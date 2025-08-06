@@ -69,9 +69,9 @@ export default function SelectHorario({ endpoint, onSelect }: SelectHorarioProps
     <select
       value={selectedId}
       onChange={handleChange}
-      className="border rounded p-2"
+      className="border rounded p-2 font-bold"
     >
-      <option value="">Selecione uma opção...</option>
+      <option value="">Selecione um horário...</option>
       {options.map((opt) => (
         <option key={opt.id} value={opt.id}>
           {opt.label}

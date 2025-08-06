@@ -121,7 +121,7 @@ const WeeklyCalendar = ({ horario_id }: { horario_id: number }) => {
   const HOUR_HEIGHT = 60;
   const MINUTE_HEIGHT = HOUR_HEIGHT / 60;
   const START_HOUR = 8;
-  const END_HOUR = 20;
+  const END_HOUR = 24;
   const TOTAL_HOURS = END_HOUR - START_HOUR;
   const CALENDAR_HEIGHT = TOTAL_HOURS * HOUR_HEIGHT;
 
@@ -251,9 +251,9 @@ const WeeklyCalendar = ({ horario_id }: { horario_id: number }) => {
             }}
           >
             <div className={styles.slotTitle}>{slot.disciplina_nome}</div>
-            <div className={styles.slotDetails}>{slot.docente_nome} - {slot.sala_nome}</div>
+            <div className={styles.slotDetails}><em>{slot.tipo === 'T' ? 'Teórica' : 'Prática'}</em> - {slot.sala_nome}</div>
             <div className={styles.slotDetails}>
-              <em>{slot.tipo === 'T' ? 'Teórica' : 'Prática'}</em>
+              {slot.docente_nome}
             </div>
           </div>
         );
@@ -473,7 +473,6 @@ const WeeklyCalendar = ({ horario_id }: { horario_id: number }) => {
                        onClick={(e) => handleClassSlotClick(day.id, turma.id, e)}
                     >
                       Turma {turma.nome}
-                      {renderSlotsForDayAndClass(day.id, turma.id)}
                     </div>
                   ))}
                 </div>
@@ -663,12 +662,13 @@ const WeeklyCalendar = ({ horario_id }: { horario_id: number }) => {
                   onChange={handleInputChange}
                   required
                 >
-                  <option value="30">30 minutos</option>
                   <option value="60">1 hora</option>
                   <option value="90">1 hora e 30 minutos</option>
                   <option value="120">2 horas</option>
                   <option value="150">2 horas e 30 minutos</option>
                   <option value="180">3 horas</option>
+                  <option value="210">3 horas e 30 minutos</option>
+                  <option value="240">4 horas</option>
                 </select>
               </div>
 

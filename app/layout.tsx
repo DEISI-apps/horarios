@@ -39,13 +39,13 @@ export default function RootLayout({
               flex flex-row justify-between items-center
               text-white 
         ">
-          <h1 className="text-4xl font-bold">Horários</h1>
-          <nav className="flex flex-row gap-4">
+          <h1 className="text-4xl font-bold pt-8">Horários</h1>
+          {/* <nav className="flex flex-row gap-4">
             <Link  className="hover:underline" href="/">Home</Link>
             <Link className="hover:underline" href="/municipalities">Municípios</Link>
             <Link className="hover:underline" href="/counter">Contador</Link>            
             <Link className="hover:underline" href="/about">Sobre</Link>            
-          </nav>
+          </nav> */}
         </header>
 
         <main className="min-h-[70vh] w-[90vw] p-5 rounded-xl bg-white">{children}</main>

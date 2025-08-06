@@ -51,6 +51,7 @@ interface Option {
     };
     ano: number;
     semestre: number;
+    num_turmas: number;
     ano_lectivo: { ano_lectivo: string };
   };
 }
@@ -118,85 +119,84 @@ export default function Page() {
   // D. Renderização do componente
   return (
     <div className="p-4">
+      <p className="pt-4 pb-4">Selecione um horário e marque as aulas no calendário, de acordo com as necessidades listadas em baixo.</p>
       <h2 className="text-xl mb-2 flex row gap-3 items-center">
-        <div className="font-bold">Horário:</div>
+        {/* <div>Horário:</div> */}
         <SelectHorario
           endpoint="https://dsdeisi.pythonanywhere.com/api/horarios/horarios"
           onSelect={(option) => setSelectedOption(option)}
         />
       </h2>
-
-      {selectedOption && (
+      {/* {selectedOption && (
         <>
           <p className="mt-4">
             <strong>{selectedOption.label}</strong>
           </p>
           <p className="text-gray-400">
-            <strong>{disciplinas.length} turmas</strong>
+            <strong>{selectedOption.raw.num_turmas} turmas</strong>
           </p>
         </>
-      )}
-
-      <section>
-        <h3 className="mt-4 mb-2 text-lg font-semibold">Disciplinas</h3>
-
-        {loadingDisciplinas && (
-          <p className="text-gray-500">A carregar disciplinas...</p>
-        )}
-        {erroDisciplinas && (
-          <p className="text-red-500">Erro ao carregar disciplinas.</p>
-        )}
-
-        {!loadingDisciplinas && disciplinas.length > 0 && (
-          <div className="space-y-4">
-            {disciplinas.map((disciplina) => (
-              <DisciplinaCard key={disciplina.id} disciplina={disciplina} />
-            ))}
-          </div>
-        )}
-
-        {!loadingDisciplinas &&
-          selectedOption &&
-          disciplinas.length === 0 && (
-            <p className="text-gray-500">Nenhuma disciplina encontrada.</p>
-          )}
-      </section>
-
-      <section>
-        <h3 className="mt-8 mb-2 text-lg font-semibold">Aulas</h3>
-
-        {loadingAulas && <p className="text-gray-500">A carregar aulas...</p>}
-        {erroAulas && (
-          <p className="text-red-500">Erro ao carregar aulas.</p>
-        )}
-
-        {!loadingAulas && aulas && aulas.length > 0 && (
-          <div className="space-y-4">
-            {aulas.map((aula) => (
-              <AulaCard
-                key={aula.id}
-                disciplina={aula.disciplina}
-                tipo={aula.tipo}
-                docente={aula.docente}
-                sala={aula.sala}
-                dia_semana={aula.dia_semana}
-                hora_inicio={aula.hora_inicio}
-                duracao={aula.duracao}
-              />
-            ))}
-          </div>
-        )}
-
-        {!loadingAulas &&
-          selectedOption &&
-          aulas &&
-          aulas.length === 0 && (
-            <p className="text-gray-500">Nenhuma aula encontrada.</p>
-          )}
-      </section>
+      )} */}
 
       {selectedOption && (
-        <CalendarioSemanal horario_id={Number(selectedOption.id)} />
+        <>
+          <CalendarioSemanal horario_id={Number(selectedOption.id)} />
+          <section>
+            <h3 className="mt-4 mb-2 text-lg font-semibold">Disciplinas</h3>
+
+            {loadingDisciplinas && (
+              <p className="text-gray-500">A carregar disciplinas...</p>
+            )}
+            {erroDisciplinas && (
+              <p className="text-red-500">Erro ao carregar disciplinas.</p>
+            )}
+
+            {!loadingDisciplinas && disciplinas.length > 0 && (
+              <div className="space-y-4">
+                {disciplinas.map((disciplina) => (
+                  <DisciplinaCard key={disciplina.id} disciplina={disciplina} />
+                ))}
+              </div>
+            )}
+
+            {!loadingDisciplinas &&
+              selectedOption &&
+              disciplinas.length === 0 && (
+                <p className="text-gray-500">Nenhuma disciplina encontrada.</p>
+            )}
+          </section>
+          <section>
+            <h3 className="mt-8 mb-2 text-lg font-semibold">Aulas</h3>
+
+            {loadingAulas && <p className="text-gray-500">A carregar aulas...</p>}
+            {erroAulas && (
+              <p className="text-red-500">Erro ao carregar aulas.</p>
+            )}
+
+            {!loadingAulas && aulas && aulas.length > 0 && (
+              <div className="space-y-4">
+                {aulas.map((aula) => (
+                  <AulaCard
+                    key={aula.id}
+                    disciplina={aula.disciplina}
+                    tipo={aula.tipo}
+                    docente={aula.docente}
+                    sala={aula.sala}
+                    dia_semana={aula.dia_semana}
+                    hora_inicio={aula.hora_inicio}
+                    duracao={aula.duracao} />
+                ))}
+              </div>
+            )}
+
+            {!loadingAulas &&
+              selectedOption &&
+              aulas &&
+              aulas.length === 0 && (
+                <p className="text-gray-500">Nenhuma aula encontrada.</p>
+              )}
+          </section>
+        </>
       )}
     </div>
   );

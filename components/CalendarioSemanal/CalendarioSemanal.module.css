@@ -1,6 +1,6 @@
 .container {
   margin: 0;
-  padding: 20px;
+  padding: 20px 0;
 }
 
 .calendarWrapper {
@@ -143,14 +143,14 @@
 
 .slotTitle {
   font-weight: bold;
-  white-space: nowrap;
+  white-space: wrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .slotDetails {
   font-size: 10px;
-  white-space: nowrap;
+  white-space: wrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
