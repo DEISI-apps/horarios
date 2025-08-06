@@ -1,8 +1,6 @@
-## Explore esta aplicação no [Vercel](https://municipios-ruddy.vercel.app/)
+## Explore esta aplicação no Vercel
 
 Veja os [video-tutoriais](https://educast.fccn.pt/vod/channels/2pld2hfi8j?locale=pt) que explicam detalhadamente a construção desta App
-
-[![image](https://github.com/user-attachments/assets/79122abf-21af-40d2-ba2b-0e0e4e5447b1)](https://municipios-ruddy.vercel.app/)
 
 
 ## Getting Started
