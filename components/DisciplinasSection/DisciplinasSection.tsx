@@ -19,12 +19,6 @@ interface Disciplina {
   cor: string;
 }
 
-interface Option {
-  id: number;
-  label: string;
-  raw: any;
-}
-
 // Função para gerar cor
 const gerarCorDisciplina = (id: number) => {
   const hue = (id * 137) % 360;
@@ -37,16 +31,15 @@ const fetcher = (url: string) =>
     return res.json();
   });
 
-export default function DisciplinasSection({ selectedOption }: { selectedOption: Option }) {
-  const horarioId = selectedOption?.id;
+export default function DisciplinasSection({ horario_id }: { horario_id: number }) {
 
   const {
     data: disciplinasRaw,
     isLoading: loadingDisciplinas,
     error: erroDisciplinas,
   } = useSWR<Disciplina[]>(
-    horarioId
-      ? `https://dsdeisi.pythonanywhere.com/api/horarios/horarios/${horarioId}/disciplinas`
+    horario_id
+      ? `https://dsdeisi.pythonanywhere.com/api/horarios/horarios/${horario_id}/disciplinas`
       : null,
     fetcher
   );

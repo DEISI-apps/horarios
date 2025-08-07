@@ -8,6 +8,7 @@ import { useAulas } from '@/hooks/useAulas';
 import { 
   SlotForm,
   Disciplina,
+  Docente,
   Aula,
   Sala,
   Turma,
@@ -113,7 +114,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
       setDocentesDisciplina(novosDocentes);
 
       const docenteAindaExiste = novosDocentes.some(
-        d => d.id.toString() === aulaSelecionada.docente_id
+        (d:Docente) => d.id.toString() === aulaSelecionada.docente_id
       );
 
       if (!docenteAindaExiste) {
@@ -137,7 +138,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
       prev.length === 0 ? prev : []
     );
   }
-}, [aulaSelecionada.disciplina_id, disciplinas]);
+}, [aulaSelecionada.disciplina_id, aulaSelecionada.docente_id, disciplinas]);
 
 
  
@@ -270,7 +271,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
     
     // Se for seleção de disciplina, atualiza a disciplina
     if (name === 'disciplina_id') {
-      const disciplina = disciplinas.find(d => d.id === parseInt(value));
+      const disciplina = disciplinas.find((d:Disciplina) => d.id === parseInt(value));
 
       setAulaSelecionada(prev => ({
         ...prev,

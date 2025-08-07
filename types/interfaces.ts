@@ -16,9 +16,12 @@
 //   raw: RawHorario;
 // }
 
-// export interface Docente {
-//   nome: string;
-// }
+export interface Docente {
+  id: number;
+  nome: string;
+  horas_teoricas: number;
+  horas_praticas: number;
+}
 
 // export interface Disciplina {
 //   id: number;

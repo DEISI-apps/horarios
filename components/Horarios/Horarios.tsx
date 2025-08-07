@@ -21,7 +21,7 @@ export default function Page() {
       {selectedOption && (
         <>
           <CalendarioSemanal horario_id={Number(selectedOption.id)} />
-          <DisciplinasSection selectedOption={selectedOption} />
+          <DisciplinasSection horario_id={Number(selectedOption.id)} />
         </>
       )}
     </div>
