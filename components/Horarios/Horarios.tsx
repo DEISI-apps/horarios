@@ -119,7 +119,7 @@ export default function Page() {
   // D. Renderização do componente
   return (
     <div className="p-4">
-      <p className="pt-4 pb-4">Selecione um horário e marque as aulas no calendário, de acordo com as necessidades listadas em baixo.</p>
+      <p className="pb-4">Selecione um curso & ano e marque as aulas no calendário, de acordo com as necessidades listadas em baixo.</p>
       <h2 className="text-xl mb-2 flex row gap-3 items-center">
         {/* <div>Horário:</div> */}
         <SelectHorario
@@ -165,7 +165,7 @@ export default function Page() {
                 <p className="text-gray-500">Nenhuma disciplina encontrada.</p>
             )}
           </section>
-          <section>
+          {/* <section>
             <h3 className="mt-8 mb-2 text-lg font-semibold">Aulas</h3>
 
             {loadingAulas && <p className="text-gray-500">A carregar aulas...</p>}
@@ -195,7 +195,7 @@ export default function Page() {
               aulas.length === 0 && (
                 <p className="text-gray-500">Nenhuma aula encontrada.</p>
               )}
-          </section>
+          </section> */}
         </>
       )}
     </div>

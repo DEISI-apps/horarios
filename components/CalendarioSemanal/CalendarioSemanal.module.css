@@ -142,6 +142,7 @@
 }
 
 .slotTitle {
+  font-size: 14px;
   font-weight: bold;
   white-space: wrap;
   overflow: hidden;
@@ -149,7 +150,7 @@
 }
 
 .slotDetails {
-  font-size: 10px;
+  font-size: 12px;
   white-space: wrap;
   overflow: hidden;
   text-overflow: ellipsis;
