@@ -5,84 +5,17 @@ import { useDisciplinas } from '@/hooks/useDisciplinas';
 import { useTurmas } from '@/hooks/useTurmas';
 import { useSalas } from '@/hooks/useSalas';
 import { useAulas } from '@/hooks/useAulas';
+import { 
+  SlotForm,
+  Disciplina,
+  Aula,
+  Sala,
+  Turma,
+  AulaIn,
+} from "@/types/interfaces"; 
 
 import styles from './CalendarioSemanal.module.css';
 
-
-type TurmaType = {
-  id: number;
-  nome: string;
-};
-
-type SalaType = {
-  id: number;
-  nome: string;
-};
-
-
-interface Disciplina {
-  id: number;
-  nome: string;
-  docentes: {
-    id: number;
-    nome: string;
-    horas_teoricas: number;
-    horas_praticas: number;
-  }[];
-}
-
-interface AulaIn {
-  horario_id: number;
-  turma_id: number;
-  disciplina_id: number;
-  tipo: string;
-  docente_id: number;
-  sala_id: number;
-  dia_semana: number;
-  hora_inicio: string; // Formato "HH:MM"
-  duracao: number;
-  cor: string;
-}
-
-interface Aula extends AulaIn {
-  id: number;
-  disciplina_nome: string;
-  docente_nome: string;
-  sala_nome: string;
-}
-
-interface SlotForm {
-  id: number | null;
-  turma_id: string;
-  disciplina_id: string;
-  disciplina_nome: string;
-  docente_id: string;
-  docente_nome: string;
-  sala_id: string;
-  sala_nome: string;
-  dia_semana: string;
-  hora_inicio: string;
-  duracao: string;
-  color: string;
-  type: string;
-}
-
-interface AulaAPI {
-  id: number;
-  horario_id: number;
-  turma_id: number;
-  disciplina_id: number;
-  disciplina: string;
-  docente_id: number;
-  docente: string;
-  sala_id: number;
-  sala: string;
-  tipo: string;
-  dia_semana: number;
-  hora_inicio: string;
-  duracao: number;
-  cor: string;
-}
 
 //
 // Gerar cor simples para cada disciplina
@@ -96,7 +29,6 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
 
   //
   // A. Gestão de estados do componente
-//  const [aulas, setAulas] = useState<Aula[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [aulaSelecionada, setAulaSelecionada] = useState<SlotForm>({
     id: null,
@@ -140,57 +72,72 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
   //
   // B. Obtenção de dados da API usando SWR
 
-  const { disciplinas, isLoadingDisciplinas, errorDisciplinas } = useDisciplinas(horario_id);
-  const { turmas, isLoadingTurmas, errorTurmas } = useTurmas(horario_id);
-  const { salas, isLoadingSalas, errorSalas } = useSalas();
-  const { aulas, isLoadingAulas, errorAulas, mutateAulas } = useAulas(horario_id);
-
-
-
-  // Converter aula da API para Aula
-  const convertAulaToSlot = (aula: AulaAPI): Aula => {
-      return {
-      id: aula.id,
-      horario_id: aula.horario_id,
-      turma_id: aula.turma_id,
-      disciplina_id: aula.disciplina_id,
-      disciplina_nome: aula.disciplina,
-      docente_id: aula.docente_id,
-      docente_nome: aula.docente,
-      sala_id: aula.sala_id || 7,
-      sala_nome: aula.sala,
-      tipo: aula.tipo,
-      dia_semana: aula.dia_semana,
-      hora_inicio: aula.hora_inicio,
-      duracao: aula.duracao,
-      cor: gerarCorDisciplina(aula.disciplina_id),
-    };
-  };
+  const { disciplinas, isLoadingDisciplinas } = useDisciplinas(horario_id);
+  const { turmas } = useTurmas(horario_id);
+  const { salas, isLoadingSalas } = useSalas();
+  const { aulas, isLoadingAulas, mutateAulas } = useAulas(horario_id);
 
 
   // C. Efeitos colaterais para carregar dados iniciais
   
   // Atualizar lista de docentes quando a disciplina mudar
+  // useEffect(() => {
+  //   if (aulaSelecionada.disciplina_id) {
+  //     const disciplinaSelecionada = disciplinas.find(
+  //       (d: Disciplina) => d.id === parseInt(aulaSelecionada.disciplina_id)
+  //     );
+  //     if (disciplinaSelecionada) {
+  //       setDocentesDisciplina(disciplinaSelecionada.docentes);
+  //       setAulaSelecionada(prev => ({
+  //         ...prev,
+  //         docente_id: '',
+  //         docente_nome: '',
+  //         type: 'T'
+  //       }));
+  //     }
+  //   } else {
+  //       setDocentesDisciplina(prev =>
+  //         prev.length === 0 ? prev : []
+  //       );
+  //   }
+  // }, [aulaSelecionada.disciplina_id, disciplinas]);
+
+
   useEffect(() => {
-    if (aulaSelecionada.disciplina_id) {
-      const disciplinaSelecionada = disciplinas.find(
-        (d: Disciplina) => d.id === parseInt(aulaSelecionada.disciplina_id)
+  if (aulaSelecionada.disciplina_id) {
+    const disciplinaSelecionada = disciplinas.find(
+      (d: Disciplina) => d.id === parseInt(aulaSelecionada.disciplina_id)
+    );
+    if (disciplinaSelecionada) {
+      const novosDocentes = disciplinaSelecionada.docentes;
+      setDocentesDisciplina(novosDocentes);
+
+      const docenteAindaExiste = novosDocentes.some(
+        d => d.id.toString() === aulaSelecionada.docente_id
       );
-      if (disciplinaSelecionada) {
-        setDocentesDisciplina(disciplinaSelecionada.docentes);
+
+      if (!docenteAindaExiste) {
+        // Só limpa se o docente atual não estiver na nova lista
         setAulaSelecionada(prev => ({
           ...prev,
           docente_id: '',
           docente_nome: '',
           type: 'T'
         }));
+      } else {
+        // Mantém tudo como está
+        setAulaSelecionada(prev => ({
+          ...prev,
+          type: 'T'
+        }));
       }
-    } else {
-        setDocentesDisciplina(prev =>
-          prev.length === 0 ? prev : []
-        );
     }
-  }, [aulaSelecionada.disciplina_id, disciplinas]);
+  } else {
+    setDocentesDisciplina(prev =>
+      prev.length === 0 ? prev : []
+    );
+  }
+}, [aulaSelecionada.disciplina_id, disciplinas]);
 
 
  
@@ -219,8 +166,9 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
               backgroundColor: gerarCorDisciplina(slot.disciplina_id),
               display:'flex',
               flexDirection: 'column',
-              justifyContent: 'center',
+              justifyContent: 'flex-start',
               alignItems: 'center',
+              textAlign: 'center',
             }}
             onClick={(e) => {
               e.stopPropagation();
@@ -230,7 +178,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
             <div className={styles.slotTitle}>{
               slot.disciplina_nome
               .split(" ")
-              .map(palavra => palavra.length > 4 ? palavra.slice(0, 4) + '.' : palavra)
+              .map(palavra => palavra.length > 6 ? palavra.slice(0, 4) + '.' : palavra)
               .join(" ")
           }</div>
             <div className={styles.slotDetails}>{slot.tipo === 'T' ? 'Teórica' : 'Prática'} - {slot.sala_nome}</div>
@@ -290,6 +238,10 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
   };
 
   const openEditSlotModal = (slot: Aula): void => {
+
+    console.log('docente', slot.docente_nome)
+    console.log('aula que selecionei', slot)
+    
     setAulaSelecionada({
       id: slot.id,
       disciplina_id: slot.disciplina_id.toString(),
@@ -301,7 +253,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
       sala_nome: slot.sala_nome,
       dia_semana: slot.dia_semana.toString(),
       turma_id: slot.turma_id.toString(),
-      hora_inicio: slot.hora_inicio,
+      hora_inicio: slot.hora_inicio.toString().slice(0,-3),
       duracao: slot.duracao.toString(),
       color: gerarCorDisciplina(slot.disciplina_id),
     });
@@ -342,7 +294,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
     else if (name === 'turma_id') {
       console.log('Turma selecionada:', value);
       // Encontrar a turma correspondente
-      const turma = turmas.find((t: TurmaType) => t.id === parseInt(value));
+      const turma = turmas.find((t: Turma) => t.id === parseInt(value));
       console.log('Turma selecionada:', turma);
       setAulaSelecionada(prev => ({
         ...prev,
@@ -396,8 +348,6 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
       if (!response.ok) {
         throw new Error('Erro ao gravar aula');
       }
-
-      const savedAula = await response.json();
 
       await mutateAulas();
 
@@ -458,7 +408,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
               <div key={`day-${day.id}`} className={styles.dayHeader}>
                 <div className={styles.dayName}>{day.name}</div>
                 <div className={styles.classColumns}>
-                  {turmas.map((turma: TurmaType) => (
+                  {turmas.map((turma: Turma) => (
                     <div
                       key={`class-${day.id}-${turma.id}`}
                       className={styles.classColumn}
@@ -486,7 +436,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
             >
               {DAYS.map(day => (
                 <div key={`day-${day.id}`} className={styles.dayColumn}>
-                  {turmas.map((turma: TurmaType) => (
+                  {turmas.map((turma: Turma) => (
                     <div
                       key={`slot-${day.id}-${turma.id}`}
                       className={styles.classSlotColumn}
@@ -521,7 +471,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
                   onChange={handleInputChange}
                   required
                 >
-                  {turmas.map((turma: TurmaType) => (
+                  {turmas.map((turma: Turma) => (
                     <option key={turma.id} value={turma.id}>
                       {turma.nome}
                     </option>
@@ -540,7 +490,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
                   disabled={isLoadingDisciplinas}
                 >
                   <option value="">Selecione uma disciplina</option>
-                  {disciplinas.map(disciplina => (
+                  {disciplinas.map((disciplina: Disciplina) => (
                     <option key={disciplina.id} value={disciplina.id}>
                       {disciplina.nome}
                     </option>
@@ -574,7 +524,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
                   disabled={!aulaSelecionada.disciplina_id || docentesDisciplina.length === 0}
                 >
                   <option value="">Selecione um professor</option>
-                  {docentesDisciplina.map(docente => (
+                  {docentesDisciplina.map((docente) => (
                     <option key={docente.id} value={docente.id}>
                       {docente.nome}
                     </option>
@@ -596,7 +546,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
                   disabled={isLoadingSalas}
                 >
                   <option key="7" value="7">Não é lab DEISI Hub</option>
-                  {salas.map(sala => (
+                  {salas.map((sala: Sala) => (
                     <option key={sala.id} value={sala.id}>
                       {sala.nome}
                     </option>
@@ -646,7 +596,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
               </div>
 
               <div className={styles.formGroup}>
-                <label htmlFor="slot-duracao">Duração (minutos)</label>
+                <label htmlFor="slot-duracao">Duração</label>
                 <select
                   id="slot-duracao"
                   name="duracao"
@@ -654,13 +604,13 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
                   onChange={handleInputChange}
                   required
                 >
-                  <option value="60">1 hora</option>
-                  <option value="90">1 hora e 30 minutos</option>
-                  <option value="120">2 horas</option>
-                  <option value="150">2 horas e 30 minutos</option>
-                  <option value="180">3 horas</option>
-                  <option value="210">3 horas e 30 minutos</option>
-                  <option value="240">4 horas</option>
+                  <option value="60">1h</option>
+                  <option value="90">1h 30m</option>
+                  <option value="120">2h</option>
+                  <option value="150">2h 30m</option>
+                  <option value="180">3h</option>
+                  <option value="210">3h 30m</option>
+                  <option value="240">4h</option>
                 </select>
               </div>
 

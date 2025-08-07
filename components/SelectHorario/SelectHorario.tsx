@@ -1,40 +1,24 @@
 "use client";
 import { useState } from "react";
 import useSWR from "swr";
+import { Option, RawItem } from "@/types/horario"; 
 
-interface RawItem {
-  id: number;
-  curso: {
-    nome: string;
-    sigla: string;
-  };
-  ano: number;
-  semestre: number;
-  ano_lectivo: { ano_lectivo: string };
-}
-
-interface Option {
-  id: number;
-  label: string;
-  raw: RawItem;
-}
 
 interface SelectHorarioProps {
-  endpoint: string;
   onSelect: (value: Option | null) => void;
 }
 
 // Função fetcher usada pelo SWR
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-export default function SelectHorario({ endpoint, onSelect }: SelectHorarioProps) {
+export default function SelectHorario({ onSelect }: SelectHorarioProps) {
   //
   // A. Gestão de estado do componente
   const [selectedId, setSelectedId] = useState<string>("");
 
   //
   // B. Obtenção de dados da API usando SWR
-  const { data, error, isLoading } = useSWR<RawItem[]>(endpoint, fetcher);
+  const { data, error, isLoading } = useSWR<RawItem[]>('https://dsdeisi.pythonanywhere.com/api/horarios/horarios', fetcher);
 
   //
   // C. Transformação/processamento dos dados recebidos
@@ -63,7 +47,7 @@ export default function SelectHorario({ endpoint, onSelect }: SelectHorarioProps
     <select
       value={selectedId}
       onChange={handleChange}
-      className="border rounded p-2 font-bold text-base"
+      className="border rounded p-2 font-bold text-base         text-xl mb-2 flex row gap-3 items-center"
     >
       <option value="">Selecione um Curso & Ano...</option>
       {options.map((opt) => (
