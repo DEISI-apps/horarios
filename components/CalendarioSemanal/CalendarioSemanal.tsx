@@ -67,7 +67,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
 
   //
   // A.2. Variáveis de configuração do calendário
-  const HOUR_HEIGHT = 60;
+  const HOUR_HEIGHT = 40;
   const MINUTE_HEIGHT = HOUR_HEIGHT / 60;
   const START_HOUR = 8;
   const END_HOUR = 24;
