@@ -18,13 +18,34 @@ import {
 import styles from './CalendarioSemanal.module.css';
 
 
-//
-// Gerar cor simples para cada disciplina
 const gerarCorDisciplina = (id: number) => {
   const hue = (id * 137) % 360; // 137 é um número primo para dispersar cores
   return `hsl(${hue}, 80%, 80%)`;
+
+  // const hash = Math.abs(Math.sin(id * 9999) * 10000);
+
+  // const hue = Math.floor(hash % 360);
+  // const saturation = Math.round(50 + (hash % 40)); // 50% a 90%
+  // const lightness = Math.round(50 + ((hash * 1.3) % 20)); // 50% a 70%
+
+  // return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 };
 
+function resumirNomeDisciplina(nomeDisciplina: String) {
+
+  const nomeAbreviadoDisciplina = nomeDisciplina  
+              .split(" ")
+              .map(palavra => palavra.length > 6 ? palavra.slice(0, 4) + '.' : palavra)
+              .join(" ")
+
+  const listaDePalavras = nomeAbreviadoDisciplina.trim().split(/\s+/);
+  if (listaDePalavras.length <= 5) {
+    return nomeAbreviadoDisciplina;
+  }
+  const primeiras = listaDePalavras.slice(0, 3);
+  const ultimas = listaDePalavras.slice(-3);
+  return [...primeiras, '...', ...ultimas].join(' ');
+}
 
 export default function CalendarioSemanal ({ horario_id }: { horario_id: number }){
 
@@ -165,23 +186,22 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
               top: `${top}px`,
               height: `${height}px`,
               backgroundColor: gerarCorDisciplina(slot.disciplina_id),
+              color:'black',
               display:'flex',
               flexDirection: 'column',
               justifyContent: 'flex-start',
               alignItems: 'center',
               textAlign: 'center',
+              filter: slot.tipo==='T'? 'brightness(1)' : ''
             }}
             onClick={(e) => {
               e.stopPropagation();
               openEditSlotModal(slot);
             }}
           >
-            <div className={styles.slotTitle}>{
-              slot.disciplina_nome
-              .split(" ")
-              .map(palavra => palavra.length > 6 ? palavra.slice(0, 4) + '.' : palavra)
-              .join(" ")
-          }</div>
+            <div className={styles.slotTitle}>
+              {resumirNomeDisciplina(slot.disciplina_nome)}
+          </div>
             <div className={styles.slotDetails}>{slot.tipo === 'T' ? 'Teórica' : 'Prática'} - {slot.sala_nome}</div>
             <div className={`${styles.slotDetails} pt-2`}>
               {slot.docente_nome}
@@ -197,6 +217,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
       markers.push(
         <div 
           key={`full-${hour}`}
+          style={{ borderBottom: '1px solid red'}}
           className={styles.timeMarker}
           style={{ top: `${(hour - START_HOUR) * HOUR_HEIGHT}px` }}
         >
@@ -426,7 +447,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
           <div className={styles.calendarBody}>
             <div 
               className={styles.timeSlots} 
-              style={{ height: `${CALENDAR_HEIGHT}px` }}
+              style={{ height: `${CALENDAR_HEIGHT}px`, borderTop:'1px solid green' }}
             >
               {generateTimeMarkers()}
             </div>
