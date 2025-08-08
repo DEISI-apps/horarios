@@ -113,7 +113,7 @@ export interface SlotForm {
   hora_inicio: string;
   duracao: string;
   color: string;
-  type: string;
+  tipo: string;
 }
 
 export interface AulaAPI {

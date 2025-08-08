@@ -21,17 +21,9 @@ import styles from './CalendarioSemanal.module.css';
 const gerarCorDisciplina = (id: number) => {
   const hue = (id * 137) % 360; // 137 é um número primo para dispersar cores
   return `hsl(${hue}, 80%, 80%)`;
-
-  // const hash = Math.abs(Math.sin(id * 9999) * 10000);
-
-  // const hue = Math.floor(hash % 360);
-  // const saturation = Math.round(50 + (hash % 40)); // 50% a 90%
-  // const lightness = Math.round(50 + ((hash * 1.3) % 20)); // 50% a 70%
-
-  // return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 };
 
-function resumirNomeDisciplina(nomeDisciplina: String) {
+function abreviarNomeDisciplina(nomeDisciplina: String) {
 
   const nomeAbreviadoDisciplina = nomeDisciplina  
               .split(" ")
@@ -65,7 +57,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
     hora_inicio: '08:00',
     duracao: '90',
     color: '#3a87ad',
-    type: 'T',
+    tipo: 'T',
   });
 
 
@@ -114,7 +106,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
   //         ...prev,
   //         docente_id: '',
   //         docente_nome: '',
-  //         type: 'T'
+  //         tipo: 'T'
   //       }));
   //     }
   //   } else {
@@ -144,13 +136,13 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
           ...prev,
           docente_id: '',
           docente_nome: '',
-          type: 'T'
+          tipo: 'T'
         }));
       } else {
         // Mantém tudo como está
         setAulaSelecionada(prev => ({
           ...prev,
-          type: 'T'
+          tipo: 'T'
         }));
       }
     }
@@ -200,7 +192,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
             }}
           >
             <div className={styles.slotTitle}>
-              {resumirNomeDisciplina(slot.disciplina_nome)}
+              {abreviarNomeDisciplina(slot.disciplina_nome)}
           </div>
             <div className={styles.slotDetails}>{slot.tipo === 'T' ? 'Teórica' : 'Prática'} - {slot.sala_nome}</div>
             <div className={`${styles.slotDetails} pt-2`}>
@@ -217,7 +209,6 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
       markers.push(
         <div 
           key={`full-${hour}`}
-          style={{ borderBottom: '1px solid red'}}
           className={styles.timeMarker}
           style={{ top: `${(hour - START_HOUR) * HOUR_HEIGHT}px` }}
         >
@@ -246,7 +237,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
       turma_id: classId.toString(),
       disciplina_id: '',
       disciplina_nome: '',
-      type: 'T',
+      tipo: 'T',
       docente_id: '',
       docente_nome: '',
       sala_id: '7',
@@ -259,16 +250,14 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
     setModalOpen(true);
   };
 
+  
   const openEditSlotModal = (slot: Aula): void => {
-
-    console.log('docente', slot.docente_nome)
-    console.log('aula que selecionei', slot)
     
     setAulaSelecionada({
       id: slot.id,
       disciplina_id: slot.disciplina_id.toString(),
       disciplina_nome: slot.disciplina_nome,
-      type: slot.tipo,
+      tipo: slot.tipo,
       docente_id: slot.docente_id.toString(),
       docente_nome: slot.docente_nome,
       sala_id: slot.sala_id.toString() || '7',
@@ -345,7 +334,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
         docente_id: parseInt(aulaSelecionada.docente_id),
         turma_id: parseInt(aulaSelecionada.turma_id),
         sala_id: parseInt(aulaSelecionada.sala_id),
-        tipo: aulaSelecionada.type,
+        tipo: aulaSelecionada.tipo,
         dia_semana: parseInt(aulaSelecionada.dia_semana),
         hora_inicio: aulaSelecionada.hora_inicio,
         duracao: parseInt(aulaSelecionada.duracao),
@@ -525,8 +514,8 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
                 <label htmlFor="slot-type">Tipo de aula</label>
                 <select
                   id="slot-type"
-                  name="type"
-                  value={aulaSelecionada.type}
+                  name="tipo"
+                  value={aulaSelecionada.tipo}
                   onChange={handleInputChange}
                   required
                 >
