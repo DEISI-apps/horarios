@@ -23,7 +23,7 @@ const gerarCorDisciplina = (id: number) => {
   return `hsl(${hue}, 80%, 80%)`;
 };
 
-function abreviarNomeDisciplina(nomeDisciplina: String) {
+function abreviarNomeDisciplina(nomeDisciplina: string) {
 
   const nomeAbreviadoDisciplina = nomeDisciplina  
               .split(" ")
@@ -252,7 +252,6 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
 
   
   const openEditSlotModal = (slot: Aula): void => {
-    
     setAulaSelecionada({
       id: slot.id,
       disciplina_id: slot.disciplina_id.toString(),
@@ -268,8 +267,13 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
       duracao: slot.duracao.toString(),
       color: gerarCorDisciplina(slot.disciplina_id),
     });
-    setModalOpen(true);
   };
+
+  useEffect(() => {
+    if (aulaSelecionada.id && !modalOpen) {
+      setModalOpen(true);
+    }
+  }, [aulaSelecionada, modalOpen]);
 
   const closeModal = () => {
     setModalOpen(false);
