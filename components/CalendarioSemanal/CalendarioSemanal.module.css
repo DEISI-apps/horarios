@@ -1,6 +1,6 @@
 .container {
   margin: 0;
-  padding: 20px 0;
+  background: white;
 }
 
 .calendarWrapper {
@@ -21,7 +21,7 @@
 
 .calendarHeader {
   display: flex;
-  background-color: #f5f5f5;
+  /* background-color: #f5f5f5; */
   border-bottom: 1px solid #ddd;
 }
 

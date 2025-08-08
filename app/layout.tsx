@@ -29,7 +29,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased
           min-h-screen
           flex flex-col justify-start items-center
-          bg-purple-900
+          bg-black
         `}
       >
         
@@ -47,7 +47,7 @@ export default function RootLayout({
           </nav> */}
         </header>
 
-        <main className="min-h-[70vh] w-[90vw] p-5 rounded-xl bg-white">{children}</main>
+        <main className="min-h-[70vh] w-[90vw] p-5 rounded-xl bg-gray-100">{children}</main>
 
         <footer className="text-sm text-white pt-4">2024, DEISI, Lusófona</footer>
 

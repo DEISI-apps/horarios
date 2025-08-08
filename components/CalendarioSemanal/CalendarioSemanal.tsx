@@ -270,10 +270,10 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
   };
 
   useEffect(() => {
-    if (aulaSelecionada.id && !modalOpen) {
+    if (aulaSelecionada.id) {
       setModalOpen(true);
     }
-  }, [aulaSelecionada, modalOpen]);
+  }, [aulaSelecionada]);
 
   const closeModal = () => {
     setModalOpen(false);
