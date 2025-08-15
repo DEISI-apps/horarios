@@ -59,8 +59,6 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
     color: '#3a87ad',
     tipo: 'T',
   });
-
-
   const [docentesDisciplina, setDocentesDisciplina] = useState<Disciplina['docentes']>([]);
   const [loadingSaving, setLoadingSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -138,13 +136,8 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
           docente_nome: '',
           tipo: 'T'
         }));
-      } else {
-        // Mantém tudo como está
-        setAulaSelecionada(prev => ({
-          ...prev,
-          tipo: 'T'
-        }));
       }
+      // Se o docente ainda existe, não alteramos nada (incluindo o tipo)
     }
   } else {
     setDocentesDisciplina(prev =>
@@ -181,7 +174,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
               color:'black',
               display:'flex',
               flexDirection: 'column',
-              justifyContent: 'flex-start',
+              justifyContent: 'center',
               alignItems: 'center',
               textAlign: 'center',
               filter: slot.tipo==='T'? 'brightness(1)' : ''
@@ -194,8 +187,8 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
             <div className={styles.slotTitle}>
               {abreviarNomeDisciplina(slot.disciplina_nome)}
           </div>
-            <div className={styles.slotDetails}>{slot.tipo === 'T' ? 'Teórica' : 'Prática'} - {slot.sala_nome}</div>
-            <div className={`${styles.slotDetails} pt-2`}>
+            <div className={`${styles.slotDetails}`}>{slot.tipo === 'T' ? 'Teórica' : 'Prática'} - {slot.sala_nome}</div>
+            <div className={`${styles.slotDetails}`}>
               {slot.docente_nome}
             </div>
           </div>
@@ -315,6 +308,14 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
         ...prev,
         turma_id: value,
         turma_nome: turma?.nome || ''
+      }));
+    }
+
+    // Se for seleção de tipo, atualiza o tipo
+    else if (name === 'tipo') {
+      setAulaSelecionada(prev => ({
+        ...prev,
+        tipo: value
       }));
     }
 

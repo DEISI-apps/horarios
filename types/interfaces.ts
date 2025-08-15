@@ -1,14 +1,19 @@
-// export interface RawHorario {
-//   id: number;
-//   curso: {
-//     nome: string;
-//     sigla: string;
-//   };
-//   ano: number;
-//   semestre: number;
-//   num_turmas: number;
-//   ano_lectivo: { ano_lectivo: string };
-// }
+
+
+export interface TurmaAPI {
+  id: number;
+  nome: string;
+  horario_id: number;
+};
+
+export interface HorarioAPI {
+  curso_id: number;
+  ano: number;
+  ano_lectivo_id: number;
+  semestre: number;
+  num_turmas: number;
+  turmas: TurmaAPI[];
+}
 
 // export interface HorarioOption {
 //   id: number;
@@ -72,6 +77,9 @@ export interface Sala {
 export interface Disciplina {
   id: number;
   nome: string;
+  semestre: number,
+  horas_teoricas: number,
+  horas_praticas: number,
   docentes: {
     id: number;
     nome: string;

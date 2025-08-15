@@ -157,6 +157,7 @@
   white-space: wrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: rgb(100, 98, 98);
 }
 
 .modal {

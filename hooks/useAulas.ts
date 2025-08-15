@@ -87,7 +87,7 @@ interface AulaAPI {
   };
 
 export function useAulas(horario_id: number) {
-  const { data, error, isLoading, mutate } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR<AulaAPI[]>(
     `https://dsdeisi.pythonanywhere.com/api/horarios/horarios/${horario_id}/aulas`,
     fetcher
   );

@@ -38,7 +38,7 @@ export default function RootLayout({
               flex flex-row justify-between items-center
               text-white 
         ">
-          <h1 className="text-4xl font-bold pt-8">Horários</h1>
+          <h1 className="text-4xl font-bold pt-8">Horários do DEISI</h1>
           {/* <nav className="flex flex-row gap-4">
             <Link  className="hover:underline" href="/">Home</Link>
             <Link className="hover:underline" href="/municipalities">Municípios</Link>
@@ -49,7 +49,7 @@ export default function RootLayout({
 
         <main className="min-h-[70vh] w-[90vw] p-5 rounded-xl bg-gray-100">{children}</main>
 
-        <footer className="text-sm text-white pt-4">2024, DEISI, Lusófona</footer>
+        <footer className="text-sm text-white pt-4">2025, DEISI, Lusófona</footer>
 
       </body>
     </html>
