@@ -32,7 +32,7 @@ export default function TurmasSection({ horario_id }: { horario_id: number }) {
   const { aulas: aulasData, isLoadingAulas: loadingAulas, errorAulas: erroAulas } = useAulas(horario_id);
 
   useEffect(() => {
-    if (!disciplinasData || !turmasData || !aulasData) return;
+    if (!disciplinasData || !turmasData ) return;
 
     const novoTurmasMap = new Map<number, { nome: string; disciplinas: Map<number, DisciplinaInfo> }>();
 
@@ -45,33 +45,34 @@ export default function TurmasSection({ horario_id }: { horario_id: number }) {
     });
 
     // Atualiza as horas das aulas agendadas
-    aulasData.forEach(({ turma_id, disciplina_id, tipo, duracao }) => {
-      const discInfo = novoTurmasMap.get(turma_id)?.disciplinas.get(disciplina_id);
-      if (!discInfo) return;
+    if (aulasData) {
+      aulasData.forEach(({ turma_id, disciplina_id, tipo, duracao }) => {
+        const discInfo = novoTurmasMap.get(turma_id)?.disciplinas.get(disciplina_id);
+        if (!discInfo) return;
 
-      if (tipo.toLowerCase().startsWith("t")) discInfo.teorica += (duracao ?? 0) / 60;
-      else if (tipo.toLowerCase().startsWith("p")) discInfo.pratica += (duracao ?? 0) / 60;
-    });
+        if (tipo.toLowerCase().startsWith("t")) discInfo.teorica += (duracao ?? 0) / 60;
+        else if (tipo.toLowerCase().startsWith("p")) discInfo.pratica += (duracao ?? 0) / 60;
+      });
 
-    // Só atualiza se mudou
-    setTurmasMap(prev => {
-      // comparação simples por referência, pode melhorar se quiser comparar conteúdo
-      if (prev === novoTurmasMap) return prev;
-      return novoTurmasMap;
-    });
-
+      // Só atualiza se mudou
+      setTurmasMap(prev => {
+        // comparação simples por referência, pode melhorar se quiser comparar conteúdo
+        if (prev === novoTurmasMap) return prev;
+        return novoTurmasMap;
+      });
+    }
   }, [disciplinasData, turmasData, aulasData]);
 
   return (
-    <section>
-      <h3 className="mt-4 mb-2 text-lg font-semibold">Aulas Marcadas no Calendário</h3>
+    <section className="pt-8">
+      <h3 className="mt-4 mb-2 text-lg font-semibold">Aulas Marcadas</h3>
 
       {(loadingDisciplinas || loadingAulas) && <p className="text-gray-500">A carregar dados...</p>}
       {(erroDisciplinas || erroAulas) && <p className="text-red-500">Erro ao carregar dados.</p>}
 
       {!loadingDisciplinas && disciplinasData && turmasMap.size > 0 && (
         <div className="overflow-auto">
-          <table className="w-full border-separate border-spacing-y-2">
+          <table className="border-separate border-spacing-y-2">
             <thead>
               <tr className="bg-gray-100">
                 <th className="border px-2 py-1 rounded-l-lg">Disciplina</th>
@@ -94,7 +95,7 @@ export default function TurmasSection({ horario_id }: { horario_id: number }) {
                 >
                   {/* Aplica cor de fundo apenas ao nome da disciplina */}
                   <td className="border px-2 py-1 font-semibold rounded-l-lg">
-                    {disc.nome} (T: xh, P: xh)
+                    {disc.nome} (T: 1.5h, P: 2h)
                   </td>
 
                   {Array.from(turmasMap.entries()).map(([turmaId, turma], index, array) => {

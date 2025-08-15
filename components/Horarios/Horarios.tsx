@@ -16,10 +16,6 @@ export default function Horarios() {
 
   return (
     <div className="p-4">
-      <p className="pb-4">
-        Selecione um curso & ano e marque as aulas no calendário, de acordo com as necessidades listadas em baixo.
-      </p>
-
       <SelectHorario onSelect={setSelectedHorarioId} />
 
       {selectedHorarioId && (

@@ -55,7 +55,7 @@ export default function DisciplinasSection({ horario_id }: { horario_id: number 
   }));
 
   return (
-    <section>
+    <section className="pt-8">
       <h3 className="mt-4 mb-2 text-lg font-semibold">Disciplinas e Horas por Docente</h3>
 
       {loadingDisciplinas && (

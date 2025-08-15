@@ -415,6 +415,12 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
   };
 
   return (
+  <section className="pt-8">
+      <h3 className="mt-4 mb-2 text-lg font-semibold">Marcação de Aulas</h3>
+
+    <p className="pb-4">
+      Marque o horário semanal das aulas de cada turma, de acordo com as necessidades listadas em baixo.
+    </p>
     <div className={styles.container}>
       <div className={styles.calendarWrapper}>
         <div className={styles.calendarContainer}>
@@ -669,5 +675,6 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
         </div>
       )}
     </div>
+    </section>
   );
 };
