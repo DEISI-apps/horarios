@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import SelectHorario from "@/components/SelectHorario/SelectHorario";
 import CalendarioSemanal from "@/components/CalendarioSemanal/CalendarioSemanal";
 import DisciplinasSection from "@/components/DisciplinasSection/DisciplinasSection";
-import { Option, HorarioAPI } from "@/types/interfaces"; 
+import { Option } from "@/types/interfaces"; 
 import TurmasSection from "../TurmasSection/TurmasSection";
 
 

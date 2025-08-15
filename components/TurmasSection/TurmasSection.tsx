@@ -3,7 +3,6 @@
 import { useAulas } from "@/hooks/useAulas";
 import { useDisciplinas } from "@/hooks/useDisciplinas";
 import { useTurmas } from "@/hooks/useTurmas";
-import { AulaAPI, TurmaAPI } from "@/types/interfaces";
 import { useEffect, useState } from "react";
 
 const gerarCorDisciplina = (id: number) => {
@@ -29,7 +28,7 @@ export default function TurmasSection({ horario_id }: { horario_id: number }) {
   const [turmasMap, setTurmasMap] = useState< Map<number, { nome: string; disciplinas: Map<number, DisciplinaInfo> }> >(new Map());
 
   const { disciplinas: disciplinasData, isLoadingDisciplinas: loadingDisciplinas, errorDisciplinas: erroDisciplinas } = useDisciplinas(horario_id);
-  const { turmas: turmasData, isLoadingTurmas } = useTurmas(horario_id);
+  const { turmas: turmasData } = useTurmas(horario_id);
   const { aulas: aulasData, isLoadingAulas: loadingAulas, errorAulas: erroAulas } = useAulas(horario_id);
 
   useEffect(() => {
