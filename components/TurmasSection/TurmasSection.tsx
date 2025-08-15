@@ -90,20 +90,22 @@ export default function TurmasSection({ horario_id }: { horario_id: number }) {
               {Array.from(disciplinasData).map((disc: DisciplinaAPI) => (
                 <tr 
                   key={disc.id}
-                  className="rounded-lg"
+                  className="rounded-lg text-sm"
                   style={{ backgroundColor: gerarCorDisciplina(disc.id) }}
                 >
                   {/* Aplica cor de fundo apenas ao nome da disciplina */}
-                  <td className="border px-2 py-1 font-semibold rounded-l-lg">
-                    {disc.nome} (T: 1.5h, P: 2h)
+                  <td className="border px-2 py-1 rounded-l-lg">
+                     <span className="font-semibold">{disc.nome}</span>
+                     <br></br>
+                     <span> (T: 1.5h, P: 2h (forçado))</span>
                   </td>
 
                   {Array.from(turmasMap.entries()).map(([turmaId, turma], index, array) => {
                     const discInfo = turma.disciplinas.get(disc.id);
                     return (
                         <td
-                        key={turmaId}
-                        className={`border px-2 py-1 text-left align-top bg-white ${index === array.length - 1 ? 'rounded-r-lg' : ''}`}
+                          key={turmaId}
+                        className={`border m px-2 py-1 text-left align-top bg-white ${index === array.length - 1 ? 'rounded-r-lg' : ''}`}
                         >
                         {discInfo && (
                           <>
