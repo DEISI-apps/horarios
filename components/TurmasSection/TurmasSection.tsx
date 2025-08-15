@@ -65,7 +65,7 @@ export default function TurmasSection({ horario_id }: { horario_id: number }) {
 
   return (
     <section className="pt-8">
-      <h3 className="mt-4 mb-2 text-lg font-semibold">Aulas Marcadas</h3>
+      <h2 className="mt-4 mb-2 text-lg font-semibold">Aulas Marcadas</h2>
 
       {(loadingDisciplinas || loadingAulas) && <p className="text-gray-500">A carregar dados...</p>}
       {(erroDisciplinas || erroAulas) && <p className="text-red-500">Erro ao carregar dados.</p>}

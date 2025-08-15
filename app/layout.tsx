@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import Image from "next/image";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -16,6 +17,11 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "Horários",
   description: "Aplicação para criar horários",
+  icons: {
+    icon: "/deisi-ball.png",
+    shortcut: "/deisi-ball.png",
+    apple: "/deisi-ball.png",
+  },
 };
 
 export default function RootLayout({
@@ -38,7 +44,16 @@ export default function RootLayout({
               flex flex-row justify-between items-center
               text-white 
         ">
-          <h1 className="text-4xl font-bold pt-8">Horários do DEISI</h1>
+          <div className="flex flex-row items-center gap-4 mt-8 mb-4">
+            <Image 
+              src="/deisi-ball.png" 
+              alt="DEISI Logo" 
+              width={40} 
+              height={40}
+              className="rounded-full invert"
+            />
+            <h1 className="text-4xl font-bold">Horários do DEISI</h1>
+          </div>
           {/* <nav className="flex flex-row gap-4">
             <Link  className="hover:underline" href="/">Home</Link>
             <Link className="hover:underline" href="/municipalities">Municípios</Link>

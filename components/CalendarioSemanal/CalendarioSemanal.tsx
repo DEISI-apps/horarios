@@ -478,7 +478,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
         <div className={styles.modal} onClick={() => setModalOpen(false)}>
           <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
             <div className={styles.modalHeader}>
-              <h3>{aulaSelecionada.id ? 'Editar Aula' : 'Nova Aula'}</h3>
+              <h2>{aulaSelecionada.id ? 'Editar Aula' : 'Nova Aula'}</h2>
               <button onClick={() => setModalOpen(false)}>&times;</button>
             </div>
             
