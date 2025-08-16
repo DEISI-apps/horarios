@@ -36,6 +36,9 @@ export default function TurmasSection({ horario_id }: { horario_id: number }) {
 
     const novoTurmasMap = new Map<number, { nome: string; disciplinas: Map<number, DisciplinaInfo> }>();
 
+    // cria lista de turmas, gurdando para cada turma as disciplinas
+    // e as horas de aulas teóricas e práticas.
+    // Inicializa o mapa de turmas com as disciplinas
     turmasData.forEach(({ id: turmaId, nome: turmaNome }) => {
       const disciplinasMap = new Map<number, DisciplinaInfo>();
       disciplinasData.forEach(({ id: disciplinaId, nome: disciplinaNome }) => {
@@ -53,15 +56,14 @@ export default function TurmasSection({ horario_id }: { horario_id: number }) {
         if (tipo.toLowerCase().startsWith("t")) discInfo.teorica += (duracao ?? 0) / 60;
         else if (tipo.toLowerCase().startsWith("p")) discInfo.pratica += (duracao ?? 0) / 60;
       });
-
-      // Só atualiza se mudou
-      setTurmasMap(prev => {
-        // comparação simples por referência, pode melhorar se quiser comparar conteúdo
-        if (prev === novoTurmasMap) return prev;
-        return novoTurmasMap;
-      });
     }
-  }, [disciplinasData, turmasData, aulasData]);
+    
+    // Só atualiza turmasMap se aulasData mudou
+    if (JSON.stringify([...turmasMap]) !== JSON.stringify([...novoTurmasMap])) {
+      setTurmasMap(novoTurmasMap);
+    }
+    
+  }, [disciplinasData, turmasData, turmasMap, aulasData]);
 
   return (
     <section className="pt-8">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useDisciplinas } from '@/hooks/useDisciplinas';
 import { useTurmas } from '@/hooks/useTurmas';
 import { useSalas } from '@/hooks/useSalas';
@@ -8,7 +8,7 @@ import { useAulas } from '@/hooks/useAulas';
 import { 
   SlotForm,
   Disciplina,
-  Docente,
+  DisciplinaHoras,
   Aula,
   Sala,
   Turma,
@@ -23,6 +23,7 @@ const gerarCorDisciplina = (id: number) => {
   return `hsl(${hue}, 80%, 80%)`;
 };
 
+
 function abreviarNomeDisciplina(nomeDisciplina: string) {
 
   const nomeAbreviadoDisciplina = nomeDisciplina  
@@ -35,9 +36,48 @@ function abreviarNomeDisciplina(nomeDisciplina: string) {
     return nomeAbreviadoDisciplina;
   }
   const primeiras = listaDePalavras.slice(0, 3);
-  const ultimas = listaDePalavras.slice(-3);
+  const ultimas = listaDePalavras.slice(-2);
   return [...primeiras, '...', ...ultimas].join(' ');
 }
+
+
+function atualizaDisciplinasHoras(disciplinas: Disciplina[], aulas: Aula[]): DisciplinaHoras[] {
+  
+    const disciplinasHorasAtualizadas: DisciplinaHoras[] = disciplinas.map((disciplina) => {
+      const aulasDaDisciplina = aulas.filter((aula) => aula.disciplina_id === disciplina.id);
+      const horasTeoricas = aulasDaDisciplina.filter((aula) => aula.tipo === 'T').reduce((total, aula) => total + aula.duracao/60, 0);
+      const horasPraticas = aulasDaDisciplina.filter((aula) => aula.tipo === 'P').reduce((total, aula) => total + aula.duracao/60, 0);
+
+      return {
+        ...disciplina,
+        horas_teoricas_lecionadas: horasTeoricas,
+        horas_praticas_lecionadas: horasPraticas,
+        docentes: disciplina.docentes.map((docente) => {
+          const aulasDoDocente = aulasDaDisciplina.filter((aula) => aula.docente_id === docente.id);
+          const horasTeoricasDocente = aulasDoDocente.filter((aula) => aula.tipo === 'T').reduce((total, aula) => total + aula.duracao/60, 0);
+          const horasPraticasDocente = aulasDoDocente.filter((aula) => aula.tipo === 'P').reduce((total, aula) => total + aula.duracao/60, 0);
+
+          return {
+            ...docente,
+            horas_teoricas_lecionadas: horasTeoricasDocente,
+            horas_praticas_lecionadas: horasPraticasDocente,
+          };
+        }),
+      };
+    });
+
+    return disciplinasHorasAtualizadas;
+}
+
+function apresentaHoras(docente: DisciplinaHoras['docentes'][number]): string {
+
+  const teoricas = docente.horas_teoricas ? `Teórica: ${docente.horas_teoricas_lecionadas}/${docente.horas_teoricas}h` : ''
+  const praticas = docente.horas_praticas ? `Prática: ${docente.horas_praticas_lecionadas}/${docente.horas_praticas}h` : ''
+  const virgula = (teoricas && praticas) ? ', ' : ''
+
+  return ` (${teoricas}${virgula}${praticas})`
+}
+
 
 export default function CalendarioSemanal ({ horario_id }: { horario_id: number }){
 
@@ -59,7 +99,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
     color: '#3a87ad',
     tipo: 'T',
   });
-  const [docentesDisciplina, setDocentesDisciplina] = useState<Disciplina['docentes']>([]);
+  const [docentesDisciplina, setDocentesDisciplina] = useState<DisciplinaHoras['docentes']>([]);
   const [loadingSaving, setLoadingSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -90,61 +130,29 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
   const { aulas, isLoadingAulas, mutateAulas } = useAulas(horario_id);
 
 
-  // C. Efeitos colaterais para carregar dados iniciais
-  
-  // Atualizar lista de docentes quando a disciplina mudar
-  // useEffect(() => {
-  //   if (aulaSelecionada.disciplina_id) {
-  //     const disciplinaSelecionada = disciplinas.find(
-  //       (d: Disciplina) => d.id === parseInt(aulaSelecionada.disciplina_id)
-  //     );
-  //     if (disciplinaSelecionada) {
-  //       setDocentesDisciplina(disciplinaSelecionada.docentes);
-  //       setAulaSelecionada(prev => ({
-  //         ...prev,
-  //         docente_id: '',
-  //         docente_nome: '',
-  //         tipo: 'T'
-  //       }));
-  //     }
-  //   } else {
-  //       setDocentesDisciplina(prev =>
-  //         prev.length === 0 ? prev : []
-  //       );
-  //   }
-  // }, [aulaSelecionada.disciplina_id, disciplinas]);
+  // cria disciplinasHoras, com registo de horas lecionadas
+  const disciplinasHoras: DisciplinaHoras[] = useMemo(() => {
+    if (!disciplinas) return [];
+    return atualizaDisciplinasHoras(disciplinas, aulas);
+  }, [disciplinas, aulas]);
 
 
+  // quando seleciona uma aula, edita estado docentesDisciplina
   useEffect(() => {
-  if (aulaSelecionada.disciplina_id) {
-    const disciplinaSelecionada = disciplinas.find(
-      (d: Disciplina) => d.id === parseInt(aulaSelecionada.disciplina_id)
-    );
-    if (disciplinaSelecionada) {
-      const novosDocentes = disciplinaSelecionada.docentes;
-      setDocentesDisciplina(novosDocentes);
-
-      const docenteAindaExiste = novosDocentes.some(
-        (d:Docente) => d.id.toString() === aulaSelecionada.docente_id
+    if (aulaSelecionada.disciplina_id) {
+      const disciplinaSelecionada = disciplinasHoras.find(
+        (d: Disciplina) => d.id === parseInt(aulaSelecionada.disciplina_id)
       );
-
-      if (!docenteAindaExiste) {
-        // Só limpa se o docente atual não estiver na nova lista
-        setAulaSelecionada(prev => ({
-          ...prev,
-          docente_id: '',
-          docente_nome: '',
-          tipo: 'T'
-        }));
+      if (disciplinaSelecionada) {
+        const novosDocentes = disciplinaSelecionada.docentes;
+        setDocentesDisciplina(novosDocentes);
       }
-      // Se o docente ainda existe, não alteramos nada (incluindo o tipo)
+    } else {
+      setDocentesDisciplina(prev =>
+        prev.length === 0 ? prev : []
+      );
     }
-  } else {
-    setDocentesDisciplina(prev =>
-      prev.length === 0 ? prev : []
-    );
-  }
-}, [aulaSelecionada.disciplina_id, aulaSelecionada.docente_id, disciplinas]);
+  }, [aulaSelecionada.disciplina_id, aulaSelecionada.docente_id, disciplinas, disciplinasHoras]);
 
 
  
@@ -243,7 +251,6 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
     setModalOpen(true);
   };
 
-  
   const openEditSlotModal = (slot: Aula): void => {
     setAulaSelecionada({
       id: slot.id,
@@ -262,6 +269,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
     });
   };
 
+  // Abre o modal de edição quando uma aula é selecionada
   useEffect(() => {
     if (aulaSelecionada.id) {
       setModalOpen(true);
@@ -536,7 +544,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
               </div>
 
               <div className={styles.formGroup}>
-                <label htmlFor="slot-docente-id">Professor</label>
+                <label htmlFor="slot-docente-id">Professor <span className="font-normal">(horas lecionadas/atribuídas, não exceder atribuídas)</span></label>
                 <select
                   id="slot-docente-id"
                   name="docente_id"
@@ -548,7 +556,7 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
                   <option value="">Selecione um professor</option>
                   {docentesDisciplina.map((docente) => (
                     <option key={docente.id} value={docente.id}>
-                      {docente.nome}
+                      {docente.nome} {apresentaHoras(docente)}
                     </option>
                   ))}
                 </select>

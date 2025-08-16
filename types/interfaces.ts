@@ -28,18 +28,6 @@ export interface Docente {
   horas_praticas: number;
 }
 
-// export interface Disciplina {
-//   id: number;
-//   nome: string;
-//   sigla: string;
-//   ects: number;
-//   ano: number;
-//   semestre: number;
-//   horas_teoricas: number;
-//   horas_praticas: number;
-//   docentes: Docente[];
-//   cor: string;
-// }
 
 export interface RawItem {
   id: number;
@@ -74,17 +62,48 @@ export interface Sala {
 };
 
 
+// export interface Disciplina {
+//   id: number;
+//   nome: string;
+//   sigla: string;
+//   ects: number;
+//   ano: number;
+//   semestre: number;
+//   horas_teoricas: number;
+//   horas_praticas: number;
+//   docentes: Docente[];
+//   cor: string;
+// }
+
 export interface Disciplina {
   id: number;
   nome: string;
-  semestre: number,
-  horas_teoricas: number,
-  horas_praticas: number,
+  semestre: number;
+  horas_teoricas: number;
+  horas_praticas: number;
   docentes: {
     id: number;
     nome: string;
     horas_teoricas: number;
     horas_praticas: number;
+  }[];
+}
+
+export interface DisciplinaHoras {
+  id: number;
+  nome: string;
+  semestre: number;
+  horas_teoricas: number;
+  horas_teoricas_lecionadas: number;
+  horas_praticas: number;
+  horas_praticas_lecionadas: number;
+  docentes: {
+    id: number;
+    nome: string;
+    horas_teoricas: number;
+    horas_teoricas_lecionadas: number;
+    horas_praticas: number;
+    horas_praticas_lecionadas: number;
   }[];
 }
 
