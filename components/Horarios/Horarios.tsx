@@ -6,6 +6,7 @@ import CalendarioSemanal from "@/components/CalendarioSemanal/CalendarioSemanal"
 import DisciplinasSection from "@/components/DisciplinasSection/DisciplinasSection";
 import { Option } from "@/types/interfaces"; 
 import TurmasSection from "../TurmasSection/TurmasSection";
+import CalendarioSemanalNovo from "../CalendarioSemanalNovo";
 
 
 export default function Horarios() {
@@ -20,7 +21,8 @@ export default function Horarios() {
 
       {selectedHorarioId && (
         <>
-          <CalendarioSemanal horario_id={Number(selectedHorarioId.id)} />
+          {/* <CalendarioSemanal horario_id={Number(selectedHorarioId.id)} /> */}
+          <CalendarioSemanalNovo horario_id={Number(selectedHorarioId.id)} />
           <TurmasSection horario_id={Number(selectedHorarioId.id)} />
           <DisciplinasSection horario_id={Number(selectedHorarioId.id)} />
         </>
