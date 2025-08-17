@@ -49,14 +49,8 @@ export default function CalendarioSemanal({ horario_id }: { horario_id: number }
 
   //
   // C. Transformação e computação de dados
-  // Computação de disciplinasHoras sempre que editamos uma aula
-  const disciplinasHoras: DisciplinaHoras[] = useMemo(() => {
-    if (!disciplinas || !Array.isArray(disciplinas) || !aulas || !Array.isArray(aulas)) return [];
-    return atualizaDisciplinasHoras(disciplinas, aulas);
-  }, [disciplinas, aulas]);
 
-
-  // Computação de docentes da disciplina selecionada
+  // Computação de docentes da disciplina selecionada e suas horas lecionadas
   const docentesDisciplina = useMemo(() => {
     if (!aulaSelecionada.disciplina_id || !disciplinas || !aulas) return [];
 
