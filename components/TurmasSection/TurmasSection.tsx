@@ -111,7 +111,9 @@ export default function TurmasSection({ horario_id }: { horario_id: number }) {
               </tr>
             </thead>
             <tbody>
-              {disciplinas.map((disc: DisciplinaAPI) => (
+              {[...disciplinas]  // Create a new array to avoid mutating the original
+                .sort((a, b) => a.nome.localeCompare(b.nome, 'pt'))  // Sort by name
+                .map((disc: DisciplinaAPI) => (
                 <tr
                   key={disc.id}
                   className="rounded-lg text-sm"

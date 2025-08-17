@@ -20,12 +20,8 @@ export default function DisciplinasSection({ horario_id }: { horario_id: number 
     if (!disciplinas?.length) return [];
 
     const atualizadas = atualizaDisciplinasHoras(disciplinas, aulas);
-
-    atualizadas.sort((a, b) => {
-      if (a.nome < b.nome) return -1;
-      if (a.nome > b.nome) return 1;
-      return 0;
-    });
+ 
+    atualizadas.sort((a, b) => a.nome.localeCompare(b.nome, 'pt', { sensitivity: 'base' }));
 
     return atualizadas.map((disciplina) => ({
       ...disciplina,
