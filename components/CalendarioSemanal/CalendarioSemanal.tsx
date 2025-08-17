@@ -8,7 +8,6 @@ import { useAulas } from '@/hooks/useAulas';
 import {
   SlotForm,
   Disciplina,
-  DisciplinaHoras,
   Aula,
   AulaIn,
 } from "@/types/interfaces";

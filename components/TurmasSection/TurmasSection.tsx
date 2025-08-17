@@ -78,7 +78,7 @@ export default function TurmasSection({ horario_id }: { horario_id: number }) {
       setTurmasMap(novoTurmasMap);
     }
 
-  }, [disciplinas, turmas, aulas]);
+  }, [disciplinas, turmas, aulas, turmasMap]);
 
 
     //
