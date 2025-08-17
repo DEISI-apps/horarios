@@ -10,77 +10,99 @@ const gerarCorDisciplina = (id: number) => {
   return `hsl(${hue}, 80%, 80%)`; // cor mais clara para background
 };
 
-type DisciplinaInfo = {
-  nome: string;
-  teorica: number;
-  pratica: number;
-};
-
-type DisciplinaAPI = {
+interface DisciplinaAPI {
   id: number;
   nome: string;
   horas_teoricas: number;
   horas_praticas: number;
-};
+}
+
+interface DisciplinaInfo {
+  nome: string;
+  teorica: number;
+  pratica: number;
+}
+
+interface TurmaInfo {
+  nome: string;
+  disciplinas: Map<number, DisciplinaInfo>;
+}
+
+type TurmasMap = Map<number, TurmaInfo>;
 
 export default function TurmasSection({ horario_id }: { horario_id: number }) {
 
-  const [turmasMap, setTurmasMap] = useState< Map<number, { nome: string; disciplinas: Map<number, DisciplinaInfo> }> >(new Map());
+  //
+  // A. Definição de estados
+  const [turmasMap, setTurmasMap] = useState<TurmasMap>(new Map());
 
-  const { disciplinas: disciplinasData, isLoadingDisciplinas: loadingDisciplinas, errorDisciplinas: erroDisciplinas } = useDisciplinas(horario_id);
-  const { turmas: turmasData } = useTurmas(horario_id);
-  const { aulas: aulasData, isLoadingAulas: loadingAulas, errorAulas: erroAulas } = useAulas(horario_id);
+  //
+  // B. Obtenção de dados
+  const { disciplinas, isLoadingDisciplinas, errorDisciplinas } = useDisciplinas(horario_id);
+  const { turmas, isLoadingTurmas } = useTurmas(horario_id);
+  const { aulas, isLoadingAulas, errorAulas } = useAulas(horario_id);
 
+
+  //
+  // C. atualização da lista de turmas e suas aulas.
   useEffect(() => {
-    if (!disciplinasData || !turmasData ) return;
 
-    const novoTurmasMap = new Map<number, { nome: string; disciplinas: Map<number, DisciplinaInfo> }>();
+    if (!disciplinas || !turmas) return;
 
-    // cria lista de turmas, gurdando para cada turma as disciplinas
-    // e as horas de aulas teóricas e práticas.
+    const novoTurmasMap: TurmasMap = new Map();
+
     // Inicializa o mapa de turmas com as disciplinas
-    turmasData.forEach(({ id: turmaId, nome: turmaNome }) => {
+    turmas.forEach(({ id: turmaId, nome: turmaNome }) => {
       const disciplinasMap = new Map<number, DisciplinaInfo>();
-      disciplinasData.forEach(({ id: disciplinaId, nome: disciplinaNome }) => {
+      disciplinas.forEach(({ id: disciplinaId, nome: disciplinaNome }) => {
         disciplinasMap.set(disciplinaId, { nome: disciplinaNome, teorica: 0, pratica: 0 });
       });
       novoTurmasMap.set(turmaId, { nome: turmaNome, disciplinas: disciplinasMap });
     });
 
     // Atualiza as horas das aulas agendadas
-    if (aulasData) {
-      aulasData.forEach(({ turma_id, disciplina_id, tipo, duracao }) => {
+    if (aulas) {
+      aulas.forEach(({ turma_id, disciplina_id, tipo, duracao }) => {
         const discInfo = novoTurmasMap.get(turma_id)?.disciplinas.get(disciplina_id);
         if (!discInfo) return;
-
         if (tipo.toLowerCase().startsWith("t")) discInfo.teorica += (duracao ?? 0) / 60;
         else if (tipo.toLowerCase().startsWith("p")) discInfo.pratica += (duracao ?? 0) / 60;
       });
     }
+
+    // Compara antes de atualizar para evitar loops
+    const currentMapStr = JSON.stringify(Array.from(turmasMap.entries()));
+    const newMapStr = JSON.stringify(Array.from(novoTurmasMap.entries()));
     
-    // Só atualiza turmasMap se aulasData mudou
-    if (JSON.stringify([...turmasMap]) !== JSON.stringify([...novoTurmasMap])) {
+    if (currentMapStr !== newMapStr) {
       setTurmasMap(novoTurmasMap);
     }
-    
-  }, [disciplinasData, turmasData, turmasMap, aulasData]);
+
+  }, [disciplinas, turmas, aulas]);
+
+
+    //
+  // C. renderiza
+  if (isLoadingDisciplinas) return <p className="text-gray-500">A carregar disciplinas...</p>;
+  if (errorDisciplinas) return <p className="text-red-500">Erro ao carregar disciplinas.</p>;
+  if (isLoadingTurmas) return <p className="text-gray-500">A carregar turmas...</p>;
 
   return (
     <section className="pt-8">
       <h2 className="mt-4 mb-2 text-lg font-semibold">Aulas Marcadas</h2>
 
-      {(loadingDisciplinas || loadingAulas) && <p className="text-gray-500">A carregar dados...</p>}
-      {(erroDisciplinas || erroAulas) && <p className="text-red-500">Erro ao carregar dados.</p>}
+      {(isLoadingDisciplinas || isLoadingAulas) && <p className="text-gray-500">A carregar dados...</p>}
+      {(errorDisciplinas || errorAulas) && <p className="text-red-500">Erro ao carregar dados.</p>}
 
-      {!loadingDisciplinas && disciplinasData && turmasMap.size > 0 && (
+      {!isLoadingDisciplinas && disciplinas && turmasMap.size > 0 && (
         <div className="overflow-auto">
           <table className="border-separate border-spacing-y-2">
             <thead>
               <tr className="bg-gray-100">
                 <th className="border px-2 py-1 rounded-l-lg">Disciplina</th>
                 {Array.from(turmasMap.entries()).map(([turmaId, turma], index, array) => (
-                  <th 
-                    key={turmaId} 
+                  <th
+                    key={turmaId}
                     className={`border px-2 py-1 ${index === array.length - 1 ? 'rounded-r-lg' : ''}`}
                   >
                     Turma {turma.nome}
@@ -89,39 +111,38 @@ export default function TurmasSection({ horario_id }: { horario_id: number }) {
               </tr>
             </thead>
             <tbody>
-              {Array.from(disciplinasData).map((disc: DisciplinaAPI) => (
-                <tr 
+              {disciplinas.map((disc: DisciplinaAPI) => (
+                <tr
                   key={disc.id}
                   className="rounded-lg text-sm"
                   style={{ backgroundColor: gerarCorDisciplina(disc.id) }}
                 >
-                  {/* Aplica cor de fundo apenas ao nome da disciplina */}
                   <td className="border px-2 py-1 rounded-l-lg">
-                     <span className="font-semibold">{disc.nome}</span>
-                     <br></br>
-                     <span> (T: 1.5h, P: 2h (forçado))</span>
+                    <span className="font-semibold">{disc.nome}</span>
+                    <br />
+                    <span> (T: 1.5h, P: 2h (forçado))</span>
                   </td>
 
                   {Array.from(turmasMap.entries()).map(([turmaId, turma], index, array) => {
                     const discInfo = turma.disciplinas.get(disc.id);
                     return (
-                        <td
-                          key={turmaId}
+                      <td
+                        key={turmaId}
                         className={`border m px-2 py-1 text-left align-top bg-white ${index === array.length - 1 ? 'rounded-r-lg' : ''}`}
-                        >
+                      >
                         {discInfo && (
                           <>
-                          <div>
-                            <span className="font-medium">T:</span>{" "}
-                            {discInfo.teorica ? `${discInfo.teorica.toFixed(1)}h` : "-"}
-                          </div>
-                          <div>
-                            <span className="font-medium">P:</span>{" "}
-                            {discInfo.pratica ? `${discInfo.pratica.toFixed(1)}h` : "-"}
-                          </div>
+                            <div>
+                              <span className="font-medium">T:</span>{" "}
+                              {discInfo.teorica ? `${discInfo.teorica.toFixed(1)}h` : "-"}
+                            </div>
+                            <div>
+                              <span className="font-medium">P:</span>{" "}
+                              {discInfo.pratica ? `${discInfo.pratica.toFixed(1)}h` : "-"}
+                            </div>
                           </>
                         )}
-                        </td>
+                      </td>
                     );
                   })}
                 </tr>

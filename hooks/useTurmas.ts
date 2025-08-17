@@ -9,7 +9,7 @@ export function useTurmas(horario_id: number) {
   );
 
   return {
-    turmas: data?.turmas || [],
+    turmas: data?.turmas,
     isLoadingTurmas: isLoading,
     errorTurmas: error,
   };

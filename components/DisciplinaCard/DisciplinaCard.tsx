@@ -16,13 +16,13 @@ export default function DisciplinaCard({ disciplina }: { disciplina: DisciplinaH
 
       <p className="text-sm">
         {disciplina.horas_teoricas > 0 && (
-          <span className="font-semibold">
+          <span>
             Teóricas: {disciplina.horas_teoricas_lecionadas}/{disciplina.horas_teoricas}h
           </span>
         )}
         {disciplina.horas_teoricas > 0 && disciplina.horas_praticas > 0 && ", "}
         {disciplina.horas_praticas > 0 && (
-          <span className="font-semibold">
+          <span>
             Práticas: {disciplina.horas_praticas_lecionadas}/{disciplina.horas_praticas}h
           </span>
         )}
@@ -35,8 +35,8 @@ export default function DisciplinaCard({ disciplina }: { disciplina: DisciplinaH
           if (docente.horas_praticas > 0) partes.push(`prática:  ${docente.horas_praticas_lecionadas}/${docente.horas_praticas}h`);
 
           return (
-            <li key={idx} className="text-gray-700">
-              <span className="font-medium">{docente.nome}</span>
+            <li key={idx} className="text-gray-500 text-sm">
+              <span className="font-semibold">{docente.nome}</span>
               {partes.length > 0 && ` — ${partes.join(" | ")}`}
             </li>
           );

@@ -62,19 +62,6 @@ export interface Sala {
 };
 
 
-// export interface Disciplina {
-//   id: number;
-//   nome: string;
-//   sigla: string;
-//   ects: number;
-//   ano: number;
-//   semestre: number;
-//   horas_teoricas: number;
-//   horas_praticas: number;
-//   docentes: Docente[];
-//   cor: string;
-// }
-
 export interface Disciplina {
   id: number;
   nome: string;
@@ -89,23 +76,33 @@ export interface Disciplina {
   }[];
 }
 
-export interface DisciplinaHoras {
-  id: number;
-  nome: string;
-  semestre: number;
-  horas_teoricas: number;
+export interface DisciplinaHoras extends Disciplina {
   horas_teoricas_lecionadas: number;
-  horas_praticas: number;
   horas_praticas_lecionadas: number;
-  docentes: {
-    id: number;
-    nome: string;
-    horas_teoricas: number;
+  docentes: (Disciplina['docentes'][number] & {
     horas_teoricas_lecionadas: number;
-    horas_praticas: number;
     horas_praticas_lecionadas: number;
-  }[];
+  })[];
 }
+
+// -----------------------------------------------------------------------------
+// Sobre a notação (Disciplina['docentes'][number] & { ... })[]
+//
+// Esta notação é usada para criar um novo tipo de array de objetos,
+// combinando (interseção) o tipo de cada elemento do array 'docentes' da interface Disciplina
+// com propriedades adicionais.
+//
+// - Disciplina['docentes'][number]: obtém o tipo de cada item do array 'docentes'.
+// - & { ... }: faz uma interseção de tipos, ou seja, junta o tipo original com novas propriedades.
+//
+// Exemplo prático:
+// type DocenteBase = { id: number; nome: string; horas_teoricas: number; horas_praticas: number; };
+// type DocenteComLecionadas = DocenteBase & { horas_teoricas_lecionadas: number; horas_praticas_lecionadas: number; };
+//
+// Assim, a propriedade 'docentes' em DisciplinaHoras será um array de objetos
+// que possuem todas as propriedades do docente original, mais as propriedades extras.
+//
+// -----------------------------------------------------------------------------
 
 export interface AulaIn {
   horario_id: number;
@@ -118,8 +115,10 @@ export interface AulaIn {
   hora_inicio: string; // Formato "HH:MM"
   duracao: number;
   cor: string;
+  juncao: boolean;
 }
 
+// Aula herda todos os campos de AulaIn e adiciona os seus próprios
 export interface Aula extends AulaIn {
   id: number;
   disciplina_nome: string;
@@ -127,7 +126,9 @@ export interface Aula extends AulaIn {
   sala_nome: string;
 }
 
-export interface SlotForm {
+// SlotForm herda de AulaIn, mas sobrescreve tipos e adiciona campos
+export interface SlotForm extends Omit<AulaIn, 
+  'horario_id' | 'turma_id' | 'disciplina_id' | 'docente_id' | 'sala_id' | 'dia_semana' | 'hora_inicio' | 'duracao' | 'cor' | 'tipo'> {
   id: number | null;
   turma_id: string;
   disciplina_id: string;
@@ -141,21 +142,13 @@ export interface SlotForm {
   duracao: string;
   color: string;
   tipo: string;
+  juncao: boolean;
 }
 
-export interface AulaAPI {
+// AulaAPI herda de AulaIn e adiciona/sobrescreve campos para API
+export interface AulaAPI extends AulaIn {
   id: number;
-  horario_id: number;
-  turma_id: number;
-  disciplina_id: number;
   disciplina: string;
-  docente_id: number;
   docente: string;
-  sala_id: number;
   sala: string;
-  tipo: string;
-  dia_semana: number;
-  hora_inicio: string;
-  duracao: number;
-  cor: string;
 }

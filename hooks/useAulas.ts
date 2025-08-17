@@ -26,27 +26,13 @@ interface AulaIn {
 }
 
 interface Aula extends AulaIn {
+  juncao: boolean;
   id: number;
   disciplina_nome: string;
   docente_nome: string;
   sala_nome: string;
 }
 
-interface SlotForm {
-  id: number | null;
-  turma_id: string;
-  disciplina_id: string;
-  disciplina_nome: string;
-  docente_id: string;
-  docente_nome: string;
-  sala_id: string;
-  sala_nome: string;
-  dia_semana: string;
-  hora_inicio: string;
-  duracao: string;
-  color: string;
-  type: string;
-}
 
 interface AulaAPI {
   id: number;
@@ -63,6 +49,7 @@ interface AulaAPI {
   hora_inicio: string;
   duracao: number;
   cor: string;
+  juncao: boolean;
 }
 
 
@@ -82,7 +69,8 @@ interface AulaAPI {
       dia_semana: aula.dia_semana,
       hora_inicio: aula.hora_inicio,
       duracao: aula.duracao,
-      cor: ''
+      cor: '',
+      juncao: aula.juncao,
     };
   };
 

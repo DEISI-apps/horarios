@@ -8,7 +8,7 @@ export function useSalas() {
   );
 
   return {
-    salas: data || [],
+    salas: data,
     isLoadingSalas: isLoading,
     errorSalas: error,
   };

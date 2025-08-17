@@ -37,6 +37,9 @@ export default function CalendarGrid({
     const startTime = calculateClickTime(clickY);
     onSlotClick(day, classId, startTime);
   };
+  //
+  // C. renderiza
+  if (!turmas) return <p className="text-gray-500">A carregar turmas...</p>;
 
   return (
     <div className={styles.calendarContainer}>

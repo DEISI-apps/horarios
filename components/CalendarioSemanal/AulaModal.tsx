@@ -35,10 +35,14 @@ export default function AulaModal({
   onSave,
   onDelete
 }: AulaModalProps) {
+
+  //
+  // A. Definição de estados
   const [loadingSaving, setLoadingSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   if (!isOpen) return null;
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,6 +61,7 @@ export default function AulaModal({
         hora_inicio: aulaSelecionada.hora_inicio,
         duracao: parseInt(aulaSelecionada.duracao),
         cor: gerarCorDisciplina(parseInt(aulaSelecionada.disciplina_id)),
+        juncao: aulaSelecionada.juncao,
       };
 
       await onSave(aulaData);
@@ -93,7 +98,7 @@ export default function AulaModal({
           <h2>{aulaSelecionada.id ? 'Editar Aula' : 'Nova Aula'}</h2>
           <button onClick={onClose}>&times;</button>
         </div>
-        
+
         <form onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
             <label htmlFor="slot-turma">Turma</label>
@@ -110,6 +115,20 @@ export default function AulaModal({
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className={styles.formGroup} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+            <label htmlFor="slot-juncao">
+              Junção de turmas
+            </label>
+            <input
+              type="checkbox"
+              id="slot-juncao"
+              name="juncao"
+              checked={!!aulaSelecionada.juncao}
+              onChange={onInputChange}
+              style={{ marginLeft: '8px', marginBottom: '5px', width: 'auto' }}
+            />
           </div>
 
           <div className={styles.formGroup}>
@@ -173,7 +192,7 @@ export default function AulaModal({
           <div className={styles.formGroup}>
             <label htmlFor="slot-sala">Sala</label>
             <select
-              id="slot-sala-id"
+              id="slot-sala"
               name="sala_id"
               value={aulaSelecionada.sala_id}
               onChange={onInputChange}
@@ -256,8 +275,8 @@ export default function AulaModal({
           )}
 
           <div className={styles.formActions}>
-            <button 
-              type="button" 
+            <button
+              type="button"
               className={`${styles.btn} ${styles.btnSecondary}`}
               onClick={onClose}
               disabled={loadingSaving}
@@ -265,8 +284,8 @@ export default function AulaModal({
               Cancelar
             </button>
             {aulaSelecionada.id && (
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className={`${styles.btn} ${styles.btnDanger}`}
                 onClick={handleDelete}
                 disabled={loadingSaving}
@@ -274,8 +293,8 @@ export default function AulaModal({
                 {loadingSaving ? 'Excluindo...' : 'Excluir'}
               </button>
             )}
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className={`${styles.btn} ${styles.btnPrimary}`}
               disabled={loadingSaving}
             >

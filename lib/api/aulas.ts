@@ -5,6 +5,10 @@ import { AulaIn } from '@/types/interfaces';
 
 // Funções CRUD para aulas
 export const saveAula = async (aulaData: AulaIn, aulaId?: number | null): Promise<void> => {
+
+    console.log('saveAula called with:', { aulaData, aulaId, juncao: aulaData.juncao });
+
+  
   const method = aulaId ? 'PUT' : 'POST';
   const url = aulaId
     ? `https://dsdeisi.pythonanywhere.com/api/horarios/aulas/${aulaId}`

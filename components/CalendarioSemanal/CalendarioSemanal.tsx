@@ -5,84 +5,23 @@ import { useDisciplinas } from '@/hooks/useDisciplinas';
 import { useTurmas } from '@/hooks/useTurmas';
 import { useSalas } from '@/hooks/useSalas';
 import { useAulas } from '@/hooks/useAulas';
-import { 
+import {
   SlotForm,
   Disciplina,
   DisciplinaHoras,
   Aula,
-  Sala,
-  Turma,
   AulaIn,
-} from "@/types/interfaces"; 
-
+} from "@/types/interfaces";
+import { gerarCorDisciplina, atualizaDisciplinasHoras } from '@/lib/utils';
+import { saveAula, deleteAula } from '@/lib/api/aulas';
+import CalendarGrid from './CalendarioGrid';
+import AulaModal from './AulaModal';
 import styles from './CalendarioSemanal.module.css';
 
-
-const gerarCorDisciplina = (id: number) => {
-  const hue = (id * 137) % 360; // 137 é um número primo para dispersar cores
-  return `hsl(${hue}, 80%, 80%)`;
-};
-
-
-function abreviarNomeDisciplina(nomeDisciplina: string) {
-
-  const nomeAbreviadoDisciplina = nomeDisciplina  
-              .split(" ")
-              .map(palavra => palavra.length > 6 ? palavra.slice(0, 4) + '.' : palavra)
-              .join(" ")
-
-  const listaDePalavras = nomeAbreviadoDisciplina.trim().split(/\s+/);
-  if (listaDePalavras.length <= 5) {
-    return nomeAbreviadoDisciplina;
-  }
-  const primeiras = listaDePalavras.slice(0, 3);
-  const ultimas = listaDePalavras.slice(-2);
-  return [...primeiras, '...', ...ultimas].join(' ');
-}
-
-
-function atualizaDisciplinasHoras(disciplinas: Disciplina[], aulas: Aula[]): DisciplinaHoras[] {
-  
-    const disciplinasHorasAtualizadas: DisciplinaHoras[] = disciplinas.map((disciplina) => {
-      const aulasDaDisciplina = aulas.filter((aula) => aula.disciplina_id === disciplina.id);
-      const horasTeoricas = aulasDaDisciplina.filter((aula) => aula.tipo === 'T').reduce((total, aula) => total + aula.duracao/60, 0);
-      const horasPraticas = aulasDaDisciplina.filter((aula) => aula.tipo === 'P').reduce((total, aula) => total + aula.duracao/60, 0);
-
-      return {
-        ...disciplina,
-        horas_teoricas_lecionadas: horasTeoricas,
-        horas_praticas_lecionadas: horasPraticas,
-        docentes: disciplina.docentes.map((docente) => {
-          const aulasDoDocente = aulasDaDisciplina.filter((aula) => aula.docente_id === docente.id);
-          const horasTeoricasDocente = aulasDoDocente.filter((aula) => aula.tipo === 'T').reduce((total, aula) => total + aula.duracao/60, 0);
-          const horasPraticasDocente = aulasDoDocente.filter((aula) => aula.tipo === 'P').reduce((total, aula) => total + aula.duracao/60, 0);
-
-          return {
-            ...docente,
-            horas_teoricas_lecionadas: horasTeoricasDocente,
-            horas_praticas_lecionadas: horasPraticasDocente,
-          };
-        }),
-      };
-    });
-
-    return disciplinasHorasAtualizadas;
-}
-
-function apresentaHoras(docente: DisciplinaHoras['docentes'][number]): string {
-
-  const teoricas = docente.horas_teoricas ? `Teórica: ${docente.horas_teoricas_lecionadas}/${docente.horas_teoricas}h` : ''
-  const praticas = docente.horas_praticas ? `Prática: ${docente.horas_praticas_lecionadas}/${docente.horas_praticas}h` : ''
-  const virgula = (teoricas && praticas) ? ', ' : ''
-
-  return ` (${teoricas}${virgula}${praticas})`
-}
-
-
-export default function CalendarioSemanal ({ horario_id }: { horario_id: number }){
+export default function CalendarioSemanal({ horario_id }: { horario_id: number }) {
 
   //
-  // A. Gestão de estados do componente
+  // A. Estados do componente
   const [modalOpen, setModalOpen] = useState(false);
   const [aulaSelecionada, setAulaSelecionada] = useState<SlotForm>({
     id: null,
@@ -98,139 +37,52 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
     duracao: '90',
     color: '#3a87ad',
     tipo: 'T',
+    juncao: false,
   });
-  const [docentesDisciplina, setDocentesDisciplina] = useState<DisciplinaHoras['docentes']>([]);
-  const [loadingSaving, setLoadingSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  //
-  // A.2. Variáveis de configuração do calendário
-  const HOUR_HEIGHT = 40;
-  const MINUTE_HEIGHT = HOUR_HEIGHT / 60;
-  const START_HOUR = 8;
-  const END_HOUR = 24;
-  const TOTAL_HOURS = END_HOUR - START_HOUR;
-  const CALENDAR_HEIGHT = TOTAL_HOURS * HOUR_HEIGHT;
-
-  const DAYS = [
-    { id: 1, name: 'Segunda' },
-    { id: 2, name: 'Terça' },
-    { id: 3, name: 'Quarta' },
-    { id: 4, name: 'Quinta' },
-    { id: 5, name: 'Sexta' }
-  ];
-
-
-  //
-  // B. Obtenção de dados da API usando SWR
-
+  // 
+  // B. Hooks para obtenção de dados
   const { disciplinas, isLoadingDisciplinas } = useDisciplinas(horario_id);
-  const { turmas } = useTurmas(horario_id);
+  const { turmas, isLoadingTurmas } = useTurmas(horario_id);
   const { salas, isLoadingSalas } = useSalas();
   const { aulas, isLoadingAulas, mutateAulas } = useAulas(horario_id);
 
-
-  // cria disciplinasHoras, com registo de horas lecionadas
+  //
+  // C. Transformação e computação de dados
+  // Computação de disciplinasHoras sempre que editamos uma aula
   const disciplinasHoras: DisciplinaHoras[] = useMemo(() => {
-    if (!disciplinas) return [];
+    if (!disciplinas || !Array.isArray(disciplinas) || !aulas || !Array.isArray(aulas)) return [];
     return atualizaDisciplinasHoras(disciplinas, aulas);
   }, [disciplinas, aulas]);
 
 
-  // quando seleciona uma aula, edita estado docentesDisciplina
+  // Computação de docentes da disciplina selecionada
+  const docentesDisciplina = useMemo(() => {
+    if (!aulaSelecionada.disciplina_id || !disciplinas || !aulas) return [];
+
+    const disciplinaSelecionada = disciplinas.find(
+      (d: Disciplina) => d.id === parseInt(aulaSelecionada.disciplina_id)
+    );
+
+    if (!disciplinaSelecionada) return [];
+
+    // Usa a função existente para calcular horas
+    const disciplinasAtualizadas = atualizaDisciplinasHoras([disciplinaSelecionada], aulas);
+
+    // Retorna os docentes da disciplina atualizada
+    return disciplinasAtualizadas[0]?.docentes || [];
+
+  }, [aulaSelecionada.disciplina_id, disciplinas, aulas]);
+
+
+  //
+  // D. funções 
+  // Abrir modal quando aula é selecionada
   useEffect(() => {
-    if (aulaSelecionada.disciplina_id) {
-      const disciplinaSelecionada = disciplinasHoras.find(
-        (d: Disciplina) => d.id === parseInt(aulaSelecionada.disciplina_id)
-      );
-      if (disciplinaSelecionada) {
-        const novosDocentes = disciplinaSelecionada.docentes;
-        setDocentesDisciplina(novosDocentes);
-      }
-    } else {
-      setDocentesDisciplina(prev =>
-        prev.length === 0 ? prev : []
-      );
+    if (aulaSelecionada.id) {
+      setModalOpen(true);
     }
-  }, [aulaSelecionada.disciplina_id, aulaSelecionada.docente_id, disciplinas, disciplinasHoras]);
-
-
- 
-  const calculateSlotPosition = (startTime: string): number => {
-    const [hours, minutes] = startTime.split(':').map(Number);
-    const totalMinutes = (hours - START_HOUR) * 60 + minutes;
-    return totalMinutes * MINUTE_HEIGHT;
-  };
-
-  const renderSlotsForDayAndClass = (dayId: number, classId: number) => {
-    if (isLoadingAulas) return <div>A carregar aulas...</div>;
-    
-    return aulas
-      .filter((slot:Aula) => slot.dia_semana === dayId && slot.turma_id === classId)
-      .map((slot:Aula) => {
-        const top = calculateSlotPosition(slot.hora_inicio);
-        const height = slot.duracao * MINUTE_HEIGHT;
-        
-        return (
-          <div
-            key={`slot-${slot.id}`}
-            className={styles.slot}
-            style={{
-              top: `${top}px`,
-              height: `${height}px`,
-              backgroundColor: gerarCorDisciplina(slot.disciplina_id),
-              color:'black',
-              display:'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              textAlign: 'center',
-              filter: slot.tipo==='T'? 'brightness(1)' : ''
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              openEditSlotModal(slot);
-            }}
-          >
-            <div className={styles.slotTitle}>
-              {abreviarNomeDisciplina(slot.disciplina_nome)}
-          </div>
-            <div className={`${styles.slotDetails}`}>{slot.tipo === 'T' ? 'Teórica' : 'Prática'} - {slot.sala_nome}</div>
-            <div className={`${styles.slotDetails}`}>
-              {slot.docente_nome}
-            </div>
-          </div>
-        );
-      });
-  };
-
-  const generateTimeMarkers = () => {
-    const markers = [];
-    for (let hour = START_HOUR; hour <= END_HOUR; hour++) {
-      markers.push(
-        <div 
-          key={`full-${hour}`}
-          className={styles.timeMarker}
-          style={{ top: `${(hour - START_HOUR) * HOUR_HEIGHT}px` }}
-        >
-          {`${hour.toString().padStart(2, '0')}:00`}
-        </div>
-      );
-      
-      if (hour < END_HOUR) {
-        markers.push(
-          <div 
-            key={`half-${hour}`}
-            className={`${styles.timeMarker} ${styles.halfHour}`}
-            style={{ top: `${(hour - START_HOUR) * HOUR_HEIGHT + (HOUR_HEIGHT / 2)}px` }}
-          >
-            {`${hour.toString().padStart(2, '0')}:30`}
-          </div>
-        );
-      }
-    }
-    return markers;
-  };
+  }, [aulaSelecionada]);
 
   const openNewSlotModal = (day: number, classId: number, startTime?: string) => {
     setAulaSelecionada({
@@ -247,11 +99,15 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
       hora_inicio: startTime || '08:00',
       duracao: '90',
       color: '#3a87ad',
+      juncao: false,
     });
     setModalOpen(true);
   };
 
   const openEditSlotModal = (slot: Aula): void => {
+
+    //
+    // A. Definição de estado
     setAulaSelecionada({
       id: slot.id,
       disciplina_id: slot.disciplina_id.toString(),
@@ -263,426 +119,151 @@ export default function CalendarioSemanal ({ horario_id }: { horario_id: number 
       sala_nome: slot.sala_nome,
       dia_semana: slot.dia_semana.toString(),
       turma_id: slot.turma_id.toString(),
-      hora_inicio: slot.hora_inicio.toString().slice(0,-3),
+      hora_inicio: slot.hora_inicio.toString().slice(0, -3),
       duracao: slot.duracao.toString(),
       color: gerarCorDisciplina(slot.disciplina_id),
+      juncao: slot.juncao || false,
     });
   };
 
-  // Abre o modal de edição quando uma aula é selecionada
-  useEffect(() => {
-    if (aulaSelecionada.id) {
-      setModalOpen(true);
-    }
-  }, [aulaSelecionada]);
 
+  // Função para fechar o modal
   const closeModal = () => {
     setModalOpen(false);
-    setError(null);
   };
 
+  // Função para lidar com mudanças nos inputs
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    
-    // Se for seleção de disciplina, atualiza a disciplina
-    if (name === 'disciplina_id') {
-      const disciplina = disciplinas.find((d:Disciplina) => d.id === parseInt(value));
+    const { name, type, value } = e.target;
 
+    // Trata checkbox de juncao
+    if (type === 'checkbox') {
+      const checked = (e.target as HTMLInputElement).checked;
+      setAulaSelecionada(prev => ({
+        ...prev,
+        [name]: checked
+      }));
+      return;
+    }
+
+    // Trata seleção de disciplina
+    if (name === 'disciplina_id') {
+      const disciplina = disciplinas?.find(d => d.id === parseInt(value));
       setAulaSelecionada(prev => ({
         ...prev,
         disciplina_id: value,
         disciplina_nome: disciplina?.nome || ''
       }));
-    } 
+      return;
+    }
 
-    // Se for seleção de docente, atualiza o docente
-    else if (name === 'docente_id') {
-      console.log('Docente selecionado:', value);
+    // Trata seleção de docente
+    if (name === 'docente_id') {
       const docente = docentesDisciplina.find(d => d.id === parseInt(value));
       setAulaSelecionada(prev => ({
         ...prev,
         docente_id: value,
         docente_nome: docente?.nome || ''
       }));
+      return;
     }
 
-    // Se for seleção de turma, atualiza a turma
-    else if (name === 'turma_id') {
-      console.log('Turma selecionada:', value);
-      // Encontrar a turma correspondente
-      const turma = turmas.find((t: Turma) => t.id === parseInt(value));
-      console.log('Turma selecionada:', turma);
+    // Trata seleção de turma
+    if (name === 'turma_id') {
+      const turma = turmas?.find(t => t.id === parseInt(value));
       setAulaSelecionada(prev => ({
         ...prev,
         turma_id: value,
         turma_nome: turma?.nome || ''
       }));
+      return;
     }
 
-    // Se for seleção de tipo, atualiza o tipo
-    else if (name === 'tipo') {
+    // Trata seleção de tipo
+    if (name === 'tipo') {
       setAulaSelecionada(prev => ({
         ...prev,
         tipo: value
       }));
+      return;
     }
 
-    else {
-      setAulaSelecionada(prev => ({
-        ...prev,
-        [name]: value
-      }));
-    }
+    // Trata todos os outros inputs
+    setAulaSelecionada(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
-  const saveSlot = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoadingSaving(true);
-    setError(null);
-
-    try {
-      const aulaData: AulaIn = {
-        horario_id: horario_id,
-        disciplina_id: parseInt(aulaSelecionada.disciplina_id),
-        docente_id: parseInt(aulaSelecionada.docente_id),
-        turma_id: parseInt(aulaSelecionada.turma_id),
-        sala_id: parseInt(aulaSelecionada.sala_id),
-        tipo: aulaSelecionada.tipo,
-        dia_semana: parseInt(aulaSelecionada.dia_semana),
-        hora_inicio: aulaSelecionada.hora_inicio,
-        duracao: parseInt(aulaSelecionada.duracao),
-        cor: gerarCorDisciplina(parseInt(aulaSelecionada.disciplina_id)),
-      };
-
-      // Se for uma nova aula, faz POST, caso contrário, PUT
-      const method = aulaSelecionada.id ? 'PUT' : 'POST';
-      const url = aulaSelecionada.id
-        ? `https://dsdeisi.pythonanywhere.com/api/horarios/aulas/${aulaSelecionada.id}`
-        : 'https://dsdeisi.pythonanywhere.com/api/horarios/aulas';
-
-
-      const response = await fetch(url, {
-        method:  method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(aulaData)
-      });
-
-      if (!response.ok) {
-        throw new Error('Erro ao gravar aula');
-      }
-
-      await mutateAulas();
-
-      closeModal();
-
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro ao gravar aula');
-      console.error(err);
-    } finally {
-      setLoadingSaving(false);
-    }
+  // D. Função para guardar aula
+  const handleSaveAula = async (aulaData: AulaIn) => {
+    await saveAula(aulaData, aulaSelecionada.id);
+    await mutateAulas();
   };
 
-  const deleteSlot = async () => {
+  // D. Função para apagar aula
+  const handleDeleteAula = async () => {
     if (!aulaSelecionada.id) return;
-
-    setLoadingSaving(true);
-    setError(null);
-
-    try {
-      const response = await fetch(`https://dsdeisi.pythonanywhere.com/api/horarios/aulas/${aulaSelecionada.id}`, {
-        method: 'DELETE'
-      });
-
-      if (!response.ok) {
-        throw new Error('Erro ao excluir aula');
-      }
-
-      await mutateAulas();
-
-      closeModal();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro ao excluir aula');
-      console.error(err);
-    } finally {
-      setLoadingSaving(false);
-    }
+    await deleteAula(aulaSelecionada.id);
+    await mutateAulas();
   };
 
-  const handleClassSlotClick = (day: number, classId: number, e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const clickY = e.clientY - rect.top;
-    const clickedMinutes = Math.round(clickY / MINUTE_HEIGHT);
-    const snappedMinutes = Math.floor(clickedMinutes / 30) * 30;
-    const hours = START_HOUR + Math.floor(snappedMinutes / 60);
-    const minutes = snappedMinutes % 60;
-    const startTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-    openNewSlotModal(day, classId, startTime);
-  };
+
+  //
+  // Renderiza
+
+  // Fallbacks
+  if (isLoadingDisciplinas) return <p className="text-gray-500">A carregar disciplinas...</p>;
+  if (isLoadingTurmas) return <p className="text-gray-500">A carregar turmas...</p>;
+  if (!turmas) return <p className="text-red-500">Erro ao carregar turmas.</p>;
+  if (!disciplinas) return <p className="text-red-500">Erro ao carregar disciplinas.</p>;
 
   return (
-  <section className="pt-8">
+    <section className="pt-8">
       <h3 className="mt-4 mb-2 text-lg font-semibold">Marcação de Aulas</h3>
+      <p className="pb-4 text-sm text-gray-500">
+        Marque o horário semanal das aulas de cada turma, de acordo com as necessidades listadas em baixo.
+      </p>
 
-    <p className="pb-4">
-      Marque o horário semanal das aulas de cada turma, de acordo com as necessidades listadas em baixo.
-    </p>
-    <div className={styles.container}>
-      <div className={styles.calendarWrapper}>
-        <div className={styles.calendarContainer}>
-          <div className={styles.calendarHeader}>
-            <div className={styles.timeColumn}></div>
-            {DAYS.map(day => (
-              <div key={`day-${day.id}`} className={styles.dayHeader}>
-                <div className={styles.dayName}>{day.name}</div>
-                <div className={styles.classColumns}>
-                  {turmas.map((turma: Turma) => (
-                    <div
-                      key={`class-${day.id}-${turma.id}`}
-                      className={styles.classColumn}
-                       onClick={(e) => handleClassSlotClick(day.id, turma.id, e)}
-                    >
-                      Turma {turma.nome}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-          
-          <div className={styles.calendarBody}>
-            <div 
-              className={styles.timeSlots} 
-              style={{ height: `${CALENDAR_HEIGHT}px`, borderTop:'1px solid green' }}
-            >
-              {generateTimeMarkers()}
-            </div>
-            
-            <div 
-              className={styles.daysContainer} 
-              style={{ height: `${CALENDAR_HEIGHT}px` }}
-            >
-              {DAYS.map(day => (
-                <div key={`day-${day.id}`} className={styles.dayColumn}>
-                  {turmas.map((turma: Turma) => (
-                    <div
-                      key={`slot-${day.id}-${turma.id}`}
-                      className={styles.classSlotColumn}
-                      onClick={(e) => handleClassSlotClick(day.id, turma.id, e)}
-                    >
-                      {renderSlotsForDayAndClass(day.id, turma.id)}
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+      <div className="pb-4 text-sm text-gray-500">
+        <details className="cursor-pointer">
+          <summary className="font-bold">Nota sobre aulas em junção</summary>
+          <ul className="ml-6 mt-2 list-disc space-y-1 text-green-500">
+            <li>Aulas em junção são aulas em que estão presentes na mesma sala várias turmas.</li>
+            <li>Uma das aulas deve estar sem junção, para ser contabilizada</li>
+            <li>As restantes aulas devem ser marcadas em junção, e aparecem a tracejado e sem detalhes.</li>
+            <li>Aulas em junção não são contabilizadas no número de horas lecionadas do docente.</li>
+          </ul>
+        </details>
       </div>
-      
-      {modalOpen && (
-        <div className={styles.modal} onClick={() => setModalOpen(false)}>
-          <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
-            <div className={styles.modalHeader}>
-              <h2>{aulaSelecionada.id ? 'Editar Aula' : 'Nova Aula'}</h2>
-              <button onClick={() => setModalOpen(false)}>&times;</button>
-            </div>
-            
-            <form onSubmit={saveSlot}>
 
-              <div className={styles.formGroup}>
-                <label htmlFor="slot-turma">Turma</label>
-                <select
-                  id="slot-turma"
-                  name="turma_id"
-                  value={aulaSelecionada.turma_id}
-                  onChange={handleInputChange}
-                  required
-                >
-                  {turmas.map((turma: Turma) => (
-                    <option key={turma.id} value={turma.id}>
-                      {turma.nome}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className={styles.formGroup}>
-                <label htmlFor="slot-disciplina-id">Disciplina</label>
-                <select
-                  id="slot-disciplina-id"
-                  name="disciplina_id"
-                  value={aulaSelecionada.disciplina_id}
-                  onChange={handleInputChange}
-                  required
-                  disabled={isLoadingDisciplinas}
-                >
-                  <option value="">Selecione uma disciplina</option>
-                  {disciplinas.map((disciplina: Disciplina) => (
-                    <option key={disciplina.id} value={disciplina.id}>
-                      {disciplina.nome}
-                    </option>
-                  ))}
-                </select>
-                {isLoadingDisciplinas && <span>Carregando disciplinas...</span>}
-              </div>
-
-              <div className={styles.formGroup}>
-                <label htmlFor="slot-type">Tipo de aula</label>
-                <select
-                  id="slot-type"
-                  name="tipo"
-                  value={aulaSelecionada.tipo}
-                  onChange={handleInputChange}
-                  required
-                >
-                  <option value="T">Teórica</option>
-                  <option value="P">Prática</option>
-                </select>
-              </div>
-
-              <div className={styles.formGroup}>
-                <label htmlFor="slot-docente-id">Professor <span className="font-normal">(horas lecionadas/atribuídas, não exceder atribuídas)</span></label>
-                <select
-                  id="slot-docente-id"
-                  name="docente_id"
-                  value={aulaSelecionada.docente_id}
-                  onChange={handleInputChange}
-                  required
-                  disabled={!aulaSelecionada.disciplina_id || docentesDisciplina.length === 0}
-                >
-                  <option value="">Selecione um professor</option>
-                  {docentesDisciplina.map((docente) => (
-                    <option key={docente.id} value={docente.id}>
-                      {docente.nome} {apresentaHoras(docente)}
-                    </option>
-                  ))}
-                </select>
-                {aulaSelecionada.disciplina_id && docentesDisciplina.length === 0 && (
-                  <span>Nenhum professor disponível para esta disciplina</span>
-                )}
-              </div>
-
-              <div className={styles.formGroup}>
-                <label htmlFor="slot-sala">Sala</label>
-                <select
-                  id="slot-sala-id"
-                  name="sala_id"
-                  value={aulaSelecionada.sala_id}
-                  onChange={handleInputChange}
-                  required
-                  disabled={isLoadingSalas}
-                >
-                  <option key="7" value="7">Não é lab DEISI Hub</option>
-                  {salas.map((sala: Sala) => (
-                    <option key={sala.id} value={sala.id}>
-                      {sala.nome}
-                    </option>
-                  ))}
-                </select>
-                {isLoadingSalas && <span>Carregando salas...</span>}
-              </div>
-
-              <div className={styles.formGroup}>
-                <label htmlFor="slot-dia-semana">Dia da semana</label>
-                <select
-                  id="slot-dia-semana"
-                  name="dia_semana"
-                  value={aulaSelecionada.dia_semana}
-                  onChange={handleInputChange}
-                  required
-                >
-                  {DAYS.map(day => (
-                    <option key={day.id} value={day.id}>
-                      {day.name}-feira
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className={styles.formGroup}>
-                <label htmlFor="slot-hora-inicio">Hora de início</label>
-                <select
-                  id="slot-hora-inicio"
-                  name="hora_inicio"
-                  value={aulaSelecionada.hora_inicio}
-                  onChange={handleInputChange}
-                  required
-                >
-                  {Array.from({ length: END_HOUR - START_HOUR }, (_, i) => {
-                    const hour = START_HOUR + i;
-                    return [
-                      <option key={`${hour}:00`} value={`${hour.toString().padStart(2, '0')}:00`}>
-                        {`${hour.toString().padStart(2, '0')}:00`}
-                      </option>,
-                      <option key={`${hour}:30`} value={`${hour.toString().padStart(2, '0')}:30`}>
-                        {`${hour.toString().padStart(2, '0')}:30`}
-                      </option>
-                    ];
-                  })}
-                </select>
-              </div>
-
-              <div className={styles.formGroup}>
-                <label htmlFor="slot-duracao">Duração</label>
-                <select
-                  id="slot-duracao"
-                  name="duracao"
-                  value={aulaSelecionada.duracao}
-                  onChange={handleInputChange}
-                  required
-                >
-                  <option value="60">1h</option>
-                  <option value="90">1h 30m</option>
-                  <option value="120">2h</option>
-                  <option value="150">2h 30m</option>
-                  <option value="180">3h</option>
-                  <option value="210">3h 30m</option>
-                  <option value="240">4h</option>
-                </select>
-              </div>
-
-              {error && (
-                <div className={styles.errorMessage}>
-                  {error}
-                </div>
-              )}
-
-              <div className={styles.formActions}>
-                <button 
-                  type="button" 
-                  className={`${styles.btn} ${styles.btnSecondary}`}
-                  onClick={() => setModalOpen(false)}
-                  disabled={loadingSaving}
-                >
-                  Cancelar
-                </button>
-                {aulaSelecionada.id && (
-                  <button 
-                    type="button" 
-                    className={`${styles.btn} ${styles.btnDanger}`}
-                    onClick={deleteSlot}
-                    disabled={loadingSaving}
-                  >
-                    {loadingSaving ? 'Excluindo...' : 'Excluir'}
-                  </button>
-                )}
-                <button 
-                  type="submit" 
-                  className={`${styles.btn} ${styles.btnPrimary}`}
-                  disabled={loadingSaving}
-                >
-                  {loadingSaving ? 'Gravando...' : 'Gravar'}
-                </button>
-              </div>
-
-            </form>
-          </div>
+      <div className={styles.container}>
+        <div className={styles.calendarWrapper}>
+          <CalendarGrid
+            turmas={turmas}
+            aulas={aulas}
+            isLoadingAulas={isLoadingAulas}
+            onSlotClick={openNewSlotModal}
+            onSlotEdit={openEditSlotModal}
+          />
         </div>
-      )}
-    </div>
+
+        <AulaModal
+          isOpen={modalOpen}
+          aulaSelecionada={aulaSelecionada}
+          disciplinas={disciplinas}
+          docentesDisciplina={docentesDisciplina}
+          turmas={turmas}
+          salas={salas}
+          isLoadingDisciplinas={isLoadingDisciplinas}
+          isLoadingSalas={isLoadingSalas}
+          horario_id={horario_id}
+          onClose={closeModal}
+          onInputChange={handleInputChange}
+          onSave={handleSaveAula}
+          onDelete={handleDeleteAula}
+        />
+      </div>
     </section>
   );
-};
+}

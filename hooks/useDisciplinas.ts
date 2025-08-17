@@ -9,7 +9,7 @@ export function useDisciplinas(horario_id: number) {
   );
 
   return {
-    disciplinas: data || [],
+    disciplinas: data,
     isLoadingDisciplinas: isLoading,
     errorDisciplinas: error,
   };

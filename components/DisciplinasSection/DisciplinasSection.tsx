@@ -17,7 +17,7 @@ export default function DisciplinasSection({ horario_id }: { horario_id: number 
   //
   // B. atualiza horas das disciplinas e ordena
   const disciplinasOrdenadas = useMemo(() => {
-    if (!disciplinas.length) return [];
+    if (!disciplinas?.length) return [];
 
     const atualizadas = atualizaDisciplinasHoras(disciplinas, aulas);
 
@@ -39,9 +39,12 @@ export default function DisciplinasSection({ horario_id }: { horario_id: number 
 
   //
   // C. renderiza
+
+  // C.1. fallbacks
   if (isLoadingDisciplinas) return <p className="text-gray-500">A carregar disciplinas...</p>;
   if (errorDisciplinas) return <p className="text-red-500">Erro ao carregar disciplinas.</p>;
-  if (disciplinas.length === 0) return <p className="text-gray-500">Nenhuma disciplina encontrada.</p>;
+  if (disciplinas?.length === 0) return <p className="text-gray-500">Nenhuma disciplina encontrada.</p>;
+
 
   return (
     <section className="pt-8">

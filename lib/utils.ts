@@ -9,10 +9,10 @@ export const gerarCorDisciplina = (id: number) => {
 
 export function abreviarNomeDisciplina(nomeDisciplina: string) {
 
-  const nomeAbreviadoDisciplina = nomeDisciplina  
-              .split(" ")
-              .map(palavra => palavra.length > 6 ? palavra.slice(0, 4) + '.' : palavra)
-              .join(" ")
+  const nomeAbreviadoDisciplina = nomeDisciplina
+    .split(" ")
+    .map(palavra => palavra.length > 6 ? palavra.slice(0, 4) + '.' : palavra)
+    .join(" ")
 
   const listaDePalavras = nomeAbreviadoDisciplina.trim().split(/\s+/);
   if (listaDePalavras.length <= 5) {
@@ -25,31 +25,48 @@ export function abreviarNomeDisciplina(nomeDisciplina: string) {
 
 
 export function atualizaDisciplinasHoras(disciplinas: Disciplina[], aulas: Aula[]): DisciplinaHoras[] {
-  
-    const disciplinasHorasAtualizadas: DisciplinaHoras[] = disciplinas.map((disciplina) => {
-      const aulasDaDisciplina = aulas.filter((aula) => aula.disciplina_id === disciplina.id);
-      const horasTeoricas = aulasDaDisciplina.filter((aula) => aula.tipo === 'T').reduce((total, aula) => total + aula.duracao/60, 0);
-      const horasPraticas = aulasDaDisciplina.filter((aula) => aula.tipo === 'P').reduce((total, aula) => total + aula.duracao/60, 0);
 
-      return {
-        ...disciplina,
-        horas_teoricas_lecionadas: horasTeoricas,
-        horas_praticas_lecionadas: horasPraticas,
-        docentes: disciplina.docentes.map((docente) => {
-          const aulasDoDocente = aulasDaDisciplina.filter((aula) => aula.docente_id === docente.id);
-          const horasTeoricasDocente = aulasDoDocente.filter((aula) => aula.tipo === 'T').reduce((total, aula) => total + aula.duracao/60, 0);
-          const horasPraticasDocente = aulasDoDocente.filter((aula) => aula.tipo === 'P').reduce((total, aula) => total + aula.duracao/60, 0);
+  const disciplinasHorasAtualizadas: DisciplinaHoras[] = disciplinas.map((disciplina) => {
 
-          return {
-            ...docente,
-            horas_teoricas_lecionadas: horasTeoricasDocente,
-            horas_praticas_lecionadas: horasPraticasDocente,
-          };
-        }),
-      };
-    });
+    const aulasDaDisciplina = aulas.filter((aula) => aula.disciplina_id === disciplina.id && aula.juncao === false);
+    const horasTeoricas = aulasDaDisciplina.filter((aula) => aula.tipo === 'T').reduce((total, aula) => total + aula.duracao / 60, 0);
+    const horasPraticas = aulasDaDisciplina.filter((aula) => aula.tipo === 'P').reduce((total, aula) => total + aula.duracao / 60, 0);
+    
+    // if (disciplina.nome === "Bases de Dados") console.log(
+    //   'com juncoes:',
+    //   aulasDaDisciplina.filter((aula) => aula.tipo === 'T').reduce((total, aula) => total + aula.duracao / 60, 0),
+    //   "sem juncoes",
+    //   aulas.filter((aula) => aula.disciplina_id === disciplina.id).filter((aula) => aula.tipo === 'T').reduce((total, aula) => total + aula.duracao / 60, 0)
+    // );
 
-    return disciplinasHorasAtualizadas;
+
+    return {
+      ...disciplina,
+      horas_teoricas_lecionadas: horasTeoricas,
+      horas_praticas_lecionadas: horasPraticas,
+      docentes: disciplina.docentes.map((docente) => {
+        const aulasDoDocente = aulasDaDisciplina.filter((aula) => aula.docente_id === docente.id);
+        const horasTeoricasDocente = aulasDoDocente.filter((aula) => aula.tipo === 'T').reduce((total, aula) => total + aula.duracao / 60, 0);
+        const horasPraticasDocente = aulasDoDocente.filter((aula) => aula.tipo === 'P').reduce((total, aula) => total + aula.duracao / 60, 0);
+
+        // if (docente.nome === "Rui Ribeiro") console.log(
+        //   'Rui Ribeiro: com juncoes:',
+        //   aulasDoDocente.filter((aula) => aula.tipo === 'T').reduce((total, aula) => total + aula.duracao / 60, 0),
+        //   "sem juncoes",
+        //   aulas.filter((aula) => aula.disciplina_id === disciplina.id && aula.docente_id === docente.id).filter((aula) => aula.tipo === 'T').reduce((total, aula) => total + aula.duracao / 60, 0)
+        // );
+
+
+        return {
+          ...docente,
+          horas_teoricas_lecionadas: horasTeoricasDocente,
+          horas_praticas_lecionadas: horasPraticasDocente,
+        };
+      }),
+    };
+  });
+
+  return disciplinasHorasAtualizadas;
 }
 
 export function apresentaHoras(docente: DisciplinaHoras['docentes'][number]): string {

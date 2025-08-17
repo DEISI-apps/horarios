@@ -12,6 +12,8 @@ interface TimeSlotProps {
 export default function TimeSlot({ slot, onEdit }: TimeSlotProps) {
   const top = calculateSlotPosition(slot.hora_inicio);
   const height = slot.duracao * MINUTE_HEIGHT;
+  const baseColor = gerarCorDisciplina(slot.disciplina_id);
+
 
   return (
     <div
@@ -20,14 +22,15 @@ export default function TimeSlot({ slot, onEdit }: TimeSlotProps) {
       style={{
         top: `${top}px`,
         height: `${height}px`,
-        backgroundColor: gerarCorDisciplina(slot.disciplina_id),
-        color: 'black',
+        backgroundColor: baseColor,
+        borderRight: slot.juncao ? '5px dashed white' : 'none',
+        borderLeft: slot.juncao ? '5px dashed white' : 'none',
+        color:  slot.juncao ? 'transparent': 'black',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         textAlign: 'center',
-        filter: slot.tipo === 'T' ? 'brightness(1)' : ''
       }}
       onClick={(e) => {
         e.stopPropagation();
@@ -37,10 +40,10 @@ export default function TimeSlot({ slot, onEdit }: TimeSlotProps) {
       <div className={styles.slotTitle}>
         {abreviarNomeDisciplina(slot.disciplina_nome)}
       </div>
-      <div className={styles.slotDetails}>
+      <div className={styles.slotDetails} style={{ color:  slot.juncao ? 'transparent': 'rgb(100, 98, 98)' }} >
         {slot.tipo === 'T' ? 'Teórica' : 'Prática'} - {slot.sala_nome}
       </div>
-      <div className={styles.slotDetails}>
+      <div className={styles.slotDetails} style={{ color:  slot.juncao ? 'transparent': 'rgb(100, 98, 98)' }}>
         {slot.docente_nome}
       </div>
     </div>

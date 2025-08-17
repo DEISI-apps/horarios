@@ -6,7 +6,7 @@ import CalendarioSemanal from "@/components/CalendarioSemanal/CalendarioSemanal"
 import DisciplinasSection from "@/components/DisciplinasSection/DisciplinasSection";
 import { Option } from "@/types/interfaces"; 
 import TurmasSection from "../TurmasSection/TurmasSection";
-import CalendarioSemanalNovo from "../CalendarioSemanalNovo";
+import CalendarioSemanalNovo from "../CalendarioSemanal";
 
 
 export default function Horarios() {
