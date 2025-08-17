@@ -1,5 +1,3 @@
-import useSWR from 'swr';
-import { fetcher } from '@/lib/fetcher';
 import { AulaIn } from '@/types/interfaces';
 
 
