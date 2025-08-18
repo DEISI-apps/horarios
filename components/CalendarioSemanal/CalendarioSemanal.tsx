@@ -20,7 +20,7 @@ import styles from './CalendarioSemanal.module.css';
 export default function CalendarioSemanal({ horario_id }: { horario_id: number }) {
 
   //
-  // A. Estados do componente
+  // A. Gestão de sstados do componente
   const [modalOpen, setModalOpen] = useState(false);
   const [aulaSelecionada, setAulaSelecionada] = useState<SlotForm>({
     id: null,
@@ -40,16 +40,16 @@ export default function CalendarioSemanal({ horario_id }: { horario_id: number }
   });
 
   // 
-  // B. Hooks para obtenção de dados
+  // B. Hooks de obtenção de dados
   const { disciplinas, isLoadingDisciplinas } = useDisciplinas(horario_id);
   const { turmas, isLoadingTurmas } = useTurmas(horario_id);
   const { salas, isLoadingSalas } = useSalas();
   const { aulas, isLoadingAulas, mutateAulas } = useAulas(horario_id);
 
   //
-  // C. Transformação e computação de dados
+  // C. Computação de dados
 
-  // Computação de docentes da disciplina selecionada e suas horas lecionadas
+  // Para uma disciplina selecionada, computação de docentes com info de horas lecionadas
   const docentesDisciplina = useMemo(() => {
     if (!aulaSelecionada.disciplina_id || !disciplinas || !aulas) return [];
 
@@ -69,13 +69,7 @@ export default function CalendarioSemanal({ horario_id }: { horario_id: number }
 
 
   //
-  // D. funções 
-  // Abrir modal quando aula é selecionada
-  useEffect(() => {
-    if (aulaSelecionada.id) {
-      setModalOpen(true);
-    }
-  }, [aulaSelecionada]);
+  // D. Manipuladores de eventos (event handlers) 
 
   const openNewSlotModal = (day: number, classId: number, startTime?: string) => {
     setAulaSelecionada({
@@ -117,100 +111,20 @@ export default function CalendarioSemanal({ horario_id }: { horario_id: number }
       color: gerarCorDisciplina(slot.disciplina_id),
       juncao: slot.juncao || false,
     });
-  };
-
-
-  // Função para fechar o modal
-  const closeModal = () => {
-    setModalOpen(false);
-  };
-
-  // Função para lidar com mudanças nos inputs
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, type, value } = e.target;
-
-    // Trata checkbox de juncao
-    if (type === 'checkbox') {
-      const checked = (e.target as HTMLInputElement).checked;
-      setAulaSelecionada(prev => ({
-        ...prev,
-        [name]: checked
-      }));
-      return;
-    }
-
-    // Trata seleção de disciplina
-    if (name === 'disciplina_id') {
-      const disciplina = disciplinas?.find(d => d.id === parseInt(value));
-      setAulaSelecionada(prev => ({
-        ...prev,
-        disciplina_id: value,
-        disciplina_nome: disciplina?.nome || ''
-      }));
-      return;
-    }
-
-    // Trata seleção de docente
-    if (name === 'docente_id') {
-      const docente = docentesDisciplina.find(d => d.id === parseInt(value));
-      setAulaSelecionada(prev => ({
-        ...prev,
-        docente_id: value,
-        docente_nome: docente?.nome || ''
-      }));
-      return;
-    }
-
-    // Trata seleção de turma
-    if (name === 'turma_id') {
-      const turma = turmas?.find(t => t.id === parseInt(value));
-      setAulaSelecionada(prev => ({
-        ...prev,
-        turma_id: value,
-        turma_nome: turma?.nome || ''
-      }));
-      return;
-    }
-
-    // Trata seleção de tipo
-    if (name === 'tipo') {
-      setAulaSelecionada(prev => ({
-        ...prev,
-        tipo: value
-      }));
-      return;
-    }
-
-    // Trata todos os outros inputs
-    setAulaSelecionada(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  // D. Função para guardar aula
-  const handleSaveAula = async (aulaData: AulaIn) => {
-    await saveAula(aulaData, aulaSelecionada.id);
-    await mutateAulas();
-  };
-
-  // D. Função para apagar aula
-  const handleDeleteAula = async () => {
-    if (!aulaSelecionada.id) return;
-    await deleteAula(aulaSelecionada.id);
-    await mutateAulas();
+    setModalOpen(true);
   };
 
 
   //
-  // Renderiza
+  // F. Lógica de renderização
 
-  // Fallbacks
+  // Fallbacks primeiro...
   if (isLoadingDisciplinas) return <p className="text-gray-500">A carregar disciplinas...</p>;
   if (isLoadingTurmas) return <p className="text-gray-500">A carregar turmas...</p>;
   if (!turmas) return <p className="text-red-500">Erro ao carregar turmas.</p>;
   if (!disciplinas) return <p className="text-red-500">Erro ao carregar disciplinas.</p>;
 
+  // render principal
   return (
     <section className="pt-8">
       <h3 className="mt-4 mb-2 text-lg font-semibold">Marcação de Aulas</h3>
@@ -233,16 +147,17 @@ export default function CalendarioSemanal({ horario_id }: { horario_id: number }
       <div className={styles.container}>
         <div className={styles.calendarWrapper}>
           <CalendarGrid
-            turmas={turmas}
-            aulas={aulas}
-            isLoadingAulas={isLoadingAulas}
-            onSlotClick={openNewSlotModal}
-            onSlotEdit={openEditSlotModal}
+        turmas={turmas}
+        aulas={aulas}
+        isLoadingAulas={isLoadingAulas}
+        onSlotClick={openNewSlotModal}
+        onSlotEdit={openEditSlotModal}
           />
         </div>
 
         <AulaModal
           isOpen={modalOpen}
+          setModalOpen={setModalOpen}
           aulaSelecionada={aulaSelecionada}
           disciplinas={disciplinas}
           docentesDisciplina={docentesDisciplina}
@@ -251,10 +166,8 @@ export default function CalendarioSemanal({ horario_id }: { horario_id: number }
           isLoadingDisciplinas={isLoadingDisciplinas}
           isLoadingSalas={isLoadingSalas}
           horario_id={horario_id}
-          onClose={closeModal}
-          onInputChange={handleInputChange}
-          onSave={handleSaveAula}
-          onDelete={handleDeleteAula}
+          setAulaSelecionada={setAulaSelecionada}
+          mutateAulas={mutateAulas}
         />
       </div>
     </section>

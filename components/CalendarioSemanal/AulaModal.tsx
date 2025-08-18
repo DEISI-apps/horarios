@@ -1,11 +1,14 @@
 import { useState } from 'react';
-import { SlotForm, Disciplina, DisciplinaHoras, Turma, Sala, AulaIn } from '@/types/interfaces';
+import { AulaAPI, SlotForm, Disciplina, DisciplinaHoras, Turma, Sala, AulaIn } from '@/types/interfaces';
 import { DAYS, END_HOUR, START_HOUR } from '@/lib/constants';
 import { gerarCorDisciplina, apresentaHoras } from '@/lib/utils';
 import styles from './CalendarioSemanal.module.css';
+import { saveAula, deleteAula } from '@/lib/api/aulas';
+import { KeyedMutator } from 'swr';
 
 interface AulaModalProps {
   isOpen: boolean;
+  setModalOpen: (open: boolean) => void;
   aulaSelecionada: SlotForm;
   disciplinas: Disciplina[];
   docentesDisciplina: DisciplinaHoras['docentes'];
@@ -14,14 +17,13 @@ interface AulaModalProps {
   isLoadingDisciplinas: boolean;
   isLoadingSalas: boolean;
   horario_id: number;
-  onClose: () => void;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-  onSave: (aulaData: AulaIn) => Promise<void>;
-  onDelete: () => Promise<void>;
+  setAulaSelecionada: (aula: SlotForm | ((prev: SlotForm) => SlotForm)) => void;
+  mutateAulas: KeyedMutator<AulaAPI[]>; // KeyedMutator é o tipo do SWR para a função mutate
 }
 
 export default function AulaModal({
   isOpen,
+  setModalOpen,
   aulaSelecionada,
   disciplinas,
   docentesDisciplina,
@@ -30,10 +32,8 @@ export default function AulaModal({
   isLoadingDisciplinas,
   isLoadingSalas,
   horario_id,
-  onClose,
-  onInputChange,
-  onSave,
-  onDelete
+  setAulaSelecionada,
+  mutateAulas
 }: AulaModalProps) {
 
   //
@@ -41,10 +41,82 @@ export default function AulaModal({
   const [loadingSaving, setLoadingSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  if (!isOpen) return null;
+
+  const handleClose = () => {
+    setModalOpen(false);
+    setError(null);
+    setLoadingSaving(false);
+  };
 
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  //
+  // Handlers
+
+  // Handler para lidar com mudanças nos inputs
+  function handleInputChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
+    const { name, type, value } = e.target;
+
+    // Trata checkbox de juncao
+    if (type === 'checkbox') {
+      const checked = (e.target as HTMLInputElement).checked;
+      setAulaSelecionada(prev => ({
+        ...prev,
+        [name]: checked
+      }));
+      return;
+    }
+
+    // Trata seleção de disciplina
+    if (name === 'disciplina_id') {
+      const disciplina = disciplinas?.find(d => d.id === parseInt(value));
+      setAulaSelecionada(prev => ({
+        ...prev,
+        disciplina_id: value,
+        disciplina_nome: disciplina?.nome || ''
+      }));
+      return;
+    }
+
+    // Trata seleção de docente
+    if (name === 'docente_id') {
+      const docente = docentesDisciplina.find(d => d.id === parseInt(value));
+      setAulaSelecionada(prev => ({
+        ...prev,
+        docente_id: value,
+        docente_nome: docente?.nome || ''
+      }));
+      return;
+    }
+
+    // Trata seleção de turma
+    if (name === 'turma_id') {
+      const turma = turmas?.find(t => t.id === parseInt(value));
+      setAulaSelecionada(prev => ({
+        ...prev,
+        turma_id: value,
+        turma_nome: turma?.nome || ''
+      }));
+      return;
+    }
+
+    // Trata seleção de tipo
+    if (name === 'tipo') {
+      setAulaSelecionada(prev => ({
+        ...prev,
+        tipo: value
+      }));
+      return;
+    }
+
+    // Trata todos os outros inputs
+    setAulaSelecionada(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  }
+
+  // Handler para lidar com submissão de formulário de aula
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoadingSaving(true);
     setError(null);
@@ -64,39 +136,44 @@ export default function AulaModal({
         juncao: aulaSelecionada.juncao,
       };
 
-      await onSave(aulaData);
-      onClose();
+      await saveAula(aulaData);
+      await mutateAulas(); // Importante atualizar os dados após gravar
+      handleClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao gravar aula');
       console.error(err);
     } finally {
       setLoadingSaving(false);
     }
-  };
+  }
 
-  const handleDelete = async () => {
+  // Handler para lidar com eliminação de aula
+  async function handleDelete() {
     if (!aulaSelecionada.id) return;
 
     setLoadingSaving(true);
     setError(null);
 
     try {
-      await onDelete();
-      onClose();
+      await deleteAula(aulaSelecionada.id);
+      await mutateAulas(); // Importante atualizar os dados após deletar
+      handleClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao excluir aula');
       console.error(err);
     } finally {
       setLoadingSaving(false);
     }
-  };
+  }
+
+  if (!isOpen) return null;
 
   return (
-    <div className={styles.modal} onClick={onClose}>
+    <div className={styles.modal} onClick={handleClose}>
       <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
         <div className={styles.modalHeader}>
           <h2>{aulaSelecionada.id ? 'Editar Aula' : 'Nova Aula'}</h2>
-          <button onClick={onClose}>&times;</button>
+          <button onClick={handleClose}>&times;</button>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -106,7 +183,7 @@ export default function AulaModal({
               id="slot-turma"
               name="turma_id"
               value={aulaSelecionada.turma_id}
-              onChange={onInputChange}
+              onChange={handleInputChange}
               required
             >
               {turmas.map((turma: Turma) => (
@@ -126,7 +203,7 @@ export default function AulaModal({
               id="slot-juncao"
               name="juncao"
               checked={!!aulaSelecionada.juncao}
-              onChange={onInputChange}
+              onChange={handleInputChange}
               style={{ marginLeft: '8px', marginBottom: '5px', width: 'auto' }}
             />
           </div>
@@ -137,7 +214,7 @@ export default function AulaModal({
               id="slot-disciplina-id"
               name="disciplina_id"
               value={aulaSelecionada.disciplina_id}
-              onChange={onInputChange}
+              onChange={handleInputChange}
               required
               disabled={isLoadingDisciplinas}
             >
@@ -157,7 +234,7 @@ export default function AulaModal({
               id="slot-type"
               name="tipo"
               value={aulaSelecionada.tipo}
-              onChange={onInputChange}
+              onChange={handleInputChange}
               required
             >
               <option value="T">Teórica</option>
@@ -173,7 +250,7 @@ export default function AulaModal({
               id="slot-docente-id"
               name="docente_id"
               value={aulaSelecionada.docente_id}
-              onChange={onInputChange}
+              onChange={handleInputChange}
               required
               disabled={!aulaSelecionada.disciplina_id || docentesDisciplina.length === 0}
             >
@@ -195,7 +272,7 @@ export default function AulaModal({
               id="slot-sala"
               name="sala_id"
               value={aulaSelecionada.sala_id}
-              onChange={onInputChange}
+              onChange={handleInputChange}
               required
               disabled={isLoadingSalas}
             >
@@ -215,7 +292,7 @@ export default function AulaModal({
               id="slot-dia-semana"
               name="dia_semana"
               value={aulaSelecionada.dia_semana}
-              onChange={onInputChange}
+              onChange={handleInputChange}
               required
             >
               {DAYS.map(day => (
@@ -232,7 +309,7 @@ export default function AulaModal({
               id="slot-hora-inicio"
               name="hora_inicio"
               value={aulaSelecionada.hora_inicio}
-              onChange={onInputChange}
+              onChange={handleInputChange}
               required
             >
               {Array.from({ length: END_HOUR - START_HOUR }, (_, i) => {
@@ -255,7 +332,7 @@ export default function AulaModal({
               id="slot-duracao"
               name="duracao"
               value={aulaSelecionada.duracao}
-              onChange={onInputChange}
+              onChange={handleInputChange}
               required
             >
               <option value="60">1h</option>
@@ -278,7 +355,7 @@ export default function AulaModal({
             <button
               type="button"
               className={`${styles.btn} ${styles.btnSecondary}`}
-              onClick={onClose}
+              onClick={handleClose}
               disabled={loadingSaving}
             >
               Cancelar

@@ -172,12 +172,13 @@
   z-index: 1000;
 }
 
-.modalContent {
-  background-color: white;
-  padding: 20px;
-  border-radius: 5px;
-  width: 90%;
-  max-width: 500px;
+.modalHeader {
+  font-size: 3ch;
+  margin-bottom: 1ch;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .modalContent {
