@@ -239,6 +239,11 @@
   background-color: #ddd;
 }
 
+.btnDuplicate {
+  background-color: dodgerblue;
+  color: white;
+}
+
 .btnDanger {
   background-color: #f44336;
   color: white;

@@ -69,7 +69,7 @@ export default function CalendarioSemanal({ horario_id }: { horario_id: number }
   //
   // D. Manipuladores de eventos (event handlers) 
 
-  const openNewSlotModal = (day: number, classId: number, startTime?: string) => {
+  function openNewSlotModal(day: number, classId: number, startTime?: string) {
     setAulaSelecionada({
       id: null,
       turma_id: classId.toString(),
@@ -87,9 +87,9 @@ export default function CalendarioSemanal({ horario_id }: { horario_id: number }
       juncao: false,
     });
     setModalOpen(true);
-  };
+  }
 
-  const openEditSlotModal = (slot: Aula): void => {
+  function openEditSlotModal(slot: Aula): void {
 
     //
     // A. Definição de estado
@@ -110,8 +110,16 @@ export default function CalendarioSemanal({ horario_id }: { horario_id: number }
       juncao: slot.juncao || false,
     });
     setModalOpen(true);
-  };
-
+  }
+  
+  // Handler para lidar com duplicação de aula
+  function handleDuplicate() {
+    // Cria uma nova aula baseada na atual, mas sem ID
+    setAulaSelecionada(prev => ({
+      ...prev,
+      id: null  // Marca como nova aula
+    }));
+  }
 
   //
   // F. Lógica de renderização
@@ -166,6 +174,7 @@ export default function CalendarioSemanal({ horario_id }: { horario_id: number }
           horario_id={horario_id}
           setAulaSelecionada={setAulaSelecionada}
           mutateAulas={mutateAulas}
+          handleDuplicate={handleDuplicate}
         />
       </div>
     </section>

@@ -19,6 +19,7 @@ interface AulaModalProps {
   horario_id: number;
   setAulaSelecionada: (aula: SlotForm | ((prev: SlotForm) => SlotForm)) => void;
   mutateAulas: KeyedMutator<AulaAPI[]>; // KeyedMutator é o tipo do SWR para a função mutate
+  handleDuplicate: () => void;
 }
 
 export default function AulaModal({
@@ -33,7 +34,8 @@ export default function AulaModal({
   isLoadingSalas,
   horario_id,
   setAulaSelecionada,
-  mutateAulas
+  mutateAulas,
+  handleDuplicate,
 }: AulaModalProps) {
 
   //
@@ -365,7 +367,15 @@ export default function AulaModal({
             >
               Cancelar
             </button>
-            {aulaSelecionada.id && (
+            {aulaSelecionada.id && (<>
+              <button
+                type="button"
+                className={`${styles.btn} ${styles.btnDuplicate}`}
+                onClick={handleDuplicate}
+                disabled={loadingSaving}
+              >
+                {loadingSaving ? 'Duplicando...' : 'Duplicar'}
+              </button>
               <button
                 type="button"
                 className={`${styles.btn} ${styles.btnDanger}`}
@@ -374,7 +384,7 @@ export default function AulaModal({
               >
                 {loadingSaving ? 'Excluindo...' : 'Excluir'}
               </button>
-            )}
+            </>)}
             <button
               type="submit"
               className={`${styles.btn} ${styles.btnPrimary}`}
