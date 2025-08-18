@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useDisciplinas } from '@/hooks/useDisciplinas';
 import { useTurmas } from '@/hooks/useTurmas';
 import { useSalas } from '@/hooks/useSalas';
@@ -9,10 +9,8 @@ import {
   SlotForm,
   Disciplina,
   Aula,
-  AulaIn,
 } from "@/types/interfaces";
 import { gerarCorDisciplina, atualizaDisciplinasHoras } from '@/lib/utils';
-import { saveAula, deleteAula } from '@/lib/api/aulas';
 import CalendarGrid from './CalendarioGrid';
 import AulaModal from './AulaModal';
 import styles from './CalendarioSemanal.module.css';
@@ -20,7 +18,7 @@ import styles from './CalendarioSemanal.module.css';
 export default function CalendarioSemanal({ horario_id }: { horario_id: number }) {
 
   //
-  // A. Gestão de sstados do componente
+  // A. Gestão de estados do componente
   const [modalOpen, setModalOpen] = useState(false);
   const [aulaSelecionada, setAulaSelecionada] = useState<SlotForm>({
     id: null,

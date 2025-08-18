@@ -37,20 +37,13 @@ export default function AulaModal({
 }: AulaModalProps) {
 
   //
-  // A. Definição de estados
+  // A. Gestão de estados do componente
   const [loadingSaving, setLoadingSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
 
-  const handleClose = () => {
-    setModalOpen(false);
-    setError(null);
-    setLoadingSaving(false);
-  };
-
-
   //
-  // Handlers
+  // Manipuladores de eventos (event handlers) 
 
   // Handler para lidar com mudanças nos inputs
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
@@ -166,8 +159,20 @@ export default function AulaModal({
     }
   }
 
+  const handleClose = () => {
+    setModalOpen(false);
+    setError(null);
+    setLoadingSaving(false);
+  };
+
+
+  //
+  // F. Lógica de renderização
+
+  // Fallbacks primeiro...
   if (!isOpen) return null;
 
+  // render principal
   return (
     <div className={styles.modal} onClick={handleClose}>
       <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
