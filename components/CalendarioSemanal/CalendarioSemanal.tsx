@@ -134,16 +134,17 @@ export default function CalendarioSemanal({ horario_id }: { horario_id: number }
 
   // render principal
   return (
-    <section className="pt-8">
+    <section className="pt-3">
       <h3 className="mt-4 mb-2 text-lg font-semibold">Marcação de Aulas</h3>
-      <p className="pb-4 text-sm text-gray-500">
+      <p className="pb-2 text-sm text-gray-500">
         Marque o horário semanal das aulas de cada turma, de acordo com as necessidades listadas em baixo.
       </p>
 
-      <div className="pb-4 text-sm text-gray-500">
+
+      <div className="pb-4 text-sm text-emerald-700">
         <details className="cursor-pointer">
-          <summary className="font-bold">Nota sobre aulas em junção</summary>
-          <ul className="ml-6 mt-2 list-disc space-y-1 text-green-500">
+          <summary className="font-bold">Notas sobre aulas em junção</summary>
+          <ul className="ml-6 mt-2 list-disc space-y-1">
             <li>Aulas em junção são aulas em que estão presentes na mesma sala várias turmas.</li>
             <li>Uma das aulas deve estar sem junção, para ser contabilizada</li>
             <li>As restantes aulas devem ser marcadas em junção, e aparecem a tracejado e sem detalhes.</li>

@@ -39,7 +39,7 @@ export default function TimeSlot({ slot, onEdit }: TimeSlotProps) {
         {abreviarNomeDisciplina(slot.disciplina_nome)}
       </div>
       <div className={styles.slotDetails} style={{ color:  slot.juncao ? 'transparent': 'rgb(100, 98, 98)' }} >
-        {slot.tipo === 'T' ? 'Teórica' : 'Prática'} - {slot.sala_nome}
+        {slot.tipo === 'T' ? 'Teórica' : 'Prática'} {slot.sala_nome !== 'sala?' ? ' - ' + slot.sala_nome : ''}
       </div>
       <div className={styles.slotDetails} style={{ color:  slot.juncao ? 'transparent': 'rgb(100, 98, 98)' }}>
         {slot.docente_nome}

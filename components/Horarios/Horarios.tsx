@@ -20,7 +20,6 @@ export default function Horarios() {
 
       {selectedHorarioId && (
         <>
-          {/* <CalendarioSemanal horario_id={Number(selectedHorarioId.id)} /> */}
           <CalendarioSemanal horario_id={Number(selectedHorarioId.id)} />
           <TurmasSection horario_id={Number(selectedHorarioId.id)} />
           <DisciplinasSection horario_id={Number(selectedHorarioId.id)} />

@@ -61,11 +61,12 @@ export interface Sala {
   nome: string;
 };
 
-
 export interface Disciplina {
   id: number;
   nome: string;
   semestre: number;
+  aula_teorica_duracao: number;
+  aula_pratica_duracao: number;
   horas_teoricas: number;
   horas_praticas: number;
   docentes: {

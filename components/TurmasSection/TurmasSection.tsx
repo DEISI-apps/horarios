@@ -13,6 +13,8 @@ const gerarCorDisciplina = (id: number) => {
 interface DisciplinaAPI {
   id: number;
   nome: string;
+  aula_teorica_duracao: number;
+  aula_pratica_duracao: number;
   horas_teoricas: number;
   horas_praticas: number;
 }
@@ -116,7 +118,7 @@ export default function TurmasSection({ horario_id }: { horario_id: number }) {
 
   return (
     <section className="pt-8">
-      <h2 className="mt-4 mb-2 text-lg font-semibold">Aulas Marcadas</h2>
+      <h2 className="mt-4 mb-2 text-lg font-semibold">Turmas e suas Aulas Marcadas</h2>
 
       {(isLoadingDisciplinas || isLoadingAulas) && <p className="text-gray-500">A carregar dados...</p>}
       {(errorDisciplinas || errorAulas) && <p className="text-red-500">Erro ao carregar dados.</p>}
@@ -149,7 +151,7 @@ export default function TurmasSection({ horario_id }: { horario_id: number }) {
                     <td className="border px-2 py-1 rounded-l-lg">
                       <span className="font-semibold">{disc.nome}</span>
                       <br />
-                      <span> (T: 1.5h, P: 2h (forçado))</span>
+                      <span> Duração T: {disc.aula_teorica_duracao}h, P: {disc.aula_pratica_duracao}h</span>
                     </td>
 
                     {Array.from(turmasMap.entries()).map(([turmaId, turma], index, array) => {
