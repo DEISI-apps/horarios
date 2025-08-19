@@ -9,18 +9,38 @@ export const gerarCorDisciplina = (id: number) => {
 
 export function abreviarNomeDisciplina(nomeDisciplina: string) {
 
+  // abrevia palavras com mais de 6 caracteres
   const nomeAbreviadoDisciplina = nomeDisciplina
     .split(" ")
-    .map(palavra => palavra.length > 6 ? palavra.slice(0, 4) + '.' : palavra)
+    .filter(palavra => palavra !== 'de')
+    .map(palavra => palavra.length > 6 ?
+      ('aeiou'.includes(palavra[3]) ?
+        palavra.slice(0, 3) + '.'
+        : palavra.slice(0, 4) + '.'
+      )
+      : palavra)
     .join(" ")
 
   const listaDePalavras = nomeAbreviadoDisciplina.trim().split(/\s+/);
-  if (listaDePalavras.length <= 5) {
+
+  if (listaDePalavras.length <= 3 && listaDePalavras.join(' ').length < 15) {
+    // abrevia dessa forma o nome de disciplina se tiver menos de 3 palavras e 15 carateres 
     return nomeAbreviadoDisciplina;
+  } 
+  else {  
+    // senão, retira vogais, 'de', e mostra apenas 3 palavras com 3 carateres
+    const listaDePalavrasAbreviada = nomeDisciplina
+      .split(" ")
+      .filter(palavra => palavra !== 'de')
+      .map(palavra => palavra.slice(0, 2) + palavra.split('').slice(2).map(letra => 'aeiou'.includes(letra) ? '' : letra).join(''))
+      .map(palavra => palavra.slice(0, 3) + '.');
+
+    // mostra as 2 primeiras e a última palavra
+    return listaDePalavrasAbreviada.slice(0, 1).join(' ') + ' ' + listaDePalavrasAbreviada.slice(-2).join(' ');
+
   }
-  const primeiras = listaDePalavras.slice(0, 3);
-  const ultimas = listaDePalavras.slice(-2);
-  return [...primeiras, '...', ...ultimas].join(' ');
+
+
 }
 
 
@@ -31,7 +51,7 @@ export function atualizaDisciplinasHoras(disciplinas: Disciplina[], aulas: Aula[
     const aulasDaDisciplina = aulas.filter((aula) => aula.disciplina_id === disciplina.id && aula.juncao === false);
     const horasTeoricas = aulasDaDisciplina.filter((aula) => aula.tipo === 'T').reduce((total, aula) => total + aula.duracao / 60, 0);
     const horasPraticas = aulasDaDisciplina.filter((aula) => aula.tipo === 'P').reduce((total, aula) => total + aula.duracao / 60, 0);
-    
+
     // if (disciplina.nome === "Bases de Dados") console.log(
     //   'com juncoes:',
     //   aulasDaDisciplina.filter((aula) => aula.tipo === 'T').reduce((total, aula) => total + aula.duracao / 60, 0),

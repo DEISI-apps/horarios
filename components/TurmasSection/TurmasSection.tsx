@@ -30,6 +30,25 @@ interface TurmaInfo {
 
 type TurmasMap = Map<number, TurmaInfo>;
 
+
+function serializeDisciplinaInfo(info: DisciplinaInfo): string {
+  return `${info.nome}:${info.teorica}:${info.pratica}`;
+}
+
+function serializeTurmasMap(map: TurmasMap): string {
+  return Array.from(map.entries())
+    .map(([turmaId, turma]) => {
+      const disciplinasStr = Array.from(turma.disciplinas.entries())
+        .map(([discId, info]) => `${discId}=${serializeDisciplinaInfo(info)}`)
+        .sort()
+        .join(',');
+      return `${turmaId}:{${turma.nome}|${disciplinasStr}}`;
+    })
+    .sort()
+    .join(';');
+}
+
+
 export default function TurmasSection({ horario_id }: { horario_id: number }) {
 
   //
@@ -47,7 +66,7 @@ export default function TurmasSection({ horario_id }: { horario_id: number }) {
   // C. atualização da lista de turmas e suas aulas.
   useEffect(() => {
 
-    if (!disciplinas || !turmas) return;
+    if (!disciplinas || !turmas || !aulas) return;
 
     const novoTurmasMap: TurmasMap = new Map();
 
@@ -62,28 +81,36 @@ export default function TurmasSection({ horario_id }: { horario_id: number }) {
 
     // Atualiza as horas das aulas agendadas
     if (aulas) {
-      aulas.forEach(({ turma_id, disciplina_id, tipo, duracao }) => {
+      aulas.forEach(({ turma_id, disciplina_id, tipo, duracao, juncao }) => {
+        if (juncao) return;
+
         const discInfo = novoTurmasMap.get(turma_id)?.disciplinas.get(disciplina_id);
         if (!discInfo) return;
-        if (tipo.toLowerCase().startsWith("t")) discInfo.teorica += (duracao ?? 0) / 60;
-        else if (tipo.toLowerCase().startsWith("p")) discInfo.pratica += (duracao ?? 0) / 60;
+
+        const horasAula = (duracao ?? 0) / 60;
+
+        if (tipo.toLowerCase().startsWith("t")) discInfo.teorica += horasAula;
+        else if (tipo.toLowerCase().startsWith("p")) discInfo.pratica += horasAula;
       });
     }
 
     // Compara antes de atualizar para evitar loops
-    const currentMapStr = JSON.stringify(Array.from(turmasMap.entries()));
-    const newMapStr = JSON.stringify(Array.from(novoTurmasMap.entries()));
-    
-    if (currentMapStr !== newMapStr) {
+    const currentMapSerialized = serializeTurmasMap(turmasMap);
+    const newMapSerialized = serializeTurmasMap(novoTurmasMap);
+
+    if (currentMapSerialized !== newMapSerialized) {
       setTurmasMap(novoTurmasMap);
     }
+
+    console.log('novoTurmasMap', novoTurmasMap);
 
   }, [disciplinas, turmas, aulas, turmasMap]);
 
 
-    //
+  //
   // C. renderiza
   if (isLoadingDisciplinas) return <p className="text-gray-500">A carregar disciplinas...</p>;
+  if (isLoadingAulas) return <p className="text-gray-500">A carregar aulas...</p>;
   if (errorDisciplinas) return <p className="text-red-500">Erro ao carregar disciplinas.</p>;
   if (isLoadingTurmas) return <p className="text-gray-500">A carregar turmas...</p>;
 
@@ -114,41 +141,42 @@ export default function TurmasSection({ horario_id }: { horario_id: number }) {
               {[...disciplinas]  // Create a new array to avoid mutating the original
                 .sort((a, b) => a.nome.localeCompare(b.nome, 'pt'))  // Sort by name
                 .map((disc: DisciplinaAPI) => (
-                <tr
-                  key={disc.id}
-                  className="rounded-lg text-sm"
-                  style={{ backgroundColor: gerarCorDisciplina(disc.id) }}
-                >
-                  <td className="border px-2 py-1 rounded-l-lg">
-                    <span className="font-semibold">{disc.nome}</span>
-                    <br />
-                    <span> (T: 1.5h, P: 2h (forçado))</span>
-                  </td>
+                  <tr
+                    key={disc.id}
+                    className="rounded-lg text-sm"
+                    style={{ backgroundColor: gerarCorDisciplina(disc.id) }}
+                  >
+                    <td className="border px-2 py-1 rounded-l-lg">
+                      <span className="font-semibold">{disc.nome}</span>
+                      <br />
+                      <span> (T: 1.5h, P: 2h (forçado))</span>
+                    </td>
 
-                  {Array.from(turmasMap.entries()).map(([turmaId, turma], index, array) => {
-                    const discInfo = turma.disciplinas.get(disc.id);
-                    return (
-                      <td
-                        key={turmaId}
-                        className={`border m px-2 py-1 text-left align-top bg-white ${index === array.length - 1 ? 'rounded-r-lg' : ''}`}
-                      >
-                        {discInfo && (
-                          <>
-                            <div>
-                              <span className="font-medium">T:</span>{" "}
-                              {discInfo.teorica ? `${discInfo.teorica.toFixed(1)}h` : "-"}
-                            </div>
-                            <div>
-                              <span className="font-medium">P:</span>{" "}
-                              {discInfo.pratica ? `${discInfo.pratica.toFixed(1)}h` : "-"}
-                            </div>
-                          </>
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
+                    {Array.from(turmasMap.entries()).map(([turmaId, turma], index, array) => {
+                      const discInfo = turma.disciplinas.get(disc.id);
+                      console.log('mapa discInfo', discInfo);
+                      return (
+                        <td
+                          key={turmaId}
+                          className={`border m px-2 py-1 text-left align-top bg-white ${index === array.length - 1 ? 'rounded-r-lg' : ''}`}
+                        >
+                          {discInfo && (
+                            <>
+                              <div>
+                                <span className="font-medium">T:</span>{" "}
+                                {discInfo.teorica ? `${discInfo.teorica.toFixed(1)}h` : "-"}
+                              </div>
+                              <div>
+                                <span className="font-medium">P:</span>{" "}
+                                {discInfo.pratica ? `${discInfo.pratica.toFixed(1)}h` : "-"}
+                              </div>
+                            </>
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>

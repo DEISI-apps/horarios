@@ -66,7 +66,7 @@ export default function CalendarGrid({
       <div className={styles.calendarBody}>
         <div 
           className={styles.timeSlots} 
-          style={{ height: `${CALENDAR_HEIGHT}px`, borderTop: '1px solid green' }}
+          style={{ height: `${CALENDAR_HEIGHT}px` }}
         >
           <TimeMarkers />
         </div>

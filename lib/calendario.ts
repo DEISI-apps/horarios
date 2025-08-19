@@ -8,7 +8,7 @@ export const calculateSlotPosition = (startTime: string): number => {
 
 export const generateTimeMarkers = () => {
   const markers = [];
-  for (let hour = START_HOUR; hour <= END_HOUR; hour++) {
+  for (let hour = START_HOUR; hour < END_HOUR; hour++) {
     markers.push({
       key: `full-${hour}`,
       top: (hour - START_HOUR) * HOUR_HEIGHT,

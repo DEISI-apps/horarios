@@ -14,6 +14,8 @@ import { gerarCorDisciplina, atualizaDisciplinasHoras } from '@/lib/utils';
 import CalendarGrid from './CalendarioGrid';
 import AulaModal from './AulaModal';
 import styles from './CalendarioSemanal.module.css';
+import TimeMarkers from './TimeMarkers';
+import { CALENDAR_HEIGHT } from '@/lib/constants';
 
 export default function CalendarioSemanal({ horario_id }: { horario_id: number }) {
 
@@ -111,7 +113,7 @@ export default function CalendarioSemanal({ horario_id }: { horario_id: number }
     });
     setModalOpen(true);
   }
-  
+
   // Handler para lidar com duplicação de aula
   function handleDuplicate() {
     // Cria uma nova aula baseada na atual, mas sem ID
@@ -150,14 +152,25 @@ export default function CalendarioSemanal({ horario_id }: { horario_id: number }
         </details>
       </div>
 
-      <div className={styles.container}>
+      <div className={styles.container} style={{ position: 'relative' }}>
+        <div
+          className={`${styles.timeSlots} ${styles.timeMarkersFixed}`}
+          style={{ height: `80px`, position: 'absolute', top: 0, left: -1, zIndex: 1, borderRight: '1px solid black' }}
+        >
+        </div>
+        <div
+          className={`${styles.timeSlots} ${styles.timeMarkersFixed}`}
+          style={{ height: `${CALENDAR_HEIGHT}px`, position: 'absolute', top: '67px', left: -1, zIndex: 1, borderRight: '1px solid black' }}
+        >
+          <TimeMarkers />
+        </div>
         <div className={styles.calendarWrapper}>
           <CalendarGrid
-        turmas={turmas}
-        aulas={aulas}
-        isLoadingAulas={isLoadingAulas}
-        onSlotClick={openNewSlotModal}
-        onSlotEdit={openEditSlotModal}
+            turmas={turmas}
+            aulas={aulas}
+            isLoadingAulas={isLoadingAulas}
+            onSlotClick={openNewSlotModal}
+            onSlotEdit={openEditSlotModal}
           />
         </div>
 

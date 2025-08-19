@@ -11,7 +11,7 @@ interface TimeSlotProps {
 
 export default function TimeSlot({ slot, onEdit }: TimeSlotProps) {
   const top = calculateSlotPosition(slot.hora_inicio);
-  const height = slot.duracao * MINUTE_HEIGHT;
+  const height = slot.duracao * MINUTE_HEIGHT - 3;
   const baseColor = gerarCorDisciplina(slot.disciplina_id);
 
 
@@ -23,8 +23,6 @@ export default function TimeSlot({ slot, onEdit }: TimeSlotProps) {
         top: `${top}px`,
         height: `${height}px`,
         backgroundColor: baseColor,
-        borderRight: slot.juncao ? '5px dashed white' : 'none',
-        borderLeft: slot.juncao ? '5px dashed white' : 'none',
         color:  slot.juncao ? 'transparent': 'black',
         display: 'flex',
         flexDirection: 'column',
