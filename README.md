@@ -1,9 +1,13 @@
-0. app em produção em: https://horarios-git-main-luciostuders-projects.vercel.app/
+# App Horários
+
+App em produção em: https://horarios-phi.vercel.app/
+
 
 Como trabalhar:
 1. abrir em codespaces
 2. `npm run dev` para testar funcionamento no browser em  [http://localhost:3000](http://localhost:3000).
-3. `npm run build` é a melhor forma de verificar se está tudo ok
+3. fazer alterações
+4. `npm run build` para verificar se está tudo ok
 
 
 ## rever conceitos de Next
