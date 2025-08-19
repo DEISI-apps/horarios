@@ -71,8 +71,8 @@ export function atualizaDisciplinasHoras(disciplinas: Disciplina[], aulas: Aula[
 
 export function apresentaHoras(docente: DisciplinaHoras['docentes'][number]): string {
 
-  const teoricas = docente.horas_teoricas ? `Teórica: ${docente.horas_teoricas_lecionadas}/${docente.horas_teoricas}h` : ''
-  const praticas = docente.horas_praticas ? `Prática: ${docente.horas_praticas_lecionadas}/${docente.horas_praticas}h` : ''
+  const teoricas = docente.horas_teoricas ? `T: ${docente.horas_teoricas_lecionadas}/${docente.horas_teoricas}h` : ''
+  const praticas = docente.horas_praticas ? `P: ${docente.horas_praticas_lecionadas}/${docente.horas_praticas}h` : ''
   const virgula = (teoricas && praticas) ? ', ' : ''
 
   return ` (${teoricas}${virgula}${praticas})`

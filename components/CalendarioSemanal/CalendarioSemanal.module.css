@@ -189,22 +189,32 @@
   max-width: 500px;
 }
 
+
 .formGroup {
   margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .formGroup label {
-  display: block;
-  margin-bottom: 5px;
+  min-width: 120px;
+  text-align: right;
   font-weight: bold;
 }
 
 .formGroup input,
 .formGroup select {
-  width: 100%;
+  flex: 1;
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
+}
+
+
+.formGroup.checkboxGroup input {
+  flex: 0;
+  width: auto;
 }
 
 .colorPreview {
@@ -248,3 +258,22 @@
   background-color: #f44336;
   color: white;
 }
+
+.errorMessage {
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  background-color: #fee2e2;
+  border: 1px solid #fca5a5;
+  color: #dc2626;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.errorMessage::before {
+  content: '⚠️';
+  font-size: 1rem;
+}
+

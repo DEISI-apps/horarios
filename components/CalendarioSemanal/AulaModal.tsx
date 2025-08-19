@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { AulaAPI, SlotForm, Disciplina, DisciplinaHoras, Turma, Sala, AulaIn } from '@/types/interfaces';
 import { DAYS, END_HOUR, START_HOUR } from '@/lib/constants';
-import { gerarCorDisciplina, apresentaHoras } from '@/lib/utils';
+import { gerarCorDisciplina, apresentaHoras, abreviarNomeDisciplina } from '@/lib/utils';
 import styles from './CalendarioSemanal.module.css';
 import { saveAula, deleteAula } from '@/lib/api/aulas';
 import { KeyedMutator } from 'swr';
@@ -98,7 +98,8 @@ export default function AulaModal({
     if (name === 'tipo') {
       setAulaSelecionada(prev => ({
         ...prev,
-        tipo: value
+        tipo: value,
+        duracao: value === 'T' ? '90' : '120', // Duração padrão para teórica e prática
       }));
       return;
     }
@@ -117,26 +118,6 @@ export default function AulaModal({
     setError(null);
 
     try {
-
-      // Add console.log to debug the data being sent
-    console.log('Saving aula with data:', {
-      original: aulaSelecionada,
-      parsed: {
-        horario_id,
-        disciplina_id: parseInt(aulaSelecionada.disciplina_id),
-        docente_id: parseInt(aulaSelecionada.docente_id),
-        turma_id: parseInt(aulaSelecionada.turma_id),
-        sala_id: parseInt(aulaSelecionada.sala_id),
-        tipo: aulaSelecionada.tipo,
-        dia_semana: parseInt(aulaSelecionada.dia_semana),
-        hora_inicio: aulaSelecionada.hora_inicio,
-        duracao: parseInt(aulaSelecionada.duracao),
-        juncao: aulaSelecionada.juncao,
-        id: aulaSelecionada.id || null
-      }
-    });
-
-
       const aulaData: AulaIn = {
         horario_id: horario_id,
         disciplina_id: parseInt(aulaSelecionada.disciplina_id),
@@ -151,6 +132,26 @@ export default function AulaModal({
         juncao: aulaSelecionada.juncao,
       };
 
+      // validacao
+      const docente = docentesDisciplina.find(d => d.id === parseInt(aulaSelecionada.docente_id));
+      if (!docente) {
+        setError('Professor não encontrado para esta disciplina.');
+        setLoadingSaving(false);
+        return;
+      }
+
+      if (!aulaData.juncao && aulaData.tipo === 'T' && aulaData.duracao/60 + docente.horas_teoricas_lecionadas > docente.horas_teoricas) {
+        setError('A duração excede a carga horária disponível para o professor.');
+        setLoadingSaving(false);
+        return;
+      }
+
+      if (!aulaData.juncao && aulaData.tipo === 'P' && aulaData.duracao/60 + docente.horas_praticas_lecionadas > docente.horas_praticas) {
+        setError('A duração excede a carga horária disponível para o professor.');
+        setLoadingSaving(false);
+        return;
+      }
+
       if (aulaSelecionada.id) {
         await saveAula(aulaData, aulaSelecionada.id);
       } else {
@@ -160,7 +161,6 @@ export default function AulaModal({
       await mutateAulas(); // Importante atualizar os dados após gravar
       handleClose();
     } catch (err) {
-      console.error('Error saving aula:', err); 
       setError(err instanceof Error ? err.message : 'Erro ao gravar aula');
       console.error(err);
     } finally {
@@ -227,9 +227,9 @@ export default function AulaModal({
             </select>
           </div>
 
-          <div className={styles.formGroup} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+          <div className={`${styles.formGroup} ${styles.checkboxGroup}`}>
             <label htmlFor="slot-juncao">
-              Junção de turmas
+              Em junção
             </label>
             <input
               type="checkbox"
@@ -254,7 +254,7 @@ export default function AulaModal({
               <option value="">Selecione uma disciplina</option>
               {disciplinas.map((disciplina: Disciplina) => (
                 <option key={disciplina.id} value={disciplina.id}>
-                  {disciplina.nome}
+                  {disciplina.nome.length > 40 ? abreviarNomeDisciplina(disciplina.nome): disciplina.nome}
                 </option>
               ))}
             </select>
@@ -262,7 +262,7 @@ export default function AulaModal({
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="slot-type">Tipo de aula</label>
+            <label htmlFor="slot-type">Tipo</label>
             <select
               id="slot-type"
               name="tipo"
@@ -270,14 +270,14 @@ export default function AulaModal({
               onChange={handleInputChange}
               required
             >
-              <option value="T">Teórica</option>
-              <option value="P">Prática</option>
+              <option value="T">Teórica (T)</option>
+              <option value="P">Prática (P)</option>
             </select>
           </div>
 
           <div className={styles.formGroup}>
             <label htmlFor="slot-docente-id">
-              Professor <span className="font-normal text-gray-500">(horas lecionadas/atribuídas, não exceder atribuídas)</span>
+              Professor
             </label>
             <select
               id="slot-docente-id"
@@ -288,7 +288,9 @@ export default function AulaModal({
               disabled={!aulaSelecionada.disciplina_id || docentesDisciplina.length === 0}
             >
               <option value="">Selecione um professor</option>
-              {docentesDisciplina.map((docente) => (
+              {docentesDisciplina
+                .filter((docente) => (aulaSelecionada.tipo == 'T' && docente.horas_teoricas > 0) || (aulaSelecionada.tipo == 'P' && docente.horas_praticas > 0))
+                .map((docente) => (
                 <option key={docente.id} value={docente.id}>
                   {docente.nome} {apresentaHoras(docente)}
                 </option>
@@ -309,7 +311,7 @@ export default function AulaModal({
               required
               disabled={isLoadingSalas}
             >
-              <option key="7" value="7">Não é lab DEISI Hub</option>
+              <option key="7" value="7">outra (não DEISI Hub)</option>
               {salas.map((sala: Sala) => (
                 <option key={sala.id} value={sala.id}>
                   {sala.nome}
@@ -320,7 +322,7 @@ export default function AulaModal({
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="slot-dia-semana">Dia da semana</label>
+            <label htmlFor="slot-dia-semana">Dia</label>
             <select
               id="slot-dia-semana"
               name="dia_semana"
@@ -337,7 +339,7 @@ export default function AulaModal({
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="slot-hora-inicio">Hora de início</label>
+            <label htmlFor="slot-hora-inicio">Início</label>
             <select
               id="slot-hora-inicio"
               name="hora_inicio"
