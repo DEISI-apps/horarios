@@ -117,6 +117,26 @@ export default function AulaModal({
     setError(null);
 
     try {
+
+      // Add console.log to debug the data being sent
+    console.log('Saving aula with data:', {
+      original: aulaSelecionada,
+      parsed: {
+        horario_id,
+        disciplina_id: parseInt(aulaSelecionada.disciplina_id),
+        docente_id: parseInt(aulaSelecionada.docente_id),
+        turma_id: parseInt(aulaSelecionada.turma_id),
+        sala_id: parseInt(aulaSelecionada.sala_id),
+        tipo: aulaSelecionada.tipo,
+        dia_semana: parseInt(aulaSelecionada.dia_semana),
+        hora_inicio: aulaSelecionada.hora_inicio,
+        duracao: parseInt(aulaSelecionada.duracao),
+        juncao: aulaSelecionada.juncao,
+        id: aulaSelecionada.id || null
+      }
+    });
+
+
       const aulaData: AulaIn = {
         horario_id: horario_id,
         disciplina_id: parseInt(aulaSelecionada.disciplina_id),
@@ -131,10 +151,16 @@ export default function AulaModal({
         juncao: aulaSelecionada.juncao,
       };
 
-      await saveAula(aulaData);
+      if (aulaSelecionada.id) {
+        await saveAula(aulaData, aulaSelecionada.id);
+      } else {
+        await saveAula(aulaData, null);
+      }
+
       await mutateAulas(); // Importante atualizar os dados após gravar
       handleClose();
     } catch (err) {
+      console.error('Error saving aula:', err); 
       setError(err instanceof Error ? err.message : 'Erro ao gravar aula');
       console.error(err);
     } finally {
