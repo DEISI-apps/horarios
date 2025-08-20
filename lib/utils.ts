@@ -95,3 +95,13 @@ export function apresentaHoras(docente: DisciplinaHoras['docentes'][number]): st
 
   return ` (${teoricas}${virgula}${praticas})`
 }
+
+
+export function formataTurmas(turmas: Map<string, string[]>): string {
+  return Array.from(turmas.entries())
+    .map(([curso, turmasList]) => {
+      turmasList.sort((a, b) => a.localeCompare(b));
+      return `${curso} T${turmasList.join('&')}`;
+    })
+    .join(', ');
+}

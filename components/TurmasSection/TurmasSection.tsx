@@ -4,6 +4,9 @@ import { useAulas } from "@/hooks/useAulas";
 import { useDisciplinas } from "@/hooks/useDisciplinas";
 import { useTurmas } from "@/hooks/useTurmas";
 import { useEffect, useState } from "react";
+import DisciplinaModal from "../CalendarioSemanalDisciplina/DisciplinaModal";
+import { HorarioAPI } from "@/types/interfaces";
+
 
 const gerarCorDisciplina = (id: number) => {
   const hue = (id * 137) % 360;
@@ -51,17 +54,19 @@ function serializeTurmasMap(map: TurmasMap): string {
 }
 
 
-export default function TurmasSection({ horario_id }: { horario_id: number }) {
+export default function TurmasSection({ horario }: { horario: HorarioAPI }) {
 
   //
   // A. Definição de estados
   const [turmasMap, setTurmasMap] = useState<TurmasMap>(new Map());
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [selectedDisciplina, setSelectedDisciplina] = useState<DisciplinaAPI>();
 
   //
   // B. Obtenção de dados
-  const { disciplinas, isLoadingDisciplinas, errorDisciplinas } = useDisciplinas(horario_id);
-  const { turmas, isLoadingTurmas } = useTurmas(horario_id);
-  const { aulas, isLoadingAulas, errorAulas } = useAulas(horario_id);
+  const { disciplinas, isLoadingDisciplinas, errorDisciplinas } = useDisciplinas(horario.id);
+  const { turmas, isLoadingTurmas } = useTurmas(horario.id);
+  const { aulas, isLoadingAulas, errorAulas } = useAulas(horario.id);
 
 
   //
@@ -114,7 +119,7 @@ export default function TurmasSection({ horario_id }: { horario_id: number }) {
   if (errorDisciplinas) return <p className="text-red-500">Erro ao carregar disciplinas.</p>;
   if (isLoadingTurmas) return <p className="text-gray-500">A carregar turmas...</p>;
 
-  return (
+  return (<>
     <section className="pt-8">
       <h2 className="mt-4 mb-2 text-lg font-semibold">Turmas e suas Aulas Marcadas</h2>
 
@@ -140,21 +145,31 @@ export default function TurmasSection({ horario_id }: { horario_id: number }) {
             <tbody>
               {[...disciplinas]  // Create a new array to avoid mutating the original
                 .sort((a, b) => a.nome.localeCompare(b.nome, 'pt'))  // Sort by name
-                .map((disc: DisciplinaAPI) => (
+                .map((disciplina: DisciplinaAPI) => (
                   <tr
-                    key={disc.id}
+                    key={disciplina.id}
                     className="rounded-lg text-sm"
-                    style={{ backgroundColor: gerarCorDisciplina(disc.id) }}
+                    style={{ backgroundColor: gerarCorDisciplina(disciplina.id) }}
                   >
                     <td className="border px-2 py-1 rounded-l-lg">
-                      <span className="font-semibold">{disc.nome}</span>
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedDisciplina(disciplina);
+                          setModalOpen(true);
+                        }}
+                        className="font-semibold underline focus:outline-none text-left"
+                      >
+                        {disciplina.nome}
+                      </button>
                       <br />
-                      <span> Duração T: {disc.aula_teorica_duracao}h, P: {disc.aula_pratica_duracao}h</span>
+                      <span> Duração T: {disciplina.aula_teorica_duracao}h, P: {disciplina.aula_pratica_duracao}h</span>
                     </td>
 
                     {Array.from(turmasMap.entries()).map(([turmaId, turma], index, array) => {
-                      const discInfo = turma.disciplinas.get(disc.id);
-                      
+                      const discInfo = turma.disciplinas.get(disciplina.id);
+
                       return (
                         <td
                           key={turmaId}
@@ -182,5 +197,17 @@ export default function TurmasSection({ horario_id }: { horario_id: number }) {
         </div>
       )}
     </section>
+
+    {selectedDisciplina && (
+      <DisciplinaModal
+        isOpen={isModalOpen}
+        setModalOpen={setModalOpen}
+        disciplina_id={selectedDisciplina.id}
+        disciplina_nome={selectedDisciplina.nome}
+        ano_lectivo_id={horario.ano_lectivo_id}
+        semestre={horario.semestre}
+      />)
+    }
+  </>
   );
 }

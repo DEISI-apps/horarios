@@ -1,8 +1,8 @@
 import { AulaDocente } from '@/types/interfaces';
 import { DAYS, CALENDAR_HEIGHT } from '@/lib/constants';
 import TimeMarkers from './TimeMarkers';
-import styles from './CalendarioSemanalDocente.module.css';
-import TimeSlotDocente from './TimeSlotDocente';
+import styles from './CalendarioSemanalDisciplina.module.css';
+import TimeSlotDisciplina from './TimeSlotDisciplina';
 
 interface CalendarGridProps {
   aulas: AulaDocente[];
@@ -20,7 +20,7 @@ export default function CalendarioGridDocente({
     return aulas
       .filter((slot: AulaDocente) => slot.dia_semana === dayId )
       .map((slot: AulaDocente) => (
-        <TimeSlotDocente key={`slot-${slot.id}`} slot={slot} />
+        <TimeSlotDisciplina key={`slot-${slot.id}`} slot={slot} />
       ));
   };
 

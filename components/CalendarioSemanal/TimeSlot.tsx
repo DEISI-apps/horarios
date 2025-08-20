@@ -8,10 +8,12 @@ import DocenteModal from '../CalendarioSemanalDocente/DocenteModal';
 
 interface TimeSlotProps {
   slot: Aula;
+  ano_lectivo_id: number;
+  semestre: number;
   onEdit: (slot: Aula) => void;
 }
 
-export default function TimeSlot({ slot, onEdit }: TimeSlotProps) {
+export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: TimeSlotProps) {
   const [isModalOpen, setModalOpen] = useState(false);
   const top = calculateSlotPosition(slot.hora_inicio);
   const height = slot.duracao * MINUTE_HEIGHT - 3;
@@ -65,8 +67,8 @@ export default function TimeSlot({ slot, onEdit }: TimeSlotProps) {
         setModalOpen={setModalOpen}
         docente_id={slot.docente_id}
         docente_nome={slot.docente_nome}
-        ano_lectivo_id={35}
-        semestre={1}
+        ano_lectivo_id={ano_lectivo_id}
+        semestre={semestre}
       />
     </>
   );

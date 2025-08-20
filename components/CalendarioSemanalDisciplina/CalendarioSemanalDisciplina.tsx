@@ -2,22 +2,21 @@
 
 import { useAulasAnoSemestre } from '@/hooks/useAulasAnoSemestre';
 import React, { useMemo } from 'react';
-import styles from './CalendarioSemanalDocente.module.css';
+import styles from './CalendarioSemanalDisciplina.module.css';
 import TimeMarkers from './TimeMarkers';
 import { CALENDAR_HEIGHT } from '@/lib/constants';
-import CalendarioGridDocente from './CalendarioGridDocente';
+import CalendarioGridDisciplina from './CalendarioGridDisciplina';
 import { AulaDocente } from '@/types/interfaces';
 
 
 interface Props {
-  docente_id: number;
+  disciplina_id: number;
   ano_lectivo_id: number;
   semestre: number;
 }
 
-
-export default function CalendarioSemanalDocente({ 
-  docente_id, 
+export default function CalendarioSemanalDisciplina({ 
+  disciplina_id, 
   ano_lectivo_id, 
   semestre 
 }: Props) {
@@ -29,11 +28,11 @@ export default function CalendarioSemanalDocente({
   //
   // B. Valores computados com useMemo
 
-  const aulasDocente = useMemo(() => {
-    if (!aulas?.length || !docente_id) return;
+  const aulasDisciplina = useMemo(() => {
+    if (!aulas?.length || !disciplina_id) return;
 
     const aulasAgrupadas =  aulas
-      .filter(aula => aula.docente_id === docente_id)  // filtra aulas do docente
+      .filter(aula => aula.disciplina_id === disciplina_id)  // filtra aulas da disciplina
       .reduce((acc, aula) => {
         const timeKey = `${aula.dia_semana}-${aula.hora_inicio}`;  // agrega aulas junção
 
@@ -56,15 +55,15 @@ export default function CalendarioSemanalDocente({
     // Converte o mapa de aulas agregadas numa lista
     return Array.from(aulasAgrupadas.values());
 
-  }, [aulas, docente_id]);
+  }, [aulas, disciplina_id]);
 
   //
   // F. Lógica de renderização
 
   // Fallbacks primeiro...
   if (isLoadingAulas) return <p className="text-gray-500">A carregar aulas...</p>;
-  if (!aulasDocente) return <p className="text-gray-500">A carregar aulas...</p>;
-  if (aulasDocente.length === 0) return <p className="text-gray-500">Sem aulas para este docente.</p>;
+  if (!aulasDisciplina) return <p className="text-gray-500">A carregar aulas...</p>;
+  if (aulasDisciplina.length === 0) return <p className="text-gray-500">Sem aulas para esta disciplina.</p>;
 
   // render principal
   return (
@@ -82,8 +81,8 @@ export default function CalendarioSemanalDocente({
           <TimeMarkers />
         </div>
         <div className={styles.calendarWrapper}>
-          <CalendarioGridDocente
-            aulas={aulasDocente}
+          <CalendarioGridDisciplina
+            aulas={aulasDisciplina}
             isLoadingAulas={isLoadingAulas}
           />
         </div>

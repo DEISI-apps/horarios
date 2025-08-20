@@ -1,6 +1,17 @@
-import { DisciplinaHoras } from "@/types/interfaces";
+import { DisciplinaHoras, HorarioAPI } from "@/types/interfaces";
 import { useState } from "react";
 import DocenteModal from "../CalendarioSemanalDocente/DocenteModal";
+import DisciplinaModal from "../CalendarioSemanalDisciplina/DisciplinaModal";
+
+
+interface DisciplinaAPI {
+  id: number;
+  nome: string;
+  aula_teorica_duracao: number;
+  aula_pratica_duracao: number;
+  horas_teoricas: number;
+  horas_praticas: number;
+}
 
 // Função para gerar cor
 const gerarCorDisciplina = (id: number) => {
@@ -8,18 +19,34 @@ const gerarCorDisciplina = (id: number) => {
   return `hsl(${hue}, 80%, 50%)`;
 };
 
-export default function DisciplinaCard({ disciplina }: { disciplina: DisciplinaHoras }) {
-
+export default function DisciplinaCard({ 
+  disciplina, horario
+}: { disciplina: DisciplinaHoras, horario: HorarioAPI }
+) {
 
   //
   // A. Gestão de estado
   const [selectedDocente, setSelectedDocente] = useState<{ id: number, nome: string } | null>(null);
+  const [isModalDisciplinaOpen, setModalDisciplinaOpen] = useState(false);
+  const [selectedDisciplina, setSelectedDisciplina] = useState<DisciplinaAPI>();
 
   //
   // A. Renderiza
   return (<>
     <div className="border rounded-xl p-4 shadow-sm bg-gray-50">
-      <h3 style={{ color: gerarCorDisciplina(disciplina.id) }} className="text-lg font-bold">{disciplina.nome}</h3>
+      <h3 style={{ color: gerarCorDisciplina(disciplina.id) }} className="text-lg font-bold">
+
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setSelectedDisciplina(disciplina);
+            setModalDisciplinaOpen(true);
+          }}
+          className="font-semibold underline focus:outline-none"
+        >
+          {disciplina.nome}
+        </button>
+      </h3>
 
       <p className="text-sm">
         {disciplina.horas_teoricas > 0 && (
@@ -56,15 +83,26 @@ export default function DisciplinaCard({ disciplina }: { disciplina: DisciplinaH
       </ul>
     </div>
     {selectedDocente && (
-        <DocenteModal
-          isOpen={!!selectedDocente}
-          setModalOpen={() => setSelectedDocente(null)}
-          docente_id={selectedDocente.id}
-          docente_nome={selectedDocente.nome}
-          ano_lectivo_id={35} // You might want to pass this as a prop
-          semestre={1}      // You might want to pass this as a prop
-        />
-      )}
+      <DocenteModal
+        isOpen={!!selectedDocente}
+        setModalOpen={() => setSelectedDocente(null)}
+        docente_id={selectedDocente.id}
+        docente_nome={selectedDocente.nome}
+        ano_lectivo_id={35} // You might want to pass this as a prop
+        semestre={1}      // You might want to pass this as a prop
+      />
+    )}
+
+    {selectedDisciplina && (
+      <DisciplinaModal
+        isOpen={isModalDisciplinaOpen}
+        setModalOpen={setModalDisciplinaOpen}
+        disciplina_id={selectedDisciplina.id}
+        disciplina_nome={selectedDisciplina.nome}
+        ano_lectivo_id={horario.ano_lectivo_id}
+        semestre={horario.semestre}
+      />)
+    }
   </>
   );
 }

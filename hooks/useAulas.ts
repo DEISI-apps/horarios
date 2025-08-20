@@ -1,56 +1,7 @@
 import useSWR from 'swr';
 import { fetcher } from '@/lib/fetcher';
+import { Aula, AulaAPI } from '@/types/interfaces';
 
-interface Disciplina {
-  id: number;
-  nome: string;
-  docentes: {
-    id: number;
-    nome: string;
-    horas_teoricas: number;
-    horas_praticas: number;
-  }[];
-}
-
-interface AulaIn {
-  horario_id: number;
-  turma_id: number;
-  disciplina_id: number;
-  tipo: string;
-  docente_id: number;
-  sala_id: number;
-  dia_semana: number;
-  hora_inicio: string; // Formato "HH:MM"
-  duracao: number;
-  cor: string;
-}
-
-interface Aula extends AulaIn {
-  juncao: boolean;
-  id: number;
-  disciplina_nome: string;
-  docente_nome: string;
-  sala_nome: string;
-}
-
-
-interface AulaAPI {
-  id: number;
-  horario_id: number;
-  turma_id: number;
-  disciplina_id: number;
-  disciplina: string;
-  docente_id: number;
-  docente: string;
-  sala_id: number;
-  sala: string;
-  tipo: string;
-  dia_semana: number;
-  hora_inicio: string;
-  duracao: number;
-  cor: string;
-  juncao: boolean;
-}
 
 
   // Converter aula da API para Aula

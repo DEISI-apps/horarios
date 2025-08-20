@@ -5,22 +5,23 @@ import { useAulas } from "@/hooks/useAulas";
 import { atualizaDisciplinasHoras } from "@/lib/utils";
 import { useMemo } from "react";
 import { useDisciplinas } from "@/hooks/useDisciplinas";
+import { HorarioAPI } from "@/types/interfaces";
 
 
-export default function DisciplinasSection({ horario_id }: { horario_id: number }) {
-
+export default function DisciplinasSection({ horario }: { horario: HorarioAPI }) {
+  
   //
   // A. obtém disciplinas e aulas
-  const { disciplinas, isLoadingDisciplinas, errorDisciplinas } = useDisciplinas(horario_id);
-  const { aulas = [] } = useAulas(horario_id);
-  
+  const { disciplinas, isLoadingDisciplinas, errorDisciplinas } = useDisciplinas(horario.id);
+  const { aulas, isLoadingAulas } = useAulas(horario.id);
+
   //
   // B. atualiza horas das disciplinas e ordena
   const disciplinasOrdenadas = useMemo(() => {
     if (!disciplinas?.length) return [];
 
     const atualizadas = atualizaDisciplinasHoras(disciplinas, aulas);
- 
+
     atualizadas.sort((a, b) => a.nome.localeCompare(b.nome, 'pt', { sensitivity: 'base' }));
 
     return atualizadas.map((disciplina) => ({
@@ -36,11 +37,13 @@ export default function DisciplinasSection({ horario_id }: { horario_id: number 
   //
   // C. renderiza
 
+
   // C.1. fallbacks
+
   if (isLoadingDisciplinas) return <p className="text-gray-500">A carregar disciplinas...</p>;
   if (errorDisciplinas) return <p className="text-red-500">Erro ao carregar disciplinas.</p>;
   if (disciplinas?.length === 0) return <p className="text-gray-500">Nenhuma disciplina encontrada.</p>;
-
+  if (isLoadingAulas) return <p className="text-gray-500">A carregar aulas...</p>;
 
   return (
     <section className="pt-8">
@@ -48,7 +51,11 @@ export default function DisciplinasSection({ horario_id }: { horario_id: number 
       <p className="text-gray-500 mb-4">Horas lecionadas / atribuídas. Não exceder atribuídas.</p>
       <div className="space-y-4">
         {disciplinasOrdenadas.map((disciplina) => (
-          <DisciplinaCard key={disciplina.id} disciplina={disciplina} />
+          <DisciplinaCard
+            key={disciplina.id}
+            disciplina={disciplina}
+            horario={horario}
+          />
         ))}
       </div>
     </section>

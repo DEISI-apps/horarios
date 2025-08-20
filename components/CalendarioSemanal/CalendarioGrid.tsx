@@ -9,6 +9,8 @@ interface CalendarGridProps {
   turmas: Turma[];
   aulas: Aula[];
   isLoadingAulas: boolean;
+  ano_lectivo_id: number;
+  semestre: number;
   onSlotClick: (day: number, classId: number, startTime?: string) => void;
   onSlotEdit: (slot: Aula) => void;
 }
@@ -16,18 +18,26 @@ interface CalendarGridProps {
 export default function CalendarGrid({ 
   turmas, 
   aulas, 
-  isLoadingAulas, 
+  isLoadingAulas,
+  ano_lectivo_id, 
+  semestre, 
   onSlotClick, 
   onSlotEdit 
 }: CalendarGridProps) {
   
-  const renderSlotsForDayAndClass = (dayId: number, classId: number) => {
+  const renderSlotsForDayAndClass = (dayId: number, classId: number, ano_lectivo_id: number, semestre: number) => {
     if (isLoadingAulas) return <div>A carregar aulas...</div>;
     
     return aulas
       .filter((slot: Aula) => slot.dia_semana === dayId && slot.turma_id === classId)
       .map((slot: Aula) => (
-        <TimeSlot key={`slot-${slot.id}`} slot={slot} onEdit={onSlotEdit} />
+        <TimeSlot 
+          key={`slot-${slot.id}`} 
+          slot={slot} 
+          ano_lectivo_id={ano_lectivo_id} 
+          semestre={semestre} 
+          onEdit={onSlotEdit} 
+        />
       ));
   };
 
@@ -83,7 +93,7 @@ export default function CalendarGrid({
                   className={styles.classSlotColumn}
                   onClick={(e) => handleClassSlotClick(day.id, turma.id, e)}
                 >
-                  {renderSlotsForDayAndClass(day.id, turma.id)}
+                  {renderSlotsForDayAndClass(day.id, turma.id, ano_lectivo_id, semestre)}
                 </div>
               ))}
             </div>

@@ -9,6 +9,7 @@ import {
   SlotForm,
   Disciplina,
   Aula,
+  HorarioAPI,
 } from "@/types/interfaces";
 import { gerarCorDisciplina, atualizaDisciplinasHoras } from '@/lib/utils';
 import CalendarGrid from './CalendarioGrid';
@@ -17,7 +18,7 @@ import styles from './CalendarioSemanal.module.css';
 import TimeMarkers from './TimeMarkers';
 import { CALENDAR_HEIGHT } from '@/lib/constants';
 
-export default function CalendarioSemanal({ horario_id }: { horario_id: number }) {
+export default function CalendarioSemanal({ horario }: { horario: HorarioAPI }) {
 
   //
   // A. Gestão de estados do componente
@@ -37,14 +38,16 @@ export default function CalendarioSemanal({ horario_id }: { horario_id: number }
     color: '#3a87ad',
     tipo: 'T',
     juncao: false,
+    curso_sigla: '',
+    turma_nome: '',
   });
 
   // 
   // B. Hooks de obtenção de dados
-  const { disciplinas, isLoadingDisciplinas } = useDisciplinas(horario_id);
-  const { turmas, isLoadingTurmas } = useTurmas(horario_id);
+  const { disciplinas, isLoadingDisciplinas } = useDisciplinas(horario.id);
+  const { turmas, isLoadingTurmas } = useTurmas(horario.id);
   const { salas, isLoadingSalas } = useSalas();
-  const { aulas, isLoadingAulas, mutateAulas } = useAulas(horario_id);
+  const { aulas, isLoadingAulas, mutateAulas } = useAulas(horario.id);
 
   //
   // C. Computação de dados
@@ -87,6 +90,8 @@ export default function CalendarioSemanal({ horario_id }: { horario_id: number }
       duracao: '90',
       color: '#3a87ad',
       juncao: false,
+      curso_sigla: '',
+      turma_nome: '',
     });
     setModalOpen(true);
   }
@@ -110,6 +115,8 @@ export default function CalendarioSemanal({ horario_id }: { horario_id: number }
       duracao: slot.duracao.toString(),
       color: gerarCorDisciplina(slot.disciplina_id),
       juncao: slot.juncao || false,
+      curso_sigla: slot.curso_sigla || '',
+      turma_nome: slot.turma_nome || '',
     });
     setModalOpen(true);
   }
@@ -153,6 +160,8 @@ export default function CalendarioSemanal({ horario_id }: { horario_id: number }
         </details>
       </div>
 
+      
+
       <div className={styles.container} style={{ position: 'relative' }}>
         <div
           className={`${styles.timeSlots} ${styles.timeMarkersFixed}`}
@@ -170,6 +179,8 @@ export default function CalendarioSemanal({ horario_id }: { horario_id: number }
             turmas={turmas}
             aulas={aulas}
             isLoadingAulas={isLoadingAulas}
+            ano_lectivo_id={horario.ano_lectivo.id} 
+            semestre={horario.semestre}
             onSlotClick={openNewSlotModal}
             onSlotEdit={openEditSlotModal}
           />
@@ -185,7 +196,7 @@ export default function CalendarioSemanal({ horario_id }: { horario_id: number }
           salas={salas}
           isLoadingDisciplinas={isLoadingDisciplinas}
           isLoadingSalas={isLoadingSalas}
-          horario_id={horario_id}
+          horario_id={horario.id}
           setAulaSelecionada={setAulaSelecionada}
           mutateAulas={mutateAulas}
           handleDuplicate={handleDuplicate}
