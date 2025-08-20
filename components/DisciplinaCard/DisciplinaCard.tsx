@@ -1,4 +1,6 @@
 import { DisciplinaHoras } from "@/types/interfaces";
+import { useState } from "react";
+import DocenteModal from "../CalendarioSemanalDocente/DocenteModal";
 
 // Função para gerar cor
 const gerarCorDisciplina = (id: number) => {
@@ -7,12 +9,17 @@ const gerarCorDisciplina = (id: number) => {
 };
 
 export default function DisciplinaCard({ disciplina }: { disciplina: DisciplinaHoras }) {
-  
+
+
+  //
+  // A. Gestão de estado
+  const [selectedDocente, setSelectedDocente] = useState<{ id: number, nome: string } | null>(null);
+
   //
   // A. Renderiza
-  return (
+  return (<>
     <div className="border rounded-xl p-4 shadow-sm bg-gray-50">
-      <h3  style={{ color: gerarCorDisciplina(disciplina.id) }} className="text-lg font-bold">{disciplina.nome}</h3>
+      <h3 style={{ color: gerarCorDisciplina(disciplina.id) }} className="text-lg font-bold">{disciplina.nome}</h3>
 
       <p className="text-sm">
         {disciplina.horas_teoricas > 0 && (
@@ -36,12 +43,28 @@ export default function DisciplinaCard({ disciplina }: { disciplina: DisciplinaH
 
           return (
             <li key={idx} className="text-gray-500 text-sm">
-              <span className="font-semibold">{docente.nome}</span>
+              <button
+                onClick={() => setSelectedDocente(docente)}
+                className="font-semibold underline focus:outline-none"
+              >
+                {docente.nome}
+              </button>
               {partes.length > 0 && ` — ${partes.join(" | ")}`}
             </li>
           );
         })}
       </ul>
     </div>
+    {selectedDocente && (
+        <DocenteModal
+          isOpen={!!selectedDocente}
+          setModalOpen={() => setSelectedDocente(null)}
+          docente_id={selectedDocente.id}
+          docente_nome={selectedDocente.nome}
+          ano_lectivo_id={35} // You might want to pass this as a prop
+          semestre={1}      // You might want to pass this as a prop
+        />
+      )}
+  </>
   );
 }

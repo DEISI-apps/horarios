@@ -71,6 +71,8 @@ interface AulaAPI {
       duracao: aula.duracao,
       cor: '',
       juncao: aula.juncao,
+      curso_sigla: aula.curso_sigla,
+      turma_nome: aula.turma_nome,
     };
   };
 

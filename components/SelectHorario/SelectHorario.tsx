@@ -1,59 +1,53 @@
 "use client";
+import { useHorarios } from "@/hooks/useHorarios";
+import { HorarioAPI } from "@/types/interfaces";
 import { useState } from "react";
-import useSWR from "swr";
-import { Option, RawItem } from "@/types/interfaces"; 
 
 
 interface SelectHorarioProps {
-  onSelect: (value: Option | null) => void;
+  onSelect: (value: number | null) => void;
 }
 
-// Função fetcher usada pelo SWR
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function SelectHorario({ onSelect }: SelectHorarioProps) {
   //
   // A. Gestão de estado do componente
-  const [selectedId, setSelectedId] = useState<string>("");
+  const [selectedHorarioId, setSelectedHorarioId] = useState<string>("");
 
   //
   // B. Obtenção de dados da API usando SWR
-  const { data, error, isLoading } = useSWR<RawItem[]>('https://dsdeisi.pythonanywhere.com/api/horarios/horarios', fetcher);
+  const { horarios, isLoading, isError } = useHorarios();
 
   //
   // C. Transformação/processamento dos dados recebidos
-  const options: Option[] = data?.map((item) => ({
-    id: item.id,
-    label: `${item.curso.sigla}, ${item.ano}º ano, ${item.semestre}º semestre (${item.ano_lectivo.ano_lectivo})`,
-    raw: item,
+  const horarioOptions = horarios?.map((horario: HorarioAPI) => ({
+    id: horario.id,
+    label: `${horario.curso.sigla}, ${horario.ano}º ano, ${horario.semestre}º semestre (${horario.ano_lectivo.ano_lectivo})`
   })) || [];
 
   //
-  // D. Handler, função que lida com evento do utilizador (seleção de opção). 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
-    setSelectedId(value);
-    const selectedOption = options.find((option) => option.id.toString() === value) || null;
-    onSelect(selectedOption);
+  // D. Função (handler) que lida com a escolha do horario (evento). 
+  const handleHorarioSelection = ({ target: { value } }: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedHorarioId(value);
+    onSelect(value ? Number(value) : null);
   };
 
   //
   // E. Renderização, retorna o JSX que define e exibe a UI
-  if (error) return <div>Erro ao carregar cursos.</div>;
-
+  if (isError) return <div>Erro ao carregar cursos.</div>;
   if (isLoading) return <div>A carregar...</div>;
 
   return (
     <select
-      value={selectedId}
-      onChange={handleChange}
+      value={selectedHorarioId}
+      onChange={handleHorarioSelection}
       className="border rounded p-2 font-bold text-2xl cursor-pointer mb-2 flex row gap-3 items-center"
-      style={{ border: '1px solid lightgray'}}
+      style={{ border: '1px solid lightgray' }}
     >
       <option value="">Selecione um Curso & Ano...</option>
-      {options.map((opt) => (
-        <option key={opt.id} value={opt.id}>
-          {opt.label}
+      {horarioOptions.map((horarioOption) => (
+        <option key={horarioOption.id} value={horarioOption.id}>
+          {horarioOption.label}
         </option>
       ))}
     </select>

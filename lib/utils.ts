@@ -6,7 +6,6 @@ export const gerarCorDisciplina = (id: number) => {
   return `hsl(${hue}, 80%, 80%)`;
 };
 
-
 export function abreviarNomeDisciplina(nomeDisciplina: string) {
 
   // abrevia palavras com mais de 6 caracteres
@@ -42,7 +41,6 @@ export function abreviarNomeDisciplina(nomeDisciplina: string) {
 
 
 }
-
 
 export function atualizaDisciplinasHoras(disciplinas: Disciplina[], aulas: Aula[]): DisciplinaHoras[] {
 

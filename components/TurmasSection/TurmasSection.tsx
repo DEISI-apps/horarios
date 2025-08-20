@@ -104,8 +104,6 @@ export default function TurmasSection({ horario_id }: { horario_id: number }) {
       setTurmasMap(novoTurmasMap);
     }
 
-    console.log('novoTurmasMap', novoTurmasMap);
-
   }, [disciplinas, turmas, aulas, turmasMap]);
 
 
@@ -156,7 +154,7 @@ export default function TurmasSection({ horario_id }: { horario_id: number }) {
 
                     {Array.from(turmasMap.entries()).map(([turmaId, turma], index, array) => {
                       const discInfo = turma.disciplinas.get(disc.id);
-                      console.log('mapa discInfo', discInfo);
+                      
                       return (
                         <td
                           key={turmaId}

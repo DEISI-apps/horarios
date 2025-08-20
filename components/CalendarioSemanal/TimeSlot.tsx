@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { Aula } from '@/types/interfaces';
 import { calculateSlotPosition } from '@/lib/calendario';
 import { MINUTE_HEIGHT } from '@/lib/constants';
 import { gerarCorDisciplina, abreviarNomeDisciplina } from '@/lib/utils';
 import styles from './CalendarioSemanal.module.css';
+import DocenteModal from '../CalendarioSemanalDocente/DocenteModal';
 
 interface TimeSlotProps {
   slot: Aula;
@@ -10,40 +12,62 @@ interface TimeSlotProps {
 }
 
 export default function TimeSlot({ slot, onEdit }: TimeSlotProps) {
+  const [isModalOpen, setModalOpen] = useState(false);
   const top = calculateSlotPosition(slot.hora_inicio);
   const height = slot.duracao * MINUTE_HEIGHT - 3;
   const baseColor = gerarCorDisciplina(slot.disciplina_id);
 
-
   return (
-    <div
-      key={`slot-${slot.id}`}
-      className={styles.slot}
-      style={{
-        top: `${top}px`,
-        height: `${height}px`,
-        backgroundColor: baseColor,
-        color:  slot.juncao ? 'transparent': 'black',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        textAlign: 'center',
-      }}
-      onClick={(e) => {
-        e.stopPropagation();
-        onEdit(slot);
-      }}
-    >
-      <div className={styles.slotTitle}>
-        {abreviarNomeDisciplina(slot.disciplina_nome)}
+    <>
+      <div
+        key={`slot-${slot.id}`}
+        className={styles.slot}
+        style={{
+          top: `${top}px`,
+          height: `${height}px`,
+          backgroundColor: baseColor,
+          color: slot.juncao ? 'transparent': 'black',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          textAlign: 'center',
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+          onEdit(slot);
+        }}
+      >
+        <div className={styles.slotTitle}>
+          {abreviarNomeDisciplina(slot.disciplina_nome)}
+        </div>
+        <div className={styles.slotDetails} style={{ color: slot.juncao ? 'transparent': 'rgb(100, 98, 98)' }} >
+          {slot.tipo === 'T' ? 'Teórica' : 'Prática'} {slot.sala_nome !== 'sala?' ? ' - ' + slot.sala_nome : ''}
+        </div>
+        <div className={styles.slotDetails} style={{ color: slot.juncao ? 'transparent': 'rgb(100, 98, 98)' }}>
+          {!slot.juncao && (
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                setModalOpen(true);
+              }}
+              className="underline focus:outline-none"
+            >
+              {slot.docente_nome}
+            </button>
+          )}
+          {slot.juncao && slot.docente_nome}
+        </div>
       </div>
-      <div className={styles.slotDetails} style={{ color:  slot.juncao ? 'transparent': 'rgb(100, 98, 98)' }} >
-        {slot.tipo === 'T' ? 'Teórica' : 'Prática'} {slot.sala_nome !== 'sala?' ? ' - ' + slot.sala_nome : ''}
-      </div>
-      <div className={styles.slotDetails} style={{ color:  slot.juncao ? 'transparent': 'rgb(100, 98, 98)' }}>
-        {slot.docente_nome}
-      </div>
-    </div>
+
+      <DocenteModal
+        isOpen={isModalOpen}
+        setModalOpen={setModalOpen}
+        docente_id={slot.docente_id}
+        docente_nome={slot.docente_nome}
+        ano_lectivo_id={35}
+        semestre={1}
+      />
+    </>
   );
 }

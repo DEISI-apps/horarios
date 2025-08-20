@@ -1,5 +1,3 @@
-
-
 export interface TurmaAPI {
   id: number;
   nome: string;
@@ -7,11 +5,21 @@ export interface TurmaAPI {
 };
 
 export interface HorarioAPI {
+  id: number;
   curso_id: number;
   ano: number;
   ano_lectivo_id: number;
   semestre: number;
   num_turmas: number;
+  curso: {
+    id: number;
+    nome: string;
+    sigla: string;
+  };
+  ano_lectivo: {
+    id: number;
+    ano_lectivo: string;
+  };
   turmas: TurmaAPI[];
 }
 
@@ -41,12 +49,6 @@ export interface RawItem {
   ano_lectivo: {
     ano_lectivo: string;
   };
-}
-
-export interface Option {
-  id: number;
-  label: string;
-  raw: RawItem;
 }
 
 
@@ -119,12 +121,27 @@ export interface AulaIn {
   juncao: boolean;
 }
 
+
+// AulaAPI herda de AulaIn e adiciona/sobrescreve campos para API
+export interface AulaAPI extends AulaIn {
+  id: number;
+  disciplina: string;
+  docente: string;
+  sala: string;
+  docente_nome: string;
+  sala_nome: string;
+  curso_sigla: string;
+  turma_nome: string;
+}
+
 // Aula herda todos os campos de AulaIn e adiciona os seus próprios
 export interface Aula extends AulaIn {
   id: number;
   disciplina_nome: string;
   docente_nome: string;
   sala_nome: string;
+  curso_sigla: string;
+  turma_nome: string;
 }
 
 // SlotForm herda de AulaIn, mas sobrescreve tipos e adiciona campos
@@ -143,13 +160,34 @@ export interface SlotForm extends Omit<AulaIn,
   duracao: string;
   color: string;
   tipo: string;
-  juncao: boolean;
+  juncao: boolean;  
+  curso_sigla: string;
+  turma_nome: string;
 }
 
-// AulaAPI herda de AulaIn e adiciona/sobrescreve campos para API
-export interface AulaAPI extends AulaIn {
-  id: number;
-  disciplina: string;
-  docente: string;
-  sala: string;
+
+
+
+export interface AulaDocente {
+  id: number | null;
+
+  turmas: Map<string, string[]>;
+
+  disciplina_id: number;
+  disciplina_nome: string;
+  docente_id: number;
+  docente_nome: string;
+  sala_id: number;
+  sala_nome: string;
+
+  tipo: string;
+
+  dia_semana: number;
+  hora_inicio: string; // Formato "HH:MM"
+  duracao: number;
+  cor: string;
+  juncao: boolean;
+
+  curso_sigla: string;
+  turma_nome: string;
 }
