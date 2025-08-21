@@ -29,7 +29,7 @@ export default function DisciplinaCard({
               setSelectedDisciplina(disciplina);
               setModalDisciplinaOpen(true);
             }}
-            className="font-semibold underline focus:outline-none text-left"
+            className=" underline focus:outline-none text-left"
           >
             {disciplina.nome}
           </button>
@@ -57,10 +57,10 @@ export default function DisciplinaCard({
           if (docente.horas_praticas > 0) partes.push(`prática:  ${docente.horas_praticas_lecionadas}/${docente.horas_praticas}h`);
 
           return (
-            <li key={idx} className="text-gray-500 text-sm">
+            <li key={idx} className="text-sm">
               <button
                 onClick={() => setSelectedDocente(docente)}
-                className="font-semibold underline focus:outline-none"
+                className="font-bold underline focus:outline-none"
               >
                 {docente.nome}
               </button>
