@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { AulaAPI, SlotForm, Disciplina, DocenteHoras, Sala, AulaIn, Turma, Horario } from '@/types/interfaces';
 import { DAYS, END_HOUR, START_HOUR } from '@/lib/constants';
 import { gerarCorDisciplina, abreviarNomeDisciplina } from '@/lib/utils';
@@ -222,15 +222,36 @@ export default function AulaModal({
       // garantir que não existe uma aula dessa disciplina e tipo na turma
       const aulasConflitantesTurma = aulas.filter(aula => {
         const mesmoTurma = aula.turma_id === aulaData.turma_id;
-        const mesmoDia = aula.dia_semana === aulaData.dia_semana;
+        const mesmoDisciplina = aula.disciplina_id === aulaData.disciplina_id;
         const mesmoTipo = aula.tipo === aulaData.tipo;
         const naoEhMesmaAula = aula.id !== aulaSelecionada.id;
 
-        return mesmoTurma && mesmoDia && mesmoTipo && naoEhMesmaAula;
+        return mesmoTurma && mesmoDisciplina && mesmoTipo && naoEhMesmaAula;
       });
 
       if (aulasConflitantesTurma.length > 0) {
         setError('Já existe uma aula dessa disciplina e tipo na turma.');
+        setLoadingSaving(false);
+        return;
+      }
+
+      // garantir que não existe uma aula dessa disciplina e tipo numa sala em que está a decorrer uma aula
+      const aulasConflitantesSala = aulas.filter(aula => {
+        const ehLabDEISI = aula.sala_id !== 7; // Sala do DEISI Hub
+        const mesmaSala = aula.sala_id === aulaData.sala_id;
+        const mesmoTipo = aula.tipo === aulaData.tipo;
+        const naoEhMesmaAula = aula.id !== aulaSelecionada.id;
+        const mesmoDia = aula.dia_semana === aulaData.dia_semana;
+
+        const outraInicio = parseFloat(aula.hora_inicio.replace(':','.'));
+        const outraFim = outraInicio + aula.duracao / 60;
+        const temSobreposicao = outraInicio < aulaFim && outraFim > aulaInicio;
+
+        return ehLabDEISI && mesmaSala && mesmoDia && temSobreposicao && mesmoTipo && naoEhMesmaAula;
+      });
+
+      if (aulasConflitantesSala.length > 0) {
+        setError('Já existe uma aula dessa disciplina e tipo na sala.');
         setLoadingSaving(false);
         return;
       }
