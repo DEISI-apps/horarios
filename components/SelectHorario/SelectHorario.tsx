@@ -41,7 +41,7 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
     <select
       value={selectedHorarioId}
       onChange={handleHorarioSelection}
-      className="border rounded p-2 font-bold text-2xl cursor-pointer mb-2 flex row gap-3 items-center"
+      className="border rounded p-2 font-bold text-xl cursor-pointer mb-2 flex row gap-3 items-center"
       style={{ border: '1px solid lightgray' }}
     >
       <option value="">Selecione um Curso & Ano...</option>
