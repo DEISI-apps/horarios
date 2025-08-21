@@ -20,7 +20,7 @@ export default function DisciplinaCard({
   // B. Renderiza
   return (<>
     <div className="border rounded-xl p-4 shadow-sm bg-gray-50">
-      <h3 style={{ color: gerarCorDisciplina(disciplina.id) }} className="text-lg font-bold">
+      <h3 style={{ color: gerarCorDisciplina(disciplina.id, false) }} className="text-lg font-bold">
 
         <button
           onClick={(e) => {

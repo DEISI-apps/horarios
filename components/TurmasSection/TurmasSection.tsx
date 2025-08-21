@@ -88,8 +88,7 @@ export default function TurmasSection({ horario }: { horario: Horario }) {
 
     // Atualiza as horas das aulas agendadas
     if (aulas) {
-      aulas.forEach(({ turma_id, disciplina_id, tipo, duracao, juncao }) => {
-        if (juncao) return;
+      aulas.forEach(({ turma_id, disciplina_id, tipo, duracao }) => {
 
         const discInfo = novoTurmasMap.get(turma_id)?.disciplinas.get(disciplina_id);
         if (!discInfo) return;
