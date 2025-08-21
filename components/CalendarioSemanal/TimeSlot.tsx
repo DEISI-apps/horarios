@@ -73,10 +73,9 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
               className="underline focus:outline-none font-bold"
               style={{ background: 'whitesmoke', padding: '0 5px', marginTop: '2px', borderRadius:'5px', opacity: '0.7' }}
             >
-              {slot.docente_nome}
+              {slot.docente_nome.slice(0, 13)}
             </button>
           )}
-          {slot.juncao && slot.docente_nome}
         </div>
       </div>
 
