@@ -14,7 +14,9 @@ interface TimeSlotProps {
 }
 
 export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: TimeSlotProps) {
+
   const [isModalOpen, setModalOpen] = useState(false);
+  
   const top = calculateSlotPosition(slot.hora_inicio);
   const height = slot.duracao * MINUTE_HEIGHT - 3;
   const baseColor = gerarCorDisciplina(slot.disciplina_id);
@@ -53,7 +55,7 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
                 e.stopPropagation();
                 setModalOpen(true);
               }}
-              className="underline focus:outline-none"
+              className="underline focus:outline-none font-bold"
             >
               {slot.docente_nome}
             </button>

@@ -1,12 +1,11 @@
-import { useState } from 'react';
-import { AulaAPI, SlotForm, Disciplina, DocenteHoras, Sala, AulaIn, Turma } from '@/types/interfaces';
+import { useMemo, useState } from 'react';
+import { AulaAPI, SlotForm, Disciplina, DocenteHoras, Sala, AulaIn, Turma, Horario } from '@/types/interfaces';
 import { DAYS, END_HOUR, START_HOUR } from '@/lib/constants';
 import { gerarCorDisciplina, abreviarNomeDisciplina } from '@/lib/utils';
 import styles from './CalendarioSemanal.module.css';
 import { saveAula, deleteAula } from '@/lib/api/aulas';
 import { KeyedMutator } from 'swr';
-
-
+import { useAulasAnoSemestre } from '@/hooks/useAulasAnoSemestre';
 
 
 interface AulaModalProps {
@@ -19,7 +18,7 @@ interface AulaModalProps {
   salas: Sala[];
   isLoadingDisciplinas: boolean;
   isLoadingSalas: boolean;
-  horario_id: number;
+  horario: Horario;
   setAulaSelecionada: (aula: SlotForm | ((prev: SlotForm) => SlotForm)) => void;
   mutateAulas: KeyedMutator<AulaAPI[]>; // KeyedMutator é o tipo do SWR para a função mutate
   handleDuplicate: () => void;
@@ -44,7 +43,7 @@ export default function AulaModal({
   salas,
   isLoadingDisciplinas,
   isLoadingSalas,
-  horario_id,
+  horario,
   setAulaSelecionada,
   mutateAulas,
   handleDuplicate,
@@ -56,8 +55,13 @@ export default function AulaModal({
   const [error, setError] = useState<string | null>(null);
 
 
+
+  // B. Hook de obtenção de dados
+  const { aulas, isLoadingAulas } = useAulasAnoSemestre(horario.ano_lectivo_id, horario.semestre);
+
+
   //
-  // Manipuladores de eventos (event handlers) 
+  // C. Manipuladores de eventos (event handlers) 
 
   // Handler para lidar com mudanças nos inputs
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
@@ -131,7 +135,7 @@ export default function AulaModal({
 
     try {
       const aulaData: AulaIn = {
-        horario_id: horario_id,
+        horario_id: horario.id,
         disciplina_id: parseInt(aulaSelecionada.disciplina_id),
         docente_id: parseInt(aulaSelecionada.docente_id),
         turma_id: parseInt(aulaSelecionada.turma_id),
@@ -152,14 +156,81 @@ export default function AulaModal({
         return;
       }
 
-      if (!aulaData.juncao && aulaData.tipo === 'T' && aulaData.duracao/60 + docente.horas_teoricas_lecionadas > docente.horas_teoricas) {
+      let aulaExistente_horas_teoricas_lecionadas = 0
+      let aulaExistente_horas_praticas_lecionadas = 0
+
+      // se for alteração de uma aula que já existe, retirar info dessa aula
+      const aulaExistente = aulas.find(aula => aula.id === aulaSelecionada.id);
+      if (aulaExistente) {
+        aulaExistente_horas_teoricas_lecionadas = aulaExistente.duracao / 60;
+        aulaExistente_horas_praticas_lecionadas = aulaExistente.duracao / 60;
+      }
+
+      if (!aulaData.juncao && aulaData.tipo === 'T' && aulaData.duracao / 60 + docente.horas_teoricas_lecionadas - aulaExistente_horas_teoricas_lecionadas > docente.horas_teoricas) {
         setError('A duração excede a carga horária disponível para o professor.');
         setLoadingSaving(false);
         return;
       }
 
-      if (!aulaData.juncao && aulaData.tipo === 'P' && aulaData.duracao/60 + docente.horas_praticas_lecionadas > docente.horas_praticas) {
+      if (!aulaData.juncao && aulaData.tipo === 'P' && aulaData.duracao / 60 + docente.horas_praticas_lecionadas - aulaExistente_horas_praticas_lecionadas> docente.horas_praticas) {
         setError('A duração excede a carga horária disponível para o professor.');
+        setLoadingSaving(false);
+        return;
+      }
+
+      // garantir que docente não está a dar aula noutra turma nesse horário
+      const aulaInicio = parseFloat(aulaData.hora_inicio.replace(':','.'));
+      const aulaFim = aulaInicio + aulaData.duracao / 60;
+
+      const aulasConflitantes = aulas.filter(aula => {
+        const outraInicio = parseFloat(aula.hora_inicio.replace(':','.'));
+        const outraFim = outraInicio + aula.duracao / 60;
+
+        const mesmoDocente = aula.docente_id === docente.id;
+        const mesmoDia = aula.dia_semana === aulaData.dia_semana;
+        const naoEhMesmaAula = aula.id !== aulaSelecionada.id;
+        const temSobreposicao = outraInicio < aulaFim && outraFim > aulaInicio;
+
+        return mesmoDocente && mesmoDia && naoEhMesmaAula && temSobreposicao;
+      });
+
+      if (aulasConflitantes.length > 0) {
+        setError('O docente já está a dar aula noutra turma neste horário.');
+        setLoadingSaving(false);
+        return;
+      }
+
+      // garantir que a aula não se sobrepõe a outra aula da mesma turma
+      const aulasTurmaConflitantes = aulas.filter(aula => {
+        const outraInicio = parseFloat(aula.hora_inicio.replace(':','.'));
+        const outraFim = outraInicio + aula.duracao / 60;
+
+        const mesmoTurma = aula.turma_id === aulaData.turma_id;
+        const mesmoDia = aula.dia_semana === aulaData.dia_semana;
+        const naoEhMesmaAula = aula.id !== aulaSelecionada.id;
+        const temSobreposicao = outraInicio < aulaFim && outraFim > aulaInicio;
+
+        return mesmoTurma && mesmoDia && naoEhMesmaAula && temSobreposicao;
+      });
+
+      if (aulasTurmaConflitantes.length > 0) {
+        setError('A aula não pode se sobrepor a outra aula da mesma turma.');
+        setLoadingSaving(false);
+        return;
+      }
+
+      // garantir que não existe uma aula dessa disciplina e tipo na turma
+      const aulasConflitantesTurma = aulas.filter(aula => {
+        const mesmoTurma = aula.turma_id === aulaData.turma_id;
+        const mesmoDia = aula.dia_semana === aulaData.dia_semana;
+        const mesmoTipo = aula.tipo === aulaData.tipo;
+        const naoEhMesmaAula = aula.id !== aulaSelecionada.id;
+
+        return mesmoTurma && mesmoDia && mesmoTipo && naoEhMesmaAula;
+      });
+
+      if (aulasConflitantesTurma.length > 0) {
+        setError('Já existe uma aula dessa disciplina e tipo na turma.');
         setLoadingSaving(false);
         return;
       }
@@ -211,6 +282,7 @@ export default function AulaModal({
 
   // Fallbacks primeiro...
   if (!isOpen) return null;
+  if (isLoadingAulas) return <p>Carregando aulas...</p>;
 
   // render principal
   return (
@@ -266,7 +338,7 @@ export default function AulaModal({
               <option value="">Selecione uma disciplina</option>
               {disciplinas.map((disciplina: Disciplina) => (
                 <option key={disciplina.id} value={disciplina.id}>
-                  {disciplina.nome.length > 40 ? abreviarNomeDisciplina(disciplina.nome): disciplina.nome}
+                  {disciplina.nome.length > 40 ? abreviarNomeDisciplina(disciplina.nome) : disciplina.nome}
                 </option>
               ))}
             </select>
@@ -303,10 +375,10 @@ export default function AulaModal({
               {docentesDisciplina
                 .filter((docente) => (aulaSelecionada.tipo == 'T' && docente.horas_teoricas > 0) || (aulaSelecionada.tipo == 'P' && docente.horas_praticas > 0))
                 .map((docente) => (
-                <option key={docente.id} value={docente.id}>
-                  {docente.nome} {apresentaHoras(docente)}
-                </option>
-              ))}
+                  <option key={docente.id} value={docente.id}>
+                    {docente.nome} {apresentaHoras(docente)}
+                  </option>
+                ))}
             </select>
             {aulaSelecionada.disciplina_id && docentesDisciplina.length === 0 && (
               <span>Nenhum professor disponível para esta disciplina</span>

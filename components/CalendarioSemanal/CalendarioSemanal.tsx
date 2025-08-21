@@ -196,7 +196,7 @@ export default function CalendarioSemanal({ horario }: { horario: Horario }) {
           salas={salas}
           isLoadingDisciplinas={isLoadingDisciplinas}
           isLoadingSalas={isLoadingSalas}
-          horario_id={horario.id}
+          horario={horario}
           setAulaSelecionada={setAulaSelecionada}
           mutateAulas={mutateAulas}
           handleDuplicate={handleDuplicate}
