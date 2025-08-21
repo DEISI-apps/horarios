@@ -22,7 +22,7 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
   // C. Transformação/processamento dos dados recebidos
   const horarioOptions = horarios?.map((horario: Horario) => ({
     id: horario.id,
-    label: `${horario.curso.sigla}, ${horario.ano}º ano, ${horario.semestre}º semestre (${horario.ano_lectivo.ano_lectivo})`
+    label: `${horario.curso.sigla}, ${horario.ano}º ano, ${horario.semestre}º sem. (${horario.ano_lectivo.ano_lectivo})`
   })) || [];
 
   //

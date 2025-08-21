@@ -190,12 +190,13 @@ export default function AulaModal({
         const mesmoDia = aula.dia_semana === aulaData.dia_semana;
         const naoEhMesmaAula = aula.id !== aulaSelecionada.id;
         const temSobreposicao = outraInicio < aulaFim && outraFim > aulaInicio;
+        const naoEhJuncao = aulaData.juncao === false;
 
-        return mesmoDocente && mesmoDia && naoEhMesmaAula && temSobreposicao;
+        return mesmoDocente && mesmoDia && naoEhMesmaAula && temSobreposicao && naoEhJuncao;
       });
 
       if (aulasConflitantes.length > 0) {
-        setError('O docente já está a dar aula noutra turma neste horário.');
+        setError('O docente já está a dar neste horário uma aula noutra turma sem junção.');
         setLoadingSaving(false);
         return;
       }
