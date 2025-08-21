@@ -1,7 +1,7 @@
 import { AulaDocente } from '@/types/interfaces';
 import { calculateSlotPosition } from '@/lib/calendario';
 import { MINUTE_HEIGHT } from '@/lib/constants';
-import { gerarCorDisciplina, abreviarNomeDisciplina, formataTurmas } from '@/lib/utils';
+import { gerarCorDisciplina, abreviarNomeDisciplina } from '@/lib/utils';
 import styles from './CalendarioSemanalDocente.module.css';
 
 interface TimeSlotProps {
@@ -9,9 +9,17 @@ interface TimeSlotProps {
 }
 
 
+export function formataTurmas(turmas: Map<string, string[]>): string {
+  return Array.from(turmas.entries())
+    .map(([curso, turmasList]) => {
+      turmasList.sort((a, b) => a.localeCompare(b));
+      return `${curso} T${turmasList.join('&')}`;
+    })
+    .join(', ');
+}
 
 
-export default function TimeSlot({ slot }: TimeSlotProps) {
+export default function TimeSlotDocente({ slot }: TimeSlotProps) {
   const top = calculateSlotPosition(slot.hora_inicio);
   const height = slot.duracao * MINUTE_HEIGHT - 3;
   const baseColor = gerarCorDisciplina(slot.disciplina_id);

@@ -1,6 +1,6 @@
 "use client";
 import { useHorarios } from "@/hooks/useHorarios";
-import { HorarioAPI } from "@/types/interfaces";
+import { Horario } from "@/types/interfaces";
 import { useState } from "react";
 
 
@@ -20,7 +20,7 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
 
   //
   // C. Transformação/processamento dos dados recebidos
-  const horarioOptions = horarios?.map((horario: HorarioAPI) => ({
+  const horarioOptions = horarios?.map((horario: Horario) => ({
     id: horario.id,
     label: `${horario.curso.sigla}, ${horario.ano}º ano, ${horario.semestre}º semestre (${horario.ano_lectivo.ano_lectivo})`
   })) || [];

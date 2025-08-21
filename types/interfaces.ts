@@ -1,10 +1,10 @@
-export interface TurmaAPI {
+export interface Turma {
   id: number;
   nome: string;
   horario_id: number;
 };
 
-export interface HorarioAPI {
+export interface Horario {
   id: number;
   curso_id: number;
   ano: number;
@@ -20,14 +20,8 @@ export interface HorarioAPI {
     id: number;
     ano_lectivo: string;
   };
-  turmas: TurmaAPI[];
+  turmas: Turma[];
 }
-
-// export interface HorarioOption {
-//   id: number;
-//   label: string;
-//   raw: RawHorario;
-// }
 
 export interface Docente {
   id: number;
@@ -36,27 +30,10 @@ export interface Docente {
   horas_praticas: number;
 }
 
-
-export interface RawItem {
-  id: number;
-  curso: {
-    nome: string;
-    sigla: string;
-  };
-  ano: number;
-  semestre: number;
-  num_turmas?: number; // torna opcional
-  ano_lectivo: {
-    ano_lectivo: string;
-  };
+export interface DocenteHoras extends Docente {
+  horas_teoricas_lecionadas: number;
+  horas_praticas_lecionadas: number;
 }
-
-
-export interface Turma {
-  id: number;
-  nome: string;
-};
-
 
 export interface Sala {
   id: number;
@@ -82,30 +59,9 @@ export interface Disciplina {
 export interface DisciplinaHoras extends Disciplina {
   horas_teoricas_lecionadas: number;
   horas_praticas_lecionadas: number;
-  docentes: (Disciplina['docentes'][number] & {
-    horas_teoricas_lecionadas: number;
-    horas_praticas_lecionadas: number;
-  })[];
+  docentes: DocenteHoras[];
 }
 
-// -----------------------------------------------------------------------------
-// Sobre a notação (Disciplina['docentes'][number] & { ... })[]
-//
-// Esta notação é usada para criar um novo tipo de array de objetos,
-// combinando (interseção) o tipo de cada elemento do array 'docentes' da interface Disciplina
-// com propriedades adicionais.
-//
-// - Disciplina['docentes'][number]: obtém o tipo de cada item do array 'docentes'.
-// - & { ... }: faz uma interseção de tipos, ou seja, junta o tipo original com novas propriedades.
-//
-// Exemplo prático:
-// type DocenteBase = { id: number; nome: string; horas_teoricas: number; horas_praticas: number; };
-// type DocenteComLecionadas = DocenteBase & { horas_teoricas_lecionadas: number; horas_praticas_lecionadas: number; };
-//
-// Assim, a propriedade 'docentes' em DisciplinaHoras será um array de objetos
-// que possuem todas as propriedades do docente original, mais as propriedades extras.
-//
-// -----------------------------------------------------------------------------
 
 export interface AulaIn {
   horario_id: number;

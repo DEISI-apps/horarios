@@ -1,9 +1,10 @@
 import { Aula, Disciplina, DisciplinaHoras } from "@/types/interfaces";
 
 
-export const gerarCorDisciplina = (id: number) => {
+// Função para gerar cor
+export const gerarCorDisciplina = (id: number, claro: boolean = true) => {
   const hue = (id * 137) % 360;
-  return `hsl(${hue}, 80%, 80%)`;
+  return `hsl(${hue}, 80%, ${claro ? 80 : 50}%)`;
 };
 
 export function abreviarNomeDisciplina(nomeDisciplina: string) {
@@ -85,23 +86,4 @@ export function atualizaDisciplinasHoras(disciplinas: Disciplina[], aulas: Aula[
   });
 
   return disciplinasHorasAtualizadas;
-}
-
-export function apresentaHoras(docente: DisciplinaHoras['docentes'][number]): string {
-
-  const teoricas = docente.horas_teoricas ? `T: ${docente.horas_teoricas_lecionadas}/${docente.horas_teoricas}h` : ''
-  const praticas = docente.horas_praticas ? `P: ${docente.horas_praticas_lecionadas}/${docente.horas_praticas}h` : ''
-  const virgula = (teoricas && praticas) ? ', ' : ''
-
-  return ` (${teoricas}${virgula}${praticas})`
-}
-
-
-export function formataTurmas(turmas: Map<string, string[]>): string {
-  return Array.from(turmas.entries())
-    .map(([curso, turmasList]) => {
-      turmasList.sort((a, b) => a.localeCompare(b));
-      return `${curso} T${turmasList.join('&')}`;
-    })
-    .join(', ');
 }

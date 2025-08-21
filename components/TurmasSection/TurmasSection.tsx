@@ -5,7 +5,7 @@ import { useDisciplinas } from "@/hooks/useDisciplinas";
 import { useTurmas } from "@/hooks/useTurmas";
 import { useEffect, useState } from "react";
 import DisciplinaModal from "../CalendarioSemanalDisciplina/DisciplinaModal";
-import { HorarioAPI } from "@/types/interfaces";
+import { Horario } from "@/types/interfaces";
 
 
 const gerarCorDisciplina = (id: number) => {
@@ -54,7 +54,7 @@ function serializeTurmasMap(map: TurmasMap): string {
 }
 
 
-export default function TurmasSection({ horario }: { horario: HorarioAPI }) {
+export default function TurmasSection({ horario }: { horario: Horario }) {
 
   //
   // A. Definição de estados
@@ -121,7 +121,7 @@ export default function TurmasSection({ horario }: { horario: HorarioAPI }) {
 
   return (<>
     <section className="pt-8">
-      <h2 className="mt-4 mb-2 text-lg font-semibold">Turmas e suas Aulas Marcadas</h2>
+      <h2 className="mt-4 mb-2 text-lg font-semibold">Aulas Marcadas por Turma e Disciplina</h2>
 
       {(isLoadingDisciplinas || isLoadingAulas) && <p className="text-gray-500">A carregar dados...</p>}
       {(errorDisciplinas || errorAulas) && <p className="text-red-500">Erro ao carregar dados.</p>}
@@ -131,11 +131,11 @@ export default function TurmasSection({ horario }: { horario: HorarioAPI }) {
           <table className="border-separate border-spacing-y-2">
             <thead>
               <tr className="bg-gray-100">
-                <th className="border px-2 py-1 rounded-l-lg">Disciplina</th>
+                <th className="px-2 py-1 rounded-l-lg text-left">Disciplina</th>
                 {Array.from(turmasMap.entries()).map(([turmaId, turma], index, array) => (
                   <th
                     key={turmaId}
-                    className={`border px-2 py-1 ${index === array.length - 1 ? 'rounded-r-lg' : ''}`}
+                    className={`px-2 py-1 ${index === array.length - 1 ? 'rounded-r-lg' : ''}`}
                   >
                     Turma {turma.nome}
                   </th>

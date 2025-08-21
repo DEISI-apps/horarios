@@ -1,4 +1,4 @@
-import { HorarioAPI } from '@/types/interfaces';
+import { Horario } from '@/types/interfaces';
 import useSWR from 'swr';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -9,7 +9,7 @@ export function useHorarios() {
     error, 
     isLoading, 
     mutate 
-  } = useSWR<HorarioAPI[]>(
+  } = useSWR<Horario[]>(
     'https://dsdeisi.pythonanywhere.com/api/horarios/horarios', 
     fetcher
   );

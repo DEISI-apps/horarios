@@ -1,37 +1,23 @@
-import { DisciplinaHoras, HorarioAPI } from "@/types/interfaces";
+import { DisciplinaHoras, Horario } from "@/types/interfaces";
 import { useState } from "react";
 import DocenteModal from "../CalendarioSemanalDocente/DocenteModal";
 import DisciplinaModal from "../CalendarioSemanalDisciplina/DisciplinaModal";
+import {gerarCorDisciplina} from "@/lib/utils";
 
-
-interface DisciplinaAPI {
-  id: number;
-  nome: string;
-  aula_teorica_duracao: number;
-  aula_pratica_duracao: number;
-  horas_teoricas: number;
-  horas_praticas: number;
-}
-
-// Função para gerar cor
-const gerarCorDisciplina = (id: number) => {
-  const hue = (id * 137) % 360;
-  return `hsl(${hue}, 80%, 50%)`;
-};
 
 export default function DisciplinaCard({ 
   disciplina, horario
-}: { disciplina: DisciplinaHoras, horario: HorarioAPI }
+}: { disciplina: DisciplinaHoras, horario: Horario }
 ) {
 
   //
   // A. Gestão de estado
   const [selectedDocente, setSelectedDocente] = useState<{ id: number, nome: string } | null>(null);
   const [isModalDisciplinaOpen, setModalDisciplinaOpen] = useState(false);
-  const [selectedDisciplina, setSelectedDisciplina] = useState<DisciplinaAPI>();
+  const [selectedDisciplina, setSelectedDisciplina] = useState<DisciplinaHoras>();
 
   //
-  // A. Renderiza
+  // B. Renderiza
   return (<>
     <div className="border rounded-xl p-4 shadow-sm bg-gray-50">
       <h3 style={{ color: gerarCorDisciplina(disciplina.id) }} className="text-lg font-bold">

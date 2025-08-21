@@ -9,7 +9,7 @@ import {
   SlotForm,
   Disciplina,
   Aula,
-  HorarioAPI,
+  Horario,
 } from "@/types/interfaces";
 import { gerarCorDisciplina, atualizaDisciplinasHoras } from '@/lib/utils';
 import CalendarGrid from './CalendarioGrid';
@@ -18,7 +18,7 @@ import styles from './CalendarioSemanal.module.css';
 import TimeMarkers from './TimeMarkers';
 import { CALENDAR_HEIGHT } from '@/lib/constants';
 
-export default function CalendarioSemanal({ horario }: { horario: HorarioAPI }) {
+export default function CalendarioSemanal({ horario }: { horario: Horario }) {
 
   //
   // A. Gestão de estados do componente

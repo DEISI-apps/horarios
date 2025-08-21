@@ -1,9 +1,9 @@
 import useSWR from 'swr';
 import { fetcher } from '@/lib/fetcher';
-import { HorarioAPI } from '@/types/interfaces';
+import { Horario } from '@/types/interfaces';
 
 export function useTurmas(horario_id: number) {
-  const { data, error, isLoading } = useSWR<HorarioAPI>(
+  const { data, error, isLoading } = useSWR<Horario>(
     `https://dsdeisi.pythonanywhere.com/api/horarios/horarios/${horario_id}`,
     fetcher
   );

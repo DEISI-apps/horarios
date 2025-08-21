@@ -5,10 +5,10 @@ import { useAulas } from "@/hooks/useAulas";
 import { atualizaDisciplinasHoras } from "@/lib/utils";
 import { useMemo } from "react";
 import { useDisciplinas } from "@/hooks/useDisciplinas";
-import { HorarioAPI } from "@/types/interfaces";
+import { Horario } from "@/types/interfaces";
 
 
-export default function DisciplinasSection({ horario }: { horario: HorarioAPI }) {
+export default function DisciplinasSection({ horario }: { horario: Horario }) {
   
   //
   // A. obtém disciplinas e aulas

@@ -1,17 +1,20 @@
 import { useState } from 'react';
-import { AulaAPI, SlotForm, Disciplina, DisciplinaHoras, Turma, Sala, AulaIn } from '@/types/interfaces';
+import { AulaAPI, SlotForm, Disciplina, DocenteHoras, Sala, AulaIn, Turma } from '@/types/interfaces';
 import { DAYS, END_HOUR, START_HOUR } from '@/lib/constants';
-import { gerarCorDisciplina, apresentaHoras, abreviarNomeDisciplina } from '@/lib/utils';
+import { gerarCorDisciplina, abreviarNomeDisciplina } from '@/lib/utils';
 import styles from './CalendarioSemanal.module.css';
 import { saveAula, deleteAula } from '@/lib/api/aulas';
 import { KeyedMutator } from 'swr';
+
+
+
 
 interface AulaModalProps {
   isOpen: boolean;
   setModalOpen: (open: boolean) => void;
   aulaSelecionada: SlotForm;
   disciplinas: Disciplina[];
-  docentesDisciplina: DisciplinaHoras['docentes'];
+  docentesDisciplina: DocenteHoras[];
   turmas: Turma[];
   salas: Sala[];
   isLoadingDisciplinas: boolean;
@@ -20,6 +23,15 @@ interface AulaModalProps {
   setAulaSelecionada: (aula: SlotForm | ((prev: SlotForm) => SlotForm)) => void;
   mutateAulas: KeyedMutator<AulaAPI[]>; // KeyedMutator é o tipo do SWR para a função mutate
   handleDuplicate: () => void;
+}
+
+export function apresentaHoras(docente: DocenteHoras): string {
+
+  const teoricas = docente.horas_teoricas ? `T: ${docente.horas_teoricas_lecionadas}/${docente.horas_teoricas}h` : ''
+  const praticas = docente.horas_praticas ? `P: ${docente.horas_praticas_lecionadas}/${docente.horas_praticas}h` : ''
+  const virgula = (teoricas && praticas) ? ', ' : ''
+
+  return ` (${teoricas}${virgula}${praticas})`
 }
 
 export default function AulaModal({
