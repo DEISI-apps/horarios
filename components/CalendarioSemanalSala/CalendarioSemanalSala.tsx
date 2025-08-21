@@ -6,7 +6,6 @@ import styles from './CalendarioSemanalSala.module.css';
 import TimeMarkers from './TimeMarkers';
 import { CALENDAR_HEIGHT } from '@/lib/constants';
 import CalendarioGridSala from './CalendarioGridSala';
-import { AulaDocente } from '@/types/interfaces';
 
 
 interface Props {

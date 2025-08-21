@@ -30,7 +30,7 @@ export default function SalaModal({
         style={{ maxWidth: '90vw', width: '1200px' }}
       >
         <div className={styles.modalHeader}>
-          <h2>Horário de {sala_nome}</h2>
+          <h2>Horário da sala {sala_nome}</h2>
           <button 
             onClick={() => setModalOpen(false)}
             className={styles.closeButton}

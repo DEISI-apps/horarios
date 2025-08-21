@@ -9,15 +9,6 @@ interface TimeSlotProps {
 }
 
 
-function formataTurmas(turmas: Map<string, string[]>): string {
-  return Array.from(turmas.entries())
-    .map(([curso, turmasList]) => {
-      turmasList.sort((a, b) => a.localeCompare(b));
-      return `${curso} T${turmasList.join('+')}`;
-    })
-    .join(', ');
-}
-
 export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
   const top = calculateSlotPosition(slot.hora_inicio);
   const height = slot.duracao * MINUTE_HEIGHT - 3;
@@ -43,7 +34,7 @@ export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
         {abreviarNomeDisciplina(slot.disciplina_nome)}
       </div>
       <div className={`${styles.slotDetails}`}>
-        {slot.tipo === 'T' ? 'T' : 'P'}, {slot.sala_nome !== 'sala?' ? ', ' + slot.sala_nome : ''}
+        {slot.tipo === 'T' ? 'Teórica' : 'Prática'}{slot.sala_nome !== 'sala?' ? ', ' + slot.sala_nome : ''}
       </div>
       <div className={`${styles.slotDocente}`}>
          {slot.docente_nome}
