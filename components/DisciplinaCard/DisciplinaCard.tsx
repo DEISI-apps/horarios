@@ -2,10 +2,10 @@ import { DisciplinaHoras, Horario } from "@/types/interfaces";
 import { useState } from "react";
 import DocenteModal from "../CalendarioSemanalDocente/DocenteModal";
 import DisciplinaModal from "../CalendarioSemanalDisciplina/DisciplinaModal";
-import {gerarCorDisciplina} from "@/lib/utils";
+import { gerarCorDisciplina } from "@/lib/utils";
 
 
-export default function DisciplinaCard({ 
+export default function DisciplinaCard({
   disciplina, horario
 }: { disciplina: DisciplinaHoras, horario: Horario }
 ) {
@@ -19,36 +19,38 @@ export default function DisciplinaCard({
   //
   // B. Renderiza
   return (<>
-    <div className="border rounded-xl p-4 shadow-sm bg-gray-50">
-      <h3 style={{ color: gerarCorDisciplina(disciplina.id, false) }} className="text-lg font-bold">
+    <div className="border  rounded-lg shadow-sm bg-gray-50">
+      <div className="rounded-t-lg p-4" style={{ background: gerarCorDisciplina(disciplina.id, true) }} >
+        <h3 className="text-lg font-bold">
 
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setSelectedDisciplina(disciplina);
-            setModalDisciplinaOpen(true);
-          }}
-          className="font-semibold underline focus:outline-none"
-        >
-          {disciplina.nome}
-        </button>
-      </h3>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedDisciplina(disciplina);
+              setModalDisciplinaOpen(true);
+            }}
+            className="font-semibold underline focus:outline-none text-left"
+          >
+            {disciplina.nome}
+          </button>
+        </h3>
 
-      <p className="text-sm">
-        {disciplina.horas_teoricas > 0 && (
-          <span>
-            Teóricas: {disciplina.horas_teoricas_lecionadas}/{disciplina.horas_teoricas}h
-          </span>
-        )}
-        {disciplina.horas_teoricas > 0 && disciplina.horas_praticas > 0 && ", "}
-        {disciplina.horas_praticas > 0 && (
-          <span>
-            Práticas: {disciplina.horas_praticas_lecionadas}/{disciplina.horas_praticas}h
-          </span>
-        )}
-      </p>
+        <p className="text-sm">
+          {disciplina.horas_teoricas > 0 && (
+            <span>
+              Teóricas: {disciplina.horas_teoricas_lecionadas}/{disciplina.horas_teoricas}h
+            </span>
+          )}
+          {disciplina.horas_teoricas > 0 && disciplina.horas_praticas > 0 && ", "}
+          {disciplina.horas_praticas > 0 && (
+            <span>
+              Práticas: {disciplina.horas_praticas_lecionadas}/{disciplina.horas_praticas}h
+            </span>
+          )}
+        </p>
+      </div>
 
-      <ul className="list-disc pl-6 mt-2">
+      <ul className="list-disc pl-6 mt-2 pb-4 rounded-b-lg">
         {disciplina.docentes.map((docente, idx) => {
           const partes: string[] = [];
           if (docente.horas_teoricas > 0) partes.push(`teórica:  ${docente.horas_teoricas_lecionadas}/${docente.horas_teoricas}h`);

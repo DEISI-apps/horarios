@@ -120,7 +120,7 @@ export default function TurmasSection({ horario }: { horario: Horario }) {
 
   return (<>
     <section className="pt-8">
-      <h2 className="mt-4 mb-2 text-lg font-semibold">Aulas Marcadas por Turma e Disciplina</h2>
+      <h2 className="mt-4 mb-2 text-lg font-semibold">Aulas Marcadas por Disciplina e Turma</h2>
 
       {(isLoadingDisciplinas || isLoadingAulas) && <p className="text-gray-500">A carregar dados...</p>}
       {(errorDisciplinas || errorAulas) && <p className="text-red-500">Erro ao carregar dados.</p>}
