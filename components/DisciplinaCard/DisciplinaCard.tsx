@@ -34,23 +34,26 @@ export default function DisciplinaCard({
             {disciplina.nome}
           </button>
         </h3>
-
+        <p className="text-sm">
+          Cursos: <span className="font-semibold">{disciplina.cursos}</span>
+        </p>
         <p className="text-sm">
           {disciplina.horas_teoricas > 0 && (
             <span>
-              Teóricas: {disciplina.horas_teoricas_lecionadas}/{disciplina.horas_teoricas}h
+              Total Teóricas: <span className="font-semibold">{disciplina.horas_teoricas_lecionadas}/{disciplina.horas_teoricas}h</span>
             </span>
           )}
           {disciplina.horas_teoricas > 0 && disciplina.horas_praticas > 0 && ", "}
           {disciplina.horas_praticas > 0 && (
             <span>
-              Práticas: {disciplina.horas_praticas_lecionadas}/{disciplina.horas_praticas}h
+              Total Práticas: <span className="font-semibold">{disciplina.horas_praticas_lecionadas}/{disciplina.horas_praticas}h</span>
             </span>
           )}
         </p>
       </div>
 
-      <ul className="list-disc pl-6 mt-2 pb-4 rounded-b-lg">
+      {/* <p className="text-sm ml-2 mt-2">Disponibilidade dos docentes (agregada, no caso de disciplina em funcionamento em vários cursos)</p> */}
+      <ul className="list-disc pl-6 pb-4 mt-2 rounded-b-lg">
         {disciplina.docentes.map((docente, idx) => {
           const partes: string[] = [];
           if (docente.horas_teoricas > 0) partes.push(`teórica:  ${docente.horas_teoricas_lecionadas}/${docente.horas_teoricas}h`);
@@ -87,6 +90,7 @@ export default function DisciplinaCard({
         setModalOpen={setModalDisciplinaOpen}
         disciplina_id={selectedDisciplina.id}
         disciplina_nome={selectedDisciplina.nome}
+        disciplina_cursos={selectedDisciplina.cursos}
         ano_lectivo_id={horario.ano_lectivo_id}
         semestre={horario.semestre}
       />)

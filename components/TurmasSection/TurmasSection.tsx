@@ -120,7 +120,7 @@ export default function TurmasSection({ horario }: { horario: Horario }) {
 
   return (<>
     <section className="pt-8">
-      <h2 className="mt-4 mb-2 text-lg font-semibold">Aulas Marcadas por Disciplina e Turma</h2>
+      <h2 className="mt-4 mb-2 text-lg font-semibold">Necessidades e Aulas Marcadas, por Disciplina e Turma</h2>
 
       {(isLoadingDisciplinas || isLoadingAulas) && <p className="text-gray-500">A carregar dados...</p>}
       {(errorDisciplinas || errorAulas) && <p className="text-red-500">Erro ao carregar dados.</p>}
@@ -163,7 +163,7 @@ export default function TurmasSection({ horario }: { horario: Horario }) {
                         {disciplina.nome}
                       </button>
                       <br />
-                      <span> Duração T: {disciplina.aula_teorica_duracao}h, P: {disciplina.aula_pratica_duracao}h</span>
+                      <span> Necessidade T: {disciplina.aula_teorica_duracao}h, P: {disciplina.aula_pratica_duracao}h</span>
                     </td>
 
                     {Array.from(turmasMap.entries()).map(([turmaId, turma], index, array) => {

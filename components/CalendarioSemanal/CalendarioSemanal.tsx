@@ -147,7 +147,6 @@ export default function CalendarioSemanal({ horario }: { horario: Horario }) {
         Marque o horário semanal das aulas de cada turma, de acordo com as necessidades apresentadas nas tabelas em baixo.
       </p>
 
-
       <div className="pb-4 text-sm text-emerald-700">
         <details className="cursor-pointer">
           <summary className="font-bold">Notas sobre aulas em junção</summary>
@@ -158,19 +157,17 @@ export default function CalendarioSemanal({ horario }: { horario: Horario }) {
             <li>Aulas em junção não são contabilizadas no número de horas lecionadas do docente.</li>
           </ul>
         </details>
-      </div>
-
-      
+      </div>    
 
       <div className={styles.container} style={{ position: 'relative' }}>
         <div
           className={`${styles.timeSlots} ${styles.timeMarkersFixed}`}
-          style={{ height: `80px`, position: 'absolute', top: 0, left: -1, zIndex: 1, borderRight: '1px solid black' }}
+          style={{ height: `80px`, position: 'absolute', top: 0, left: -1, zIndex: 1, borderRight: '1px solid #dddada' }}
         >
         </div>
         <div
           className={`${styles.timeSlots} ${styles.timeMarkersFixed}`}
-          style={{ height: `${CALENDAR_HEIGHT}px`, position: 'absolute', top: '67px', left: -1, zIndex: 1, borderRight: '1px solid black' }}
+          style={{ height: `${CALENDAR_HEIGHT}px`, position: 'absolute', top: '67px', left: -1, zIndex: 1, borderRight: '1px solid #dddada' }}
         >
           <TimeMarkers />
         </div>

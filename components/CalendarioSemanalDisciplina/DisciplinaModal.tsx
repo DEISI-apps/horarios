@@ -8,6 +8,7 @@ interface DocenteModalProps {
   setModalOpen: (open: boolean) => void;
   disciplina_id: number;
   disciplina_nome: string,
+  disciplina_cursos: string,
   ano_lectivo_id: number;
   semestre: number;
 }
@@ -17,6 +18,7 @@ export default function DisciplinaModal({
   setModalOpen,
   disciplina_id,
   disciplina_nome,
+  disciplina_cursos,
   ano_lectivo_id,
   semestre
 }: DocenteModalProps) {
@@ -38,6 +40,8 @@ export default function DisciplinaModal({
             ✕
           </button>
         </div>
+
+        <p className="text-sm mb-2">Cursos: <span className="font-semibold">{disciplina_cursos}</span></p>
 
         <div className={styles.modalBody}>
           <CalendarioSemanalDisciplina

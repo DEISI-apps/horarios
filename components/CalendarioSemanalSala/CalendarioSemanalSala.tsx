@@ -49,12 +49,12 @@ export default function CalendarioSemanalSala({
       <div className={styles.container} style={{ position: 'relative' }}>
         <div
           className={`${styles.timeSlots} ${styles.timeMarkersFixed}`}
-          style={{ height: `80px`, position: 'absolute', top: 0, left: -1, zIndex: 1, borderRight: '1px solid black' }}
+          style={{ height: `80px`, position: 'absolute', top: 0, left: -1, zIndex: 1, borderRight: '1px solid #dddada' }}
         >
         </div>
         <div
           className={`${styles.timeSlots} ${styles.timeMarkersFixed}`}
-          style={{ height: `${CALENDAR_HEIGHT}px`, position: 'absolute', top: '67px', left: -1, zIndex: 1, borderRight: '1px solid black' }}
+          style={{ height: `${CALENDAR_HEIGHT}px`, position: 'absolute', top: '40px', left: -1, zIndex: 1, borderRight: '1px solid #dddada' }}
         >
           <TimeMarkers />
         </div>

@@ -36,7 +36,7 @@
   text-align: center;
   padding: 10px 10px 0 10px;
   font-weight: bold;
-  border-right: 1px solid black;
+  border-right: 1px solid #dddada;
   display: flex;
   flex-direction: column;
 }
@@ -105,7 +105,7 @@
 .dayColumn {
   flex: 1;
   position: relative;
-  border-right: 1px solid black;
+  border-right: 1px solid #dddada;
   display: flex;
   height: 100%;
 }
