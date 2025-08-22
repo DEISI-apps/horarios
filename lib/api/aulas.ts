@@ -4,7 +4,7 @@ import { AulaIn } from '@/types/interfaces';
 // Funções CRUD para aulas
 export const saveAula = async (aulaData: AulaIn, aulaId?: number | null): Promise<void> => {
 
-    console.log('saveAula called with:', { aulaData, aulaId, juncao: aulaData.juncao });
+    console.log('saveAula called with:', { aulaData });
 
   
   const method = aulaId ? 'PUT' : 'POST';

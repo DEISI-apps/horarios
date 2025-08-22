@@ -23,6 +23,8 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
   const height = slot.duracao * MINUTE_HEIGHT - 3;
   const baseColor = gerarCorDisciplina(slot.disciplina_id);
 
+  console.log('slot', slot)
+
   return (
     <>
       <div
@@ -32,7 +34,7 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
           top: `${top}px`,
           height: `${height}px`,
           backgroundColor: baseColor,
-          color: slot.juncao ? 'transparent' : 'black',
+          color: (slot.juncao && !slot.juncao_visivel) ? 'transparent' : 'black',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
@@ -47,7 +49,7 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
         <div className={styles.slotTitle}>
           {abreviarNomeDisciplina(slot.disciplina_nome)}
         </div>
-        <div className={styles.slotDetails} style={{ color: slot.juncao ? 'transparent' : 'rgb(100, 98, 98)' }} >
+        <div className={styles.slotDetails} style={{ color: (slot.juncao && !slot.juncao_visivel) ? 'transparent' : 'rgb(100, 98, 98)' }} >
           {slot.tipo === 'T' ? 'Teórica ' : 'Prática '}
 
           {slot.sala_nome !== 'sala?' && (
@@ -63,8 +65,9 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
             </button>
           )}
         </div>
-        <div className={styles.slotDetails} style={{ color: slot.juncao ? 'transparent' : 'rgb(100, 98, 98)' }}>
-          {!slot.juncao && (
+
+        <div className={styles.slotDetails} style={{ color: (slot.juncao && !slot.juncao_visivel) ? 'transparent' : 'rgb(100, 98, 98)' }}>
+          {(!slot.juncao || slot.juncao_visivel) && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -96,7 +99,6 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
         ano_lectivo_id={ano_lectivo_id}
         semestre={semestre}
       />
-
 
     </>
   );

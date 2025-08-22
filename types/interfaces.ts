@@ -76,6 +76,7 @@ export interface AulaIn {
   duracao: number;
   cor: string;
   juncao: boolean;
+  juncao_visivel: boolean;
 }
 
 
@@ -120,6 +121,7 @@ export interface SlotForm extends Omit<AulaIn,
   juncao: boolean;  
   curso_sigla: string;
   turma_nome: string;
+  juncao_visivel: boolean;
 }
 
 

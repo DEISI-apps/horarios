@@ -40,6 +40,7 @@ export default function CalendarioSemanal({ horario }: { horario: Horario }) {
     juncao: false,
     curso_sigla: '',
     turma_nome: '',
+    juncao_visivel: false,
   });
 
   // 
@@ -92,6 +93,7 @@ export default function CalendarioSemanal({ horario }: { horario: Horario }) {
       juncao: false,
       curso_sigla: '',
       turma_nome: '',
+      juncao_visivel: false,
     });
     setModalOpen(true);
   }
@@ -117,6 +119,7 @@ export default function CalendarioSemanal({ horario }: { horario: Horario }) {
       juncao: slot.juncao || false,
       curso_sigla: slot.curso_sigla || '',
       turma_nome: slot.turma_nome || '',
+      juncao_visivel: slot.juncao_visivel || false,
     });
     setModalOpen(true);
   }

@@ -67,7 +67,7 @@ export default function AulaModal({
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
     const { name, type, value } = e.target;
 
-    // Trata checkbox de juncao
+    // Trata checkbox de juncao e de juncao_visivel
     if (type === 'checkbox') {
       const checked = (e.target as HTMLInputElement).checked;
       setAulaSelecionada(prev => ({
@@ -146,6 +146,7 @@ export default function AulaModal({
         duracao: parseInt(aulaSelecionada.duracao),
         cor: gerarCorDisciplina(parseInt(aulaSelecionada.disciplina_id)),
         juncao: aulaSelecionada.juncao,
+        juncao_visivel: aulaSelecionada.juncao_visivel,
       };
 
       // validacao
@@ -191,7 +192,6 @@ export default function AulaModal({
         const naoEhMesmaAula = aula.id !== aulaSelecionada.id;
         const temSobreposicao = outraInicio < aulaFim && outraFim > aulaInicio;
         const naoEhJuncao = aulaData.juncao === false;
-        console.log(aulaInicio, aulaFim, outraInicio, outraFim, aulaData.dia_semana, aula.dia_semana, aula.docente_id, docente.id)
         return mesmoDocente && mesmoDia && naoEhMesmaAula && temSobreposicao && naoEhJuncao;
       });
 
@@ -346,6 +346,20 @@ export default function AulaModal({
               style={{ marginLeft: '8px', marginBottom: '5px', width: 'auto' }}
             />
           </div>
+
+          {aulaSelecionada.juncao && (<div className={`${styles.formGroup} ${styles.checkboxGroup}`}>
+            <label htmlFor="slot-juncao-visivel">
+              Texto visível
+            </label>
+            <input
+              type="checkbox"
+              id="slot-juncao-visivel"
+              name="juncao_visivel"
+              checked={!!aulaSelecionada.juncao_visivel}
+              onChange={handleInputChange}
+              style={{ marginLeft: '8px', marginBottom: '5px', width: 'auto' }}
+            />
+          </div>)}
 
           <div className={styles.formGroup}>
             <label htmlFor="slot-disciplina-id">Disciplina</label>

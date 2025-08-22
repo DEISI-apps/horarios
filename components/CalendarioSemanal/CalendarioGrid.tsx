@@ -25,7 +25,7 @@ export default function CalendarGrid({
   onSlotEdit 
 }: CalendarGridProps) {
   
-  const renderSlotsForDayAndClass = (dayId: number, classId: number, ano_lectivo_id: number, semestre: number) => {
+  const renderizaSlotsDoDiaETurma = (dayId: number, classId: number, ano_lectivo_id: number, semestre: number) => {
     if (isLoadingAulas) return <div>A carregar aulas...</div>;
     
     return aulas
@@ -93,7 +93,7 @@ export default function CalendarGrid({
                   className={styles.classSlotColumn}
                   onClick={(e) => handleClassSlotClick(day.id, turma.id, e)}
                 >
-                  {renderSlotsForDayAndClass(day.id, turma.id, ano_lectivo_id, semestre)}
+                  {renderizaSlotsDoDiaETurma(day.id, turma.id, ano_lectivo_id, semestre)}
                 </div>
               ))}
             </div>
