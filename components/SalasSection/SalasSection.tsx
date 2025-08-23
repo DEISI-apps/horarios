@@ -56,7 +56,7 @@ export default function SalasSection({ ano_lectivo_id, semestre }: SalaProps) {
                 style={{ border: '1px solid lightgray' }}
             >
                 <option value="">Selecione uma sala...</option>
-                {salas.map((salaOpcao) => (
+                {salas.sort((a, b) => a.nome.localeCompare(b.nome)).map((salaOpcao) => (
                     <option key={salaOpcao.id} value={salaOpcao.id}>
                         {salaOpcao.nome}
                     </option>
