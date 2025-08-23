@@ -51,14 +51,6 @@ export function atualizaDisciplinasHoras(disciplinas: Disciplina[], aulas: Aula[
     const horasTeoricas = aulasDaDisciplina.filter((aula) => aula.tipo === 'T').reduce((total, aula) => total + aula.duracao / 60, 0);
     const horasPraticas = aulasDaDisciplina.filter((aula) => aula.tipo === 'P').reduce((total, aula) => total + aula.duracao / 60, 0);
 
-    // if (disciplina.nome === "Bases de Dados") console.log(
-    //   'com juncoes:',
-    //   aulasDaDisciplina.filter((aula) => aula.tipo === 'T').reduce((total, aula) => total + aula.duracao / 60, 0),
-    //   "sem juncoes",
-    //   aulas.filter((aula) => aula.disciplina_id === disciplina.id).filter((aula) => aula.tipo === 'T').reduce((total, aula) => total + aula.duracao / 60, 0)
-    // );
-
-
     return {
       ...disciplina,
       horas_teoricas_lecionadas: horasTeoricas,
@@ -67,14 +59,6 @@ export function atualizaDisciplinasHoras(disciplinas: Disciplina[], aulas: Aula[
         const aulasDoDocente = aulasDaDisciplina.filter((aula) => aula.docente_id === docente.id);
         const horasTeoricasDocente = aulasDoDocente.filter((aula) => aula.tipo === 'T').reduce((total, aula) => total + aula.duracao / 60, 0);
         const horasPraticasDocente = aulasDoDocente.filter((aula) => aula.tipo === 'P').reduce((total, aula) => total + aula.duracao / 60, 0);
-
-        // if (docente.nome === "Rui Ribeiro") console.log(
-        //   'Rui Ribeiro: com juncoes:',
-        //   aulasDoDocente.filter((aula) => aula.tipo === 'T').reduce((total, aula) => total + aula.duracao / 60, 0),
-        //   "sem juncoes",
-        //   aulas.filter((aula) => aula.disciplina_id === disciplina.id && aula.docente_id === docente.id).filter((aula) => aula.tipo === 'T').reduce((total, aula) => total + aula.duracao / 60, 0)
-        // );
-
 
         return {
           ...docente,

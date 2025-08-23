@@ -3,16 +3,15 @@ import { useHorarios } from "@/hooks/useHorarios";
 import { Horario } from "@/types/interfaces";
 import { useState } from "react";
 
-
 interface SelectHorarioProps {
   onSelect: (value: number | null) => void;
 }
 
-
 export default function SelectHorario({ onSelect }: SelectHorarioProps) {
   //
   // A. Gestão de estado do componente
-  const [selectedHorarioId, setSelectedHorarioId] = useState<string>("");
+  const [selectedAnoSemestre, setSelectedAnoSemestre] = useState<string>("");
+  const [selectedCurso, setSelectedCurso] = useState<string>("");
 
   //
   // B. Obtenção de dados da API usando SWR
@@ -20,36 +19,78 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
 
   //
   // C. Transformação/processamento dos dados recebidos
-  const horarioOptions = horarios?.map((horario: Horario) => ({
-    id: horario.id,
-    label: `${horario.curso.sigla}, ${horario.ano}º ano, ${horario.semestre}º sem. (${horario.ano_lectivo.ano_lectivo})`
-  })) || [];
+  const horarioOptions =
+    horarios?.map((horario: Horario) => ({
+      id: horario.id,
+      ano: horario.ano,
+      semestre: horario.semestre,
+      curso: horario.curso.sigla,
+      anoLectivo: horario.ano_lectivo.ano_lectivo,
+      label: `${horario.curso.sigla}, ${horario.ano}º ano, ${horario.semestre}º sem. (${horario.ano_lectivo.ano_lectivo})`,
+    })) || [];
+
+  // Opções únicas para ano+semestre e curso
+  const anoSemestreOptions = Array.from(
+    new Set(horarioOptions.map((h) => `${h.ano}º ano, ${h.semestre}º semestre (${h.anoLectivo})`))
+  );
+  const cursoOptions = Array.from(new Set(horarioOptions.map((h) => h.curso)));
 
   //
-  // D. Função (handler) que lida com a escolha do horario (evento). 
-  const handleHorarioSelection = ({ target: { value } }: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedHorarioId(value);
-    onSelect(value ? Number(value) : null);
+  // D. Handlers
+  const handleAnoSemestreSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedAnoSemestre(e.target.value);
+    updateSelection(e.target.value, selectedCurso);
+  };
+
+  const handleCursoSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedCurso(e.target.value);
+    updateSelection(selectedAnoSemestre, e.target.value);
+  };
+
+  // Combina ano+semestre com curso e procura o horário correspondente
+  const updateSelection = (anoSem: string, curso: string) => {
+    const selectedHorario = horarioOptions.find(
+      (h) =>
+        `${h.ano}º ano, ${h.semestre}º semestre (${h.anoLectivo})` === anoSem &&
+        h.curso === curso
+    );
+    onSelect(selectedHorario ? selectedHorario.id : null);
   };
 
   //
-  // E. Renderização, retorna o JSX que define e exibe a UI
+  // E. Renderização
   if (isError) return <div>Erro ao carregar cursos.</div>;
   if (isLoading) return <div>A carregar...</div>;
 
   return (
-    <select
-      value={selectedHorarioId}
-      onChange={handleHorarioSelection}
-      className="border rounded p-2 font-bold text-xl cursor-pointer mb-2 flex row gap-3 items-center"
-      style={{ border: '1px solid lightgray' }}
-    >
-      <option value="">Selecione um Curso & Ano...</option>
-      {horarioOptions.map((horarioOption) => (
-        <option key={horarioOption.id} value={horarioOption.id}>
-          {horarioOption.label}
-        </option>
-      ))}
-    </select>
+    <div className="flex gap-4 mb-4">
+      {/* Seletor de Ano & Semestre */}
+      <select
+        value={selectedAnoSemestre}
+        onChange={handleAnoSemestreSelection}
+        className="border rounded p-2 font-bold text-lg cursor-pointer"
+      >
+        <option value="">Selecione Ano & Semestre...</option>
+        {anoSemestreOptions.map((option, idx) => (
+          <option key={idx} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+
+      {/* Seletor de Curso */}
+      <select
+        value={selectedCurso}
+        onChange={handleCursoSelection}
+        className="border rounded p-2 font-bold text-lg cursor-pointer"
+      >
+        <option value="">Selecione um Curso...</option>
+        {cursoOptions.sort((a, b) => a.localeCompare(b)).map((curso, idx) => (
+          <option key={idx} value={curso}>
+            {curso}
+          </option>
+        ))}
+      </select>
+    </div>
   );
 }

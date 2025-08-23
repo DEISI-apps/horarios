@@ -23,8 +23,6 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
   const height = slot.duracao * MINUTE_HEIGHT - 3;
   const baseColor = gerarCorDisciplina(slot.disciplina_id);
 
-  console.log('slot', slot)
-
   return (
     <>
       <div

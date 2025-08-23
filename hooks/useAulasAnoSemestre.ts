@@ -24,6 +24,7 @@ import { Aula, AulaAPI } from '@/types/interfaces';
       juncao: aula.juncao,
       curso_sigla: aula.curso_sigla,
       turma_nome: aula.turma_nome,
+      juncao_visivel: aula.juncao_visivel || false,
     };
   };
 

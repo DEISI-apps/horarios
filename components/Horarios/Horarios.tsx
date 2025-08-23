@@ -6,6 +6,7 @@ import DisciplinasSection from "@/components/DisciplinasSection/DisciplinasSecti
 import TurmasSection from "../TurmasSection/TurmasSection";
 import CalendarioSemanal from "../CalendarioSemanal";
 import { useHorarios } from "@/hooks/useHorarios";
+import SalasSection from "../SalasSection/SalasSection";
 
 
 export default function Horarios() {
@@ -34,6 +35,7 @@ export default function Horarios() {
         
           <CalendarioSemanal horario={horario} />
           <TurmasSection horario={horario} />
+          <SalasSection ano_lectivo_id={horario.ano_lectivo_id} semestre={horario.semestre} />
           <DisciplinasSection horario={horario} />
         </>
       )}

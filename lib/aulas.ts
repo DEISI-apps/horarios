@@ -19,6 +19,7 @@ export const convertAulaToSlot = (aula: AulaAPI): Aula => {
         duracao: aula.duracao,
         cor: '',
         juncao: aula.juncao,
+        juncao_visivel: aula.juncao_visivel,
 
         curso_sigla: aula.curso_sigla,
         turma_nome: aula.turma_nome,

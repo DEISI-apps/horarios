@@ -5,6 +5,7 @@ import { useDisciplinas } from '@/hooks/useDisciplinas';
 import { useTurmas } from '@/hooks/useTurmas';
 import { useSalas } from '@/hooks/useSalas';
 import { useAulas } from '@/hooks/useAulas';
+import { useAulasAnoSemestre } from '@/hooks/useAulasAnoSemestre';
 import {
   SlotForm,
   Disciplina,
@@ -49,6 +50,7 @@ export default function CalendarioSemanal({ horario }: { horario: Horario }) {
   const { turmas, isLoadingTurmas } = useTurmas(horario.id);
   const { salas, isLoadingSalas } = useSalas();
   const { aulas, isLoadingAulas, mutateAulas } = useAulas(horario.id);
+  const { aulas: aulasAnoSemestre } = useAulasAnoSemestre(horario.ano_lectivo_id, horario.semestre);
 
   //
   // C. Computação de dados
@@ -64,12 +66,12 @@ export default function CalendarioSemanal({ horario }: { horario: Horario }) {
     if (!disciplinaSelecionada) return [];
 
     // Usa a função existente para calcular horas
-    const disciplinasAtualizadas = atualizaDisciplinasHoras([disciplinaSelecionada], aulas);
+    const disciplinasAtualizadas = atualizaDisciplinasHoras([disciplinaSelecionada], aulasAnoSemestre);
 
     // Retorna os docentes da disciplina atualizada
     return disciplinasAtualizadas[0]?.docentes || [];
 
-  }, [aulaSelecionada.disciplina_id, disciplinas, aulas]);
+  }, [aulaSelecionada.disciplina_id, disciplinas, aulasAnoSemestre, aulas]);
 
 
   //
@@ -193,7 +195,7 @@ export default function CalendarioSemanal({ horario }: { horario: Horario }) {
           disciplinas={disciplinas}
           docentesDisciplina={docentesDisciplina}
           turmas={turmas}
-          salas={salas}
+          salas={salas ?? []}
           isLoadingDisciplinas={isLoadingDisciplinas}
           isLoadingSalas={isLoadingSalas}
           horario={horario}

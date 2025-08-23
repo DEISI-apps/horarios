@@ -16,6 +16,7 @@ const gerarCorDisciplina = (id: number) => {
 interface DisciplinaAPI {
   id: number;
   nome: string;
+  cursos: string;
   aula_teorica_duracao: number;
   aula_pratica_duracao: number;
   horas_teoricas: number;
@@ -203,6 +204,7 @@ export default function TurmasSection({ horario }: { horario: Horario }) {
         setModalOpen={setModalOpen}
         disciplina_id={selectedDisciplina.id}
         disciplina_nome={selectedDisciplina.nome}
+        disciplina_cursos={selectedDisciplina.cursos}
         ano_lectivo_id={horario.ano_lectivo_id}
         semestre={horario.semestre}
       />)

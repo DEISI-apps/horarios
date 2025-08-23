@@ -133,6 +133,8 @@ export default function AulaModal({
     setLoadingSaving(true);
     setError(null);
 
+    await mutateAulas();
+
     try {
       const aulaData: AulaIn = {
         horario_id: horario.id,
@@ -184,18 +186,23 @@ export default function AulaModal({
       const aulaFim = aulaInicio + aulaData.duracao / 60;
 
       const aulasConflitantes = aulas.filter(aula => {
+
         const outraInicio = parseFloat(aula.hora_inicio.split(':')[0]) + parseFloat(aula.hora_inicio.split(':')[1]) / 60;
         const outraFim = outraInicio + aula.duracao / 60;
+        const temSobreposicao = outraInicio < aulaFim && outraFim > aulaInicio;
 
         const mesmoDocente = aula.docente_id === docente.id;
         const mesmoDia = aula.dia_semana === aulaData.dia_semana;
         const naoEhMesmaAula = aula.id !== aulaSelecionada.id;
-        const temSobreposicao = outraInicio < aulaFim && outraFim > aulaInicio;
         const naoEhJuncao = aulaData.juncao === false;
-        return mesmoDocente && mesmoDia && naoEhMesmaAula && temSobreposicao && naoEhJuncao;
+
+        return mesmoDocente && mesmoDia && naoEhMesmaAula && temSobreposicao && naoEhJuncao && !aula.juncao;
       });
 
       if (aulasConflitantes.length > 0) {
+
+        aulasConflitantes.map(aula => console.log(aula))
+
         setError('O docente já está a dar neste horário uma aula noutra turma sem junção.');
         setLoadingSaving(false);
         return;
@@ -203,15 +210,16 @@ export default function AulaModal({
 
       // garantir que a aula não se sobrepõe a outra aula da mesma turma
       const aulasTurmaConflitantes = aulas.filter(aula => {
+
         const outraInicio = parseFloat(aula.hora_inicio.split(':')[0]) + parseFloat(aula.hora_inicio.split(':')[1]) / 60;
         const outraFim = outraInicio + aula.duracao / 60;
-
-        const mesmoTurma = aula.turma_id === aulaData.turma_id;
-        const mesmoDia = aula.dia_semana === aulaData.dia_semana;
-        const naoEhMesmaAula = aula.id !== aulaSelecionada.id;
         const temSobreposicao = outraInicio < aulaFim && outraFim > aulaInicio;
 
-        return mesmoTurma && mesmoDia && naoEhMesmaAula && temSobreposicao;
+        const mesmaTurma = aula.turma_id === aulaData.turma_id;
+        const mesmoDia = aula.dia_semana === aulaData.dia_semana;
+        const naoEhMesmaAula = aula.id !== aulaSelecionada.id;
+
+        return mesmaTurma && mesmoDia && naoEhMesmaAula && temSobreposicao;
       });
 
       if (aulasTurmaConflitantes.length > 0) {
@@ -222,12 +230,13 @@ export default function AulaModal({
 
       // garantir que não existe uma aula dessa disciplina e tipo na turma
       const aulasConflitantesTurma = aulas.filter(aula => {
-        const mesmoTurma = aula.turma_id === aulaData.turma_id;
-        const mesmoDisciplina = aula.disciplina_id === aulaData.disciplina_id;
-        const mesmoTipo = aula.tipo === aulaData.tipo;
-        const naoEhMesmaAula = aula.id !== aulaSelecionada.id;
 
-        return mesmoTurma && mesmoDisciplina && mesmoTipo && naoEhMesmaAula;
+        const mesmaTurma = aula.turma_id === aulaData.turma_id;
+        const mesmaDisciplina = aula.disciplina_id === aulaData.disciplina_id;
+        const mesmoTipo = aula.tipo === aulaData.tipo;
+        const mesmaAula = aula.id === aulaSelecionada.id;
+
+        return mesmaTurma && mesmaDisciplina && mesmoTipo && !mesmaAula;
       });
 
       if (aulasConflitantesTurma.length > 0) {
@@ -243,12 +252,13 @@ export default function AulaModal({
         const mesmoTipo = aula.tipo === aulaData.tipo;
         const naoEhMesmaAula = aula.id !== aulaSelecionada.id;
         const mesmoDia = aula.dia_semana === aulaData.dia_semana;
+        const naoEhJuncao = aulaData.juncao === false;
 
         const outraInicio = parseFloat(aula.hora_inicio.split(':')[0]) + parseFloat(aula.hora_inicio.split(':')[1]) / 60;
         const outraFim = outraInicio + aula.duracao / 60;
         const temSobreposicao = outraInicio < aulaFim && outraFim > aulaInicio;
 
-        return ehLabDEISI && mesmaSala && mesmoDia && temSobreposicao && mesmoTipo && naoEhMesmaAula;
+        return ehLabDEISI && mesmaSala && mesmoDia && temSobreposicao && mesmoTipo && naoEhMesmaAula && naoEhJuncao;
       });
 
       if (aulasConflitantesSala.length > 0) {
@@ -372,11 +382,13 @@ export default function AulaModal({
               disabled={isLoadingDisciplinas}
             >
               <option value="">Selecione uma disciplina</option>
-              {disciplinas.map((disciplina: Disciplina) => (
-                <option key={disciplina.id} value={disciplina.id}>
-                  {disciplina.nome.length > 40 ? abreviarNomeDisciplina(disciplina.nome) : disciplina.nome}
-                </option>
-              ))}
+              {disciplinas
+                .sort((a, b) => a.nome.localeCompare(b.nome))
+                .map((disciplina: Disciplina) => (
+                  <option key={disciplina.id} value={disciplina.id}>
+                    {disciplina.nome.length > 40 ? abreviarNomeDisciplina(disciplina.nome) : disciplina.nome}
+                  </option>
+                ))}
             </select>
             {isLoadingDisciplinas && <span>Carregando disciplinas...</span>}
           </div>
@@ -410,6 +422,7 @@ export default function AulaModal({
               <option value="">Selecione um professor</option>
               {docentesDisciplina
                 .filter((docente) => (aulaSelecionada.tipo == 'T' && docente.horas_teoricas > 0) || (aulaSelecionada.tipo == 'P' && docente.horas_praticas > 0))
+                .sort((a, b) => a.nome.localeCompare(b.nome))
                 .map((docente) => (
                   <option key={docente.id} value={docente.id}>
                     {docente.nome} {apresentaHoras(docente)}
@@ -432,7 +445,7 @@ export default function AulaModal({
               disabled={isLoadingSalas}
             >
               <option key="7" value="7">outra (não DEISI Hub)</option>
-              {salas.map((sala: Sala) => (
+              {salas.sort((a,b) => a.nome.localeCompare(b.nome)).map((sala: Sala) => (
                 <option key={sala.id} value={sala.id}>
                   {sala.nome}
                 </option>
@@ -506,52 +519,52 @@ export default function AulaModal({
             </div>
           )}
 
-<div className={styles.formActions}>
-  <div className="flex justify-between w-full">
-    {/* Grupo da esquerda */}
-    <div className="space-x-2">
-      <button
-        type="button"
-        className={`${styles.btn} ${styles.btnSecondary}`}
-        onClick={handleClose}
-        disabled={loadingSaving}
-      >
-        Cancelar
-      </button>
-      {aulaSelecionada.id && (
-        <button
-          type="button"
-          className={`${styles.btn} ${styles.btnDanger}`}
-          onClick={handleDelete}
-          disabled={loadingSaving}
-        >
-          {loadingSaving ? 'Excluindo...' : 'Excluir'}
-        </button>
-      )}
-    </div>
+          <div className={styles.formActions}>
+            <div className="flex justify-between w-full">
+              {/* Grupo da esquerda */}
+              <div className="space-x-2">
+                <button
+                  type="button"
+                  className={`${styles.btn} ${styles.btnSecondary}`}
+                  onClick={handleClose}
+                  disabled={loadingSaving}
+                >
+                  Cancelar
+                </button>
+                {aulaSelecionada.id && (
+                  <button
+                    type="button"
+                    className={`${styles.btn} ${styles.btnDanger}`}
+                    onClick={handleDelete}
+                    disabled={loadingSaving}
+                  >
+                    {loadingSaving ? 'Excluindo...' : 'Excluir'}
+                  </button>
+                )}
+              </div>
 
-    {/* Grupo da direita */}
-    <div className="space-x-2">
-      {aulaSelecionada.id && (
-        <button
-          type="button"
-          className={`${styles.btn} ${styles.btnDuplicate}`}
-          onClick={handleDuplicate}
-          disabled={loadingSaving}
-        >
-          {loadingSaving ? 'Duplicando...' : 'Duplicar'}
-        </button>
-      )}
-      <button
-        type="submit"
-        className={`${styles.btn} ${styles.btnPrimary}`}
-        disabled={loadingSaving}
-      >
-        {loadingSaving ? 'Gravando...' : 'Gravar'}
-      </button>
-    </div>
-  </div>
-</div>
+              {/* Grupo da direita */}
+              <div className="space-x-2">
+                {aulaSelecionada.id && (
+                  <button
+                    type="button"
+                    className={`${styles.btn} ${styles.btnDuplicate}`}
+                    onClick={handleDuplicate}
+                    disabled={loadingSaving}
+                  >
+                    {loadingSaving ? 'Duplicando...' : 'Duplicar'}
+                  </button>
+                )}
+                <button
+                  type="submit"
+                  className={`${styles.btn} ${styles.btnPrimary}`}
+                  disabled={loadingSaving}
+                >
+                  {loadingSaving ? 'Gravando...' : 'Gravar'}
+                </button>
+              </div>
+            </div>
+          </div>
         </form>
       </div>
     </div>
