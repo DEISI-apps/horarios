@@ -48,8 +48,8 @@ export default function DisciplinasSection({ horario }: { horario: Horario }) {
 
   return (
     <section className="pt-8">
-      <h2 className="mt-4 mb-2 text-lg font-semibold">Disciplinas e Horas Agregadas (dos vários cursos em que funcionam)</h2>
-      <p className="text-gray-500 mb-4 text-sm">Horas lecionadas / horas disponíveis.</p>
+      <h2 className="mt-4 mb-2 text-2xl font-semibold">Disciplinas e Horas Agregadas</h2>
+      <p className="text-gray-500 mb-4 text-sm">Horas lecionadas / horas disponíveis. Horas agregadas dos vários cursos em que a disciplina funcionam.</p>
       <div className="space-y-4">
         {disciplinasOrdenadas.map((disciplina) => (
           <DisciplinaCard

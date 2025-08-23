@@ -46,8 +46,7 @@ export default function SalasSection({ ano_lectivo_id, semestre }: SalaProps) {
 
     return (<>
         <section className="pt-8">
-            <h2 className="mt-4 mb-2 text-lg font-semibold">Ocupação das Salas</h2>
-            <p className="text-gray-500 mb-4 text-sm">Informações sobre ocupação das salas.</p>
+            <h2 className="mt-4 mb-2 text-2xl font-semibold">Ocupação dos Labs do DEISI Hub</h2>
 
             <select
                 value={selectedSalaId ?? ""}

@@ -64,13 +64,28 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
 
   return (
     <div className="flex gap-4 mb-4">
+      
+      {/* Seletor de Curso */}
+      <select
+        value={selectedCurso}
+        onChange={handleCursoSelection}
+        className="border rounded p-2 font-bold text-lg cursor-pointer"
+      >
+        <option value="">Curso...</option>
+        {cursoOptions.sort((a, b) => a.localeCompare(b)).map((curso, idx) => (
+          <option key={idx} value={curso}>
+            {curso}
+          </option>
+        ))}
+      </select>
+      
       {/* Seletor de Ano & Semestre */}
       <select
         value={selectedAnoSemestre}
         onChange={handleAnoSemestreSelection}
         className="border rounded p-2 font-bold text-lg cursor-pointer"
       >
-        <option value="">Selecione Ano & Semestre...</option>
+        <option value="">Ano & Semestre...</option>
         {anoSemestreOptions.map((option, idx) => (
           <option key={idx} value={option}>
             {option}
@@ -78,19 +93,7 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
         ))}
       </select>
 
-      {/* Seletor de Curso */}
-      <select
-        value={selectedCurso}
-        onChange={handleCursoSelection}
-        className="border rounded p-2 font-bold text-lg cursor-pointer"
-      >
-        <option value="">Selecione um Curso...</option>
-        {cursoOptions.sort((a, b) => a.localeCompare(b)).map((curso, idx) => (
-          <option key={idx} value={curso}>
-            {curso}
-          </option>
-        ))}
-      </select>
+      
     </div>
   );
 }
