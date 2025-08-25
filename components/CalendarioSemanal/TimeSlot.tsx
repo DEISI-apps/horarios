@@ -54,7 +54,7 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'flex-start',
-          textAlign: 'center',
+          textAlign: 'left',
           paddingLeft: '8px',
           lineHeight: '14px',
         }}

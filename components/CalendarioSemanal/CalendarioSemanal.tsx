@@ -158,7 +158,8 @@ export default function CalendarioSemanal({ horario }: { horario: Horario }) {
           <ul className="ml-6 mt-2 list-disc space-y-1">
             <li>Aulas em junção são aulas em que estão presentes na mesma sala várias turmas.</li>
             <li>Uma das aulas deve estar sem junção, para ser contabilizada</li>
-            <li>As restantes aulas devem ser marcadas em junção, e aparecem a tracejado e sem detalhes.</li>
+            <li>As restantes aulas devem ser marcadas em junção, e aparecem sem texto.</li>
+            <li>Se quiser, tem a opção de mostrar o texto de uma aula em junção.</li>
             <li>Aulas em junção não são contabilizadas no número de horas lecionadas do docente.</li>
           </ul>
         </details>

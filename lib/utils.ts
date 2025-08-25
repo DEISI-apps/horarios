@@ -7,16 +7,20 @@ export const gerarCorDisciplina = (id: number, claro: boolean = true) => {
   return `hsl(${hue}, 80%, ${claro ? 75 : 50}%)`;
 };
 
-export function abreviarNomeDisciplina_old(nomeDisciplina: string) {
+export function abreviarNomeDisciplina(nomeDisciplina: string, largura: number = 100) {
+
+  if (largura > 180) {
+    return nomeDisciplina; // cabe inteiro
+  }
 
   // abrevia palavras com mais de 6 caracteres
   const nomeAbreviadoDisciplina = nomeDisciplina
     .split(" ")
     .filter(palavra => palavra !== 'de' && palavra !== 'e' && palavra !== 'do' && palavra !== 'da') 
     .map(palavra => palavra.length > 6 ?
-      ('aeiou'.includes(palavra[4]) ?
-        palavra.slice(0, 4) + '.'
-        : palavra.slice(0, 5) + '.'
+      ('aeiou'.includes(palavra[3]) ?
+        palavra.slice(0, 3) + '.'
+        : palavra.slice(0, 4) + '.'
       )
       : palavra)
     .join(" ")
@@ -44,7 +48,7 @@ export function abreviarNomeDisciplina_old(nomeDisciplina: string) {
 }
 
 
-export function abreviarNomeDisciplina(nome: string, largura: number = 100) {
+export function abreviarNomeDisciplina__(nome: string, largura: number = 100) {
   if (largura > 180) {
     return nome; // cabe inteiro
   } else if (largura > 120) {
