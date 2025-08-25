@@ -81,7 +81,7 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
                   e.stopPropagation();
                   setModalSalaOpen(true);
                 }}
-                className="underline focus:outline-none"
+                className="underline focus:outline-none cursor-help"
               >
                 {slot.sala_nome}
               </button>
@@ -99,7 +99,7 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
                 e.stopPropagation();
                 setModalOpen(true);
               }}
-              className="underline focus:outline-none"
+              className="underline focus:outline-none cursor-help"
             >
               {slot.docente_nome}
             </button>
