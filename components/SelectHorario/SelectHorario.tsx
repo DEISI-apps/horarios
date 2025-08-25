@@ -26,12 +26,12 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
       semestre: horario.semestre,
       curso: horario.curso.sigla,
       anoLectivo: horario.ano_lectivo.ano_lectivo,
-      label: `${horario.curso.sigla}, ${horario.ano}º ano, ${horario.semestre}º sem. (${horario.ano_lectivo.ano_lectivo})`,
+      label: `${horario.curso.sigla}, ${horario.ano}º ano, ${horario.semestre}º sem (${horario.ano_lectivo.ano_lectivo})`,
     })) || [];
 
   // Opções únicas para ano+semestre e curso
   const anoSemestreOptions = Array.from(
-    new Set(horarioOptions.map((h) => `${h.ano}º ano, ${h.semestre}º sem (${h.anoLectivo})`))
+    new Set(horarioOptions.map((h) => `${h.ano}ºano, ${h.semestre}ºsem (${h.anoLectivo})`))
   );
   const cursoOptions = Array.from(new Set(horarioOptions.map((h) => h.curso)));
 
