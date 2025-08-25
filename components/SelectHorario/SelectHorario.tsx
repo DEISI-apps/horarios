@@ -31,7 +31,7 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
 
   // Opções únicas para ano+semestre e curso
   const anoSemestreOptions = Array.from(
-    new Set(horarioOptions.map((h) => `${h.ano}º ano, ${h.semestre}º semestre (${h.anoLectivo})`))
+    new Set(horarioOptions.map((h) => `${h.ano}º ano, ${h.semestre}º sem (${h.anoLectivo})`))
   );
   const cursoOptions = Array.from(new Set(horarioOptions.map((h) => h.curso)));
 
@@ -85,7 +85,7 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
         onChange={handleAnoSemestreSelection}
         className="border rounded p-2 font-bold text-lg cursor-pointer"
       >
-        <option value="">Ano & Semestre...</option>
+        <option value="">Ano & Sem...</option>
         {anoSemestreOptions.map((option, idx) => (
           <option key={idx} value={option}>
             {option}
