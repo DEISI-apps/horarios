@@ -63,7 +63,7 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
           onEdit(slot);
         }}
       >
-        <div className={styles.slotTitle}>
+        <div className={`${styles.slotTitle} mb-1`}>
           {abreviarNomeDisciplina(slot.disciplina_nome, width)} 
         </div>
 
@@ -99,7 +99,7 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
                 e.stopPropagation();
                 setModalOpen(true);
               }}
-              className="underline focus:outline-none cursor-help"
+              className="underline focus:outline-none cursor-help text-left"
             >
               {slot.docente_nome}
             </button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import SalaModal from "../CalendarioSemanalSala/SalaModal";
 import { useSalas } from "@/hooks/useSalas";
 
@@ -28,7 +28,16 @@ export default function SalasSection({ ano_lectivo_id, semestre }: SalaProps) {
 
 
     //
-    // B. Handlers
+    // B. Effects
+
+    useEffect(() => {
+        if (!isModalSalaOpen) {
+            setSelectedSalaId(null);
+        }
+    }, [isModalSalaOpen]);
+
+    //
+    // C. Handlers
 
     const handleSalaSelection = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedId = event.target.value;
@@ -38,7 +47,7 @@ export default function SalasSection({ ano_lectivo_id, semestre }: SalaProps) {
 
 
     //
-    // C. Render
+    // D. Render
 
     if (isLoadingSalas) return <div>Loading...</div>;
     if (!salas) return <div>No data available</div>;

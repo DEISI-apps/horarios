@@ -33,6 +33,8 @@ export function apresentaHoras(docente: DocenteHoras): string {
   return ` (${teoricas}${virgula}${praticas})`
 }
 
+
+
 export default function AulaModal({
   isOpen,
   setModalOpen,
@@ -48,6 +50,7 @@ export default function AulaModal({
   mutateAulas,
   handleDuplicate,
 }: AulaModalProps) {
+
 
   //
   // A. Gestão de estados do componente
@@ -230,7 +233,7 @@ export default function AulaModal({
 
       // garantir que não existe uma aula dessa disciplina e tipo na turma
       const aulasConflitantesTurma = aulas.filter(aula => {
-
+console.log("conflito ja existe essa aula")
         const mesmaTurma = aula.turma_id === aulaData.turma_id;
         const mesmaDisciplina = aula.disciplina_id === aulaData.disciplina_id;
         const mesmoTipo = aula.tipo === aulaData.tipo;
@@ -421,7 +424,7 @@ export default function AulaModal({
             >
               <option value="">Selecione um professor</option>
               {docentesDisciplina
-                .filter((docente) => (aulaSelecionada.tipo == 'T' && docente.horas_teoricas > 0) || (aulaSelecionada.tipo == 'P' && docente.horas_praticas > 0))
+                // .filter((docente) => (aulaSelecionada.tipo == 'T' && docente.horas_teoricas > 0) || (aulaSelecionada.tipo == 'P' && docente.horas_praticas > 0))
                 .sort((a, b) => a.nome.localeCompare(b.nome))
                 .map((docente) => (
                   <option key={docente.id} value={docente.id}>
