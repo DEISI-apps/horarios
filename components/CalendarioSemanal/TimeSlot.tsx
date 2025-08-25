@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Aula } from '@/types/interfaces';
 import { calculateSlotPosition } from '@/lib/calendario';
 import { MINUTE_HEIGHT } from '@/lib/constants';
@@ -15,17 +15,34 @@ interface TimeSlotProps {
 }
 
 export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: TimeSlotProps) {
-
   const [isModalOpen, setModalOpen] = useState(false);
   const [isModalSalaOpen, setModalSalaOpen] = useState(false);
 
+  const [width, setWidth] = useState<number>(0);
+  const slotRef = useRef<HTMLDivElement>(null);
+
   const top = calculateSlotPosition(slot.hora_inicio);
-  const height = slot.duracao * MINUTE_HEIGHT - 3;
-  const baseColor = gerarCorDisciplina(slot.disciplina_id);
+  const height = slot.duracao * MINUTE_HEIGHT - 5;
+  const baseColor = gerarCorDisciplina(slot.disciplina_id, true);
+
+  // observar largura do slot dinamicamente
+  useEffect(() => {
+    if (!slotRef.current) return;
+
+    const observer = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        setWidth(entry.contentRect.width);
+      }
+    });
+
+    observer.observe(slotRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <>
       <div
+        ref={slotRef}
         key={`slot-${slot.id}`}
         className={styles.slot}
         style={{
@@ -36,8 +53,10 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          alignItems: 'center',
+          alignItems: 'flex-start',
           textAlign: 'center',
+          paddingLeft: '8px',
+          lineHeight: '14px',
         }}
         onClick={(e) => {
           e.stopPropagation();
@@ -45,36 +64,44 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
         }}
       >
         <div className={styles.slotTitle}>
-          {abreviarNomeDisciplina(slot.disciplina_nome)}
+          {abreviarNomeDisciplina(slot.disciplina_nome, width)} 
         </div>
-        <div className={styles.slotDetails} style={{ color: (slot.juncao && !slot.juncao_visivel) ? 'transparent' : 'rgb(100, 98, 98)' }} >
+
+        <div
+          className={styles.slotDetails}
+          style={{ color: (slot.juncao && !slot.juncao_visivel) ? 'transparent' : 'black' }}
+        >
           {slot.tipo === 'T' ? 'Teórica ' : 'Prática '}
 
           {slot.sala_nome !== 'sala?' && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setModalSalaOpen(true);
-              }}
-              className="underline focus:outline-none font-bold"
-              style={{ background: 'whitesmoke', padding: '0 5px', borderRadius:'5px', opacity: '0.7'  }}
-            >
-              {slot.sala_nome}
-            </button>
+            <>
+              <span>· </span>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setModalSalaOpen(true);
+                }}
+                className="underline focus:outline-none"
+              >
+                {slot.sala_nome}
+              </button>
+            </>
           )}
         </div>
 
-        <div className={styles.slotDetails} style={{ color: (slot.juncao && !slot.juncao_visivel) ? 'transparent' : 'rgb(100, 98, 98)' }}>
+        <div
+          className={styles.slotDetails}
+          style={{ color: (slot.juncao && !slot.juncao_visivel) ? 'transparent' : 'black' }}
+        >
           {(!slot.juncao || slot.juncao_visivel) && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 setModalOpen(true);
               }}
-              className="underline focus:outline-none font-bold"
-              style={{ background: 'whitesmoke', padding: '0 5px', marginTop: '2px', borderRadius:'5px', opacity: '0.7' }}
+              className="underline focus:outline-none"
             >
-              {slot.docente_nome.slice(0, 13)}
+              {slot.docente_nome}
             </button>
           )}
         </div>
@@ -97,7 +124,6 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
         ano_lectivo_id={ano_lectivo_id}
         semestre={semestre}
       />
-
     </>
   );
 }

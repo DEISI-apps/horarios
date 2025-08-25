@@ -34,8 +34,8 @@ export default function Horarios() {
         <>
         
           <CalendarioSemanal horario={horario} />
-          <TurmasSection horario={horario} />
           <SalasSection ano_lectivo_id={horario.ano_lectivo_id} semestre={horario.semestre} />
+          <TurmasSection horario={horario} />
           <DisciplinasSection horario={horario} />
         </>
       )}

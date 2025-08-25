@@ -59,15 +59,28 @@ export default function DisciplinaCard({
           if (docente.horas_teoricas > 0) partes.push(`teórica:  ${docente.horas_teoricas_lecionadas}/${docente.horas_teoricas}h`);
           if (docente.horas_praticas > 0) partes.push(`prática:  ${docente.horas_praticas_lecionadas}/${docente.horas_praticas}h`);
 
+          // Condição para destacar em vermelho
+          const needsAttention =
+            docente.horas_praticas > 0 &&
+            docente.horas_praticas_lecionadas !== docente.horas_praticas ||
+            docente.horas_teoricas > 0 &&
+            docente.horas_teoricas_lecionadas !== docente.horas_teoricas;
+
           return (
-            <li key={idx} className="text-sm">
+            <li 
+              key={idx} 
+              className="text-sm"
+               style={needsAttention ? { color: "red", fontWeight: 'bold' } : {}}
+            >
               <button
                 onClick={() => setSelectedDocente(docente)}
                 className="font-bold underline focus:outline-none"
               >
                 {docente.nome}
               </button>
+              <span>
               {partes.length > 0 && ` — ${partes.join(" | ")}`}
+              </span>
             </li>
           );
         })}

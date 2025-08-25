@@ -4,19 +4,19 @@ import { Aula, Disciplina, DisciplinaHoras } from "@/types/interfaces";
 // Função para gerar cor
 export const gerarCorDisciplina = (id: number, claro: boolean = true) => {
   const hue = (id * 137) % 360;
-  return `hsl(${hue}, 80%, ${claro ? 80 : 50}%)`;
+  return `hsl(${hue}, 80%, ${claro ? 75 : 50}%)`;
 };
 
-export function abreviarNomeDisciplina(nomeDisciplina: string) {
+export function abreviarNomeDisciplina_old(nomeDisciplina: string) {
 
   // abrevia palavras com mais de 6 caracteres
   const nomeAbreviadoDisciplina = nomeDisciplina
     .split(" ")
-    .filter(palavra => palavra !== 'de')
+    .filter(palavra => palavra !== 'de' && palavra !== 'e' && palavra !== 'do' && palavra !== 'da') 
     .map(palavra => palavra.length > 6 ?
-      ('aeiou'.includes(palavra[3]) ?
-        palavra.slice(0, 3) + '.'
-        : palavra.slice(0, 4) + '.'
+      ('aeiou'.includes(palavra[4]) ?
+        palavra.slice(0, 4) + '.'
+        : palavra.slice(0, 5) + '.'
       )
       : palavra)
     .join(" ")
@@ -31,8 +31,8 @@ export function abreviarNomeDisciplina(nomeDisciplina: string) {
     // senão, retira vogais, 'de', e mostra apenas 3 palavras com 3 carateres
     const listaDePalavrasAbreviada = nomeDisciplina
       .split(" ")
-      .filter(palavra => palavra !== 'de')
-      .map(palavra => palavra.slice(0, 2) + palavra.split('').slice(2).map(letra => 'aeiou'.includes(letra) ? '' : letra).join(''))
+      .filter(palavra => palavra !== 'de' && palavra !== 'e' && palavra !== 'do' && palavra !== 'da' && palavra !== '(LCD)') 
+//      .map(palavra => palavra.slice(0, 2) + palavra.split('').slice(2).map(letra => 'aeiou'.includes(letra) ? '' : letra).join(''))
       .map(palavra => palavra.slice(0, 3) + '.');
 
     // mostra as 2 primeiras e a última palavra
@@ -41,6 +41,17 @@ export function abreviarNomeDisciplina(nomeDisciplina: string) {
   }
 
 
+}
+
+
+export function abreviarNomeDisciplina(nome: string, largura: number = 100) {
+  if (largura > 180) {
+    return nome; // cabe inteiro
+  } else if (largura > 120) {
+    return nome.split(" ").map(p => p.length > 8 ? p.slice(0, 6) + "." : p).join(" ");
+  } else {
+    return nome.split(" ").map(p => p.slice(0, 3) + ".").join(" ");
+  }
 }
 
 export function atualizaDisciplinasHoras(disciplinas: Disciplina[], aulas: Aula[]): DisciplinaHoras[] {

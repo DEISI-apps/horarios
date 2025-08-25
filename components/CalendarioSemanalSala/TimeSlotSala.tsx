@@ -11,7 +11,7 @@ interface TimeSlotProps {
 
 export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
   const top = calculateSlotPosition(slot.hora_inicio);
-  const height = slot.duracao * MINUTE_HEIGHT - 3;
+  const height = slot.duracao * MINUTE_HEIGHT - 5;
   const baseColor = gerarCorDisciplina(slot.disciplina_id);
 
 

@@ -6,12 +6,8 @@ import { useTurmas } from "@/hooks/useTurmas";
 import { useEffect, useState } from "react";
 import DisciplinaModal from "../CalendarioSemanalDisciplina/DisciplinaModal";
 import { Horario } from "@/types/interfaces";
+import { gerarCorDisciplina } from "@/lib/utils";
 
-
-const gerarCorDisciplina = (id: number) => {
-  const hue = (id * 137) % 360;
-  return `hsl(${hue}, 80%, 80%)`; // cor mais clara para background
-};
 
 interface DisciplinaAPI {
   id: number;
