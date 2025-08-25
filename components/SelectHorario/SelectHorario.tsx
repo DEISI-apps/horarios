@@ -26,7 +26,7 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
       semestre: horario.semestre,
       curso: horario.curso.sigla,
       anoLectivo: horario.ano_lectivo.ano_lectivo,
-      label: `${horario.curso.sigla}, ${horario.ano}º ano, ${horario.semestre}º sem (${horario.ano_lectivo.ano_lectivo})`,
+      label: `${horario.curso.sigla}, ${horario.ano}ºano, ${horario.semestre}ºsem (${horario.ano_lectivo.ano_lectivo})`,
     })) || [];
 
   // Opções únicas para ano+semestre e curso
@@ -51,7 +51,7 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
   const updateSelection = (anoSem: string, curso: string) => {
     const selectedHorario = horarioOptions.find(
       (h) =>
-        `${h.ano}º ano, ${h.semestre}º semestre (${h.anoLectivo})` === anoSem &&
+        `${h.ano}ºano, ${h.semestre}ºsem (${h.anoLectivo})` === anoSem &&
         h.curso === curso
     );
     onSelect(selectedHorario ? selectedHorario.id : null);

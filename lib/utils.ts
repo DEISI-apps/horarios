@@ -9,14 +9,22 @@ export const gerarCorDisciplina = (id: number, claro: boolean = true) => {
 
 export function abreviarNomeDisciplina(nomeDisciplina: string, largura: number = 100) {
 
-  if (largura > 180) {
+  let caracteres = 0;
+
+  if (largura > 150) {
     return nomeDisciplina; // cabe inteiro
+  }
+
+  if (largura > 100 && nomeDisciplina.length < 30) {
+    return nomeDisciplina;
+  } else {
+    caracteres = 25;
   }
 
   // abrevia palavras com mais de 6 caracteres
   const nomeAbreviadoDisciplina = nomeDisciplina
-    .split(" ")
-    .filter(palavra => palavra !== 'de' && palavra !== 'e' && palavra !== 'do' && palavra !== 'da') 
+    .split(/[\s-]+/)
+    .filter(palavra => palavra !== 'de' && palavra !== 'e' && palavra !== 'do' && palavra !== 'da' && palavra !== '(LCD)') 
     .map(palavra => palavra.length > 6 ?
       ('aeiou'.includes(palavra[3]) ?
         palavra.slice(0, 3) + '.'
@@ -25,38 +33,28 @@ export function abreviarNomeDisciplina(nomeDisciplina: string, largura: number =
       : palavra)
     .join(" ")
 
-  const listaDePalavras = nomeAbreviadoDisciplina.trim().split(/\s+/);
+  const listaDePalavras = nomeAbreviadoDisciplina.trim().split(/[\s-]+/);
 
-  if (listaDePalavras.length <= 3 && listaDePalavras.join(' ').length < 15) {
-    // abrevia dessa forma o nome de disciplina se tiver menos de 3 palavras e 15 carateres 
+  if (listaDePalavras.length <= 5 && listaDePalavras.join(' ').length < caracteres) {
+    // abrevia dessa forma o nome de disciplina se tiver menos de 3 palavras e 20 carateres
     return nomeAbreviadoDisciplina;
   } 
   else {  
     // senão, retira vogais, 'de', e mostra apenas 3 palavras com 3 carateres
     const listaDePalavrasAbreviada = nomeDisciplina
-      .split(" ")
+      .split(/[\s-]+/)
       .filter(palavra => palavra !== 'de' && palavra !== 'e' && palavra !== 'do' && palavra !== 'da' && palavra !== '(LCD)') 
 //      .map(palavra => palavra.slice(0, 2) + palavra.split('').slice(2).map(letra => 'aeiou'.includes(letra) ? '' : letra).join(''))
       .map(palavra => palavra.slice(0, 3) + '.');
 
     // mostra as 2 primeiras e a última palavra
-    return listaDePalavrasAbreviada.slice(0, 1).join(' ') + ' ' + listaDePalavrasAbreviada.slice(-2).join(' ');
+    return listaDePalavrasAbreviada.slice(0, 3).join(' ') + ' ' + listaDePalavrasAbreviada.slice(-2).join(' ');
 
   }
 
 
 }
 
-
-export function abreviarNomeDisciplina__(nome: string, largura: number = 100) {
-  if (largura > 180) {
-    return nome; // cabe inteiro
-  } else if (largura > 120) {
-    return nome.split(" ").map(p => p.length > 8 ? p.slice(0, 6) + "." : p).join(" ");
-  } else {
-    return nome.split(" ").map(p => p.slice(0, 3) + ".").join(" ");
-  }
-}
 
 export function atualizaDisciplinasHoras(disciplinas: Disciplina[], aulas: Aula[]): DisciplinaHoras[] {
 

@@ -36,8 +36,9 @@ export default function TimeSlotDocente({ slot }: TimeSlotProps) {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center',
-        textAlign: 'center',
+        alignItems: 'left',
+        textAlign: 'left',
+        paddingLeft:'5px',
       }}
     >
       <div className={styles.slotTitle}>

@@ -152,19 +152,6 @@ export default function CalendarioSemanal({ horario }: { horario: Horario }) {
         Marque o horário semanal das aulas de cada turma, de acordo com as necessidades apresentadas nas tabelas em baixo.
       </p>
 
-      <div className="pb-4 text-sm text-emerald-700">
-        <details className="cursor-pointer">
-          <summary className="font-bold">Notas sobre aulas em junção</summary>
-          <ul className="ml-6 mt-2 list-disc space-y-1">
-            <li>Aulas em junção são aulas em que estão presentes na mesma sala várias turmas.</li>
-            <li>Uma das aulas deve estar sem junção, para ser contabilizada</li>
-            <li>As restantes aulas devem ser marcadas em junção, e aparecem sem texto.</li>
-            <li>Se quiser, tem a opção de mostrar o texto de uma aula em junção.</li>
-            <li>Aulas em junção não são contabilizadas no número de horas lecionadas do docente.</li>
-          </ul>
-        </details>
-      </div>    
-
       <div className={styles.container} style={{ position: 'relative' }}>
         <div
           className={`${styles.timeSlots} ${styles.timeMarkersFixed}`}
@@ -205,6 +192,20 @@ export default function CalendarioSemanal({ horario }: { horario: Horario }) {
           handleDuplicate={handleDuplicate}
         />
       </div>
+
+      <div className="mt-4 text-sm text-emerald-700">
+        <details className="cursor-pointer">
+          <summary className="font-bold">Notas sobre aulas em junção</summary>
+          <ul className="ml-6 mt-2 list-disc space-y-1">
+            <li>Aulas em junção são aulas em que estão presentes na mesma sala várias turmas.</li>
+            <li>Uma das aulas deve estar sem junção, para ser contabilizada</li>
+            <li>As restantes aulas devem ser marcadas em junção, e aparecem sem texto.</li>
+            <li>Se quiser, tem a opção de mostrar o texto de uma aula em junção.</li>
+            <li>Aulas em junção não são contabilizadas no número de horas lecionadas do docente.</li>
+          </ul>
+        </details>
+      </div>    
+
     </section>
   );
 }
