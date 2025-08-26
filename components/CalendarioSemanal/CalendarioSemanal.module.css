@@ -22,19 +22,19 @@
 .calendarHeader {
   display: flex;
   /* background-color: #f5f5f5; */
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid white;
 }
 
 .timeColumn {
-  width: 80px;
-  min-width: 80px;
+  width: 78px;
+  min-width: 78px;
   background-color: #f5f5f5;
 }
 
 .dayHeader {
   flex: 1;
   text-align: center;
-  padding: 10px 10px 0 10px;
+  padding: 10px 10px 0 0;
   font-weight: bold;
   border-right: 1px solid #dddada;
   display: flex;
@@ -73,7 +73,7 @@
   width: 80px;
   min-width: 80px;
   position: relative;
-  height: 720px; /* Altura total baseada em 12 horas (8h-20h) */
+  height: 720px; 
 }
 
 .timeMarker {
@@ -283,6 +283,7 @@
 
 .timeMarkersFixed{
   background:white;
+  width: 40px;
 }
 
 

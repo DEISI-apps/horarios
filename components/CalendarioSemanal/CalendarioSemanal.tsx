@@ -153,28 +153,15 @@ export default function CalendarioSemanal({ horario }: { horario: Horario }) {
       </p>
 
       <div className={styles.container} style={{ position: 'relative' }}>
-        <div
-          className={`${styles.timeSlots} ${styles.timeMarkersFixed}`}
-          style={{ height: `80px`, position: 'absolute', top: 0, left: -1, zIndex: 1, borderRight: '1px solid #dddada' }}
-        >
-        </div>
-        <div
-          className={`${styles.timeSlots} ${styles.timeMarkersFixed}`}
-          style={{ height: `${CALENDAR_HEIGHT}px`, position: 'absolute', top: '67px', left: -1, zIndex: 1, borderRight: '1px solid #dddada' }}
-        >
-          <TimeMarkers />
-        </div>
-        <div className={styles.calendarWrapper}>
-          <CalendarGrid
-            turmas={turmas}
-            aulas={aulas}
-            isLoadingAulas={isLoadingAulas}
-            ano_lectivo_id={horario.ano_lectivo.id} 
-            semestre={horario.semestre}
-            onSlotClick={openNewSlotModal}
-            onSlotEdit={openEditSlotModal}
-          />
-        </div>
+        <CalendarGrid
+          turmas={turmas}
+          aulas={aulas}
+          isLoadingAulas={isLoadingAulas}
+          ano_lectivo_id={horario.ano_lectivo.id}
+          semestre={horario.semestre}
+          onSlotClick={openNewSlotModal}
+          onSlotEdit={openEditSlotModal}
+        />
 
         <AulaModal
           isOpen={modalOpen}
@@ -204,7 +191,7 @@ export default function CalendarioSemanal({ horario }: { horario: Horario }) {
             <li>Aulas em junção não são contabilizadas no número de horas lecionadas do docente.</li>
           </ul>
         </details>
-      </div>    
+      </div>
 
     </section>
   );

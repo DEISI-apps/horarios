@@ -48,19 +48,42 @@ export default function CalendarGrid({
       ));
   };
 
+  // detecta clique de um slot
   const handleClassSlotClick = (day: number, classId: number, e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const clickY = e.clientY - rect.top;
     const startTime = calculateClickTime(clickY);
     onSlotClick(day, classId, startTime);
   };
+
+
+
   //
   // C. renderiza
   if (!turmas) return <p className="text-gray-500">A carregar turmas...</p>;
 
   return (
-    <>
+    <div className={styles.calendarWrapper}>
+      
+      {/* quadrado no topo esquerdo do horario (podemos eventualmente por cor do fundo cinza) */}
+      <div
+        className={`${styles.timeSlots} ${styles.timeMarkersFixed}`}
+        style={{ height: `82px`, position: 'absolute', top: 0, left: -1, zIndex: 1, borderRight: '1px solid #dddada' }}
+      >
+      </div>
+      
+      {/* linhas horizontais das horas */}
+      <div
+        className={`${styles.timeSlots} ${styles.timeMarkersFixed}`}
+        style={{ height: `${CALENDAR_HEIGHT}px`, position: 'absolute', top: '67px', left: -1, zIndex: 1, borderRight: '1px solid #dddada' }}
+      >
+        <TimeMarkers />
+      </div>
+
+
       <div className={styles.calendarContainer}>
+        
+        {/* cabeçalho das colunas com info do dia e turma */}
         <div className={styles.calendarHeader}>
           <div className={styles.timeColumn}></div>
           {DAYS.map(day => (
@@ -91,22 +114,18 @@ export default function CalendarGrid({
         </div>
 
         <div className={styles.calendarBody}>
-          <div
-            className={styles.timeSlots}
-            style={{ height: `${CALENDAR_HEIGHT}px` }}
-          >
-            <TimeMarkers />
-          </div>
 
           <div
             className={styles.daysContainer}
-            style={{ height: `${CALENDAR_HEIGHT}px` }}
+            style={{ height: `${CALENDAR_HEIGHT}px`, marginLeft: '78px' }}
           >
-
+            {/* linhas horizontais das horas */}
             <TimeLines />
 
+            {/* para cada coluna-dia...  */}
             {DAYS.map(day => (
               <div key={`day-${day.id}`} className={styles.dayColumn}>
+                {/* e para cada coluna-turma... renderiza as aulas que existem */}
                 {turmas.map((turma: Turma) => (
                   <div
                     key={`slot-${day.id}-${turma.id}`}
@@ -130,6 +149,6 @@ export default function CalendarGrid({
           aulas={aulas}
         />
       )}
-    </>
+    </div>
   );
 }

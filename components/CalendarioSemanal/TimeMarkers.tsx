@@ -9,8 +9,8 @@ export default function TimeMarkers() {
       {markers.map((marker) => (
         <div 
           key={marker.key}
-          className={`${styles.timeMarker} ${marker.isHalf ? styles.halfHour : ''}`}
-          style={{ top: `${marker.top}px` }}
+          className={`${styles.timeMarker} ${marker.isHalf ? styles.halfHour : styles.timeMarkerLine}`}
+          style={{ top: `${marker.top +2 }px` }}
         >
           {marker.time}
         </div>
