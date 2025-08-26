@@ -21,7 +21,7 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
   const [width, setWidth] = useState<number>(0);
   const slotRef = useRef<HTMLDivElement>(null);
 
-  const top = calculateSlotPosition(slot.hora_inicio);
+  const top = calculateSlotPosition(slot.hora_inicio)+2.5;
   const height = slot.duracao * MINUTE_HEIGHT - 5;
   const baseColor = gerarCorDisciplina(slot.disciplina_id, true);
 

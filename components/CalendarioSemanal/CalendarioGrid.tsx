@@ -6,6 +6,7 @@ import TimeSlot from './TimeSlot';
 import TimeMarkers from './TimeMarkers';
 import styles from './CalendarioSemanal.module.css';
 import TurmaModal from '../CalendarioSemanalTurma/TurmaModal';
+import { TimeLines } from './TimeLines';
 
 interface CalendarGridProps {
   turmas: Turma[];
@@ -16,6 +17,7 @@ interface CalendarGridProps {
   onSlotClick: (day: number, classId: number, startTime?: string) => void;
   onSlotEdit: (slot: Aula) => void;
 }
+
 
 export default function CalendarGrid({
   turmas,
@@ -100,6 +102,9 @@ export default function CalendarGrid({
             className={styles.daysContainer}
             style={{ height: `${CALENDAR_HEIGHT}px` }}
           >
+
+            <TimeLines />
+
             {DAYS.map(day => (
               <div key={`day-${day.id}`} className={styles.dayColumn}>
                 {turmas.map((turma: Turma) => (
