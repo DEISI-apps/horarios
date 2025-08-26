@@ -18,9 +18,9 @@ export function abreviarNomeDisciplina(nomeDisciplina: string, largura: number =
     .split(/[\s-]+/)
     .filter(palavra => palavra !== 'de' && palavra !== 'e' && palavra !== 'do' && palavra !== 'da' && palavra !== '(LCD)') 
     .map(palavra => palavra.length > 8 ?
-      ('aeiou'.includes(palavra[3]) ?
-        palavra.slice(0, 3) + '.'
-        : palavra.slice(0, 4) + '.'
+      ('aeiou'.includes(palavra[5]) ?
+        palavra.slice(0, 5) + '.'
+        : palavra.slice(0, 6) + '.'
       )
       : palavra)
     .join(" ")
