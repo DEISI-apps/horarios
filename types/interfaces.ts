@@ -3,6 +3,10 @@ export interface Turma {
   nome: string;
   horario_id: number;
 };
+export interface AnoLectivo {
+    id: number;
+    ano_lectivo: string;
+}
 
 export interface Horario {
   id: number;
@@ -16,16 +20,16 @@ export interface Horario {
     nome: string;
     sigla: string;
   };
-  ano_lectivo: {
-    id: number;
-    ano_lectivo: string;
-  };
+  ano_lectivo: AnoLectivo;
   turmas: Turma[];
 }
 
-export interface Docente {
+export interface DocenteBase {
   id: number;
   nome: string;
+}
+
+export interface Docente extends DocenteBase {
   horas_teoricas: number;
   horas_praticas: number;
 }

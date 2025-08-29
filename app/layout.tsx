@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Image from "next/image";
 import "./globals.css";
+import Link from "next/link";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -54,12 +55,10 @@ export default function RootLayout({
             />
             <h1 className="text-4xl font-bold">Horários do DEISI</h1>
           </div>
-          {/* <nav className="flex flex-row gap-4">
-            <Link  className="hover:underline" href="/">Home</Link>
-            <Link className="hover:underline" href="/municipalities">Municípios</Link>
-            <Link className="hover:underline" href="/counter">Contador</Link>            
-            <Link className="hover:underline" href="/about">Sobre</Link>            
-          </nav> */}
+          {<nav className="flex flex-row gap-6">
+            <Link  className="hover:underline" href="/">Cursos</Link>
+            <Link className="hover:underline" href="/docentes">Docentes</Link>
+          </nav> }
         </header>
 
         <main className="min-h-[70vh] w-[90vw] p-5 rounded-xl bg-gray-100">{children}</main>

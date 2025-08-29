@@ -7,7 +7,7 @@ import CalendarioSemanalDocente from "../CalendarioSemanalDocente/CalendarioSema
 export default function HorarioDocente() {
 
 
-  const docente_id = 26
+  const docente_id = 28
   const ano_lectivo_id = 35
   const semestre = 1
 

@@ -1,9 +1,9 @@
 import React from 'react'
-import HorarioDocente from '@/components/HorarioDocente/HorarioDocente'
+import SelectDocente from '@/components/SelectDocente/SelectDocente'
 
 
 export default function page() {
   return <>
-    <HorarioDocente></HorarioDocente>
+    <SelectDocente />
   </>
 }

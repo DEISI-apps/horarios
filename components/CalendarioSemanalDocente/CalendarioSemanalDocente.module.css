@@ -92,7 +92,7 @@
 
 .timeMarker.halfHour {
   font-size: 10px;
-  color: #999;
+  color: white; /* #999; */
 }
 
 .daysContainer {
