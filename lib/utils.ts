@@ -13,22 +13,22 @@ export function abreviarNomeDisciplina(nomeDisciplina: string, largura: number =
 
   if (largura > 150) {
 
-      // abrevia palavras com mais de 6 caracteres
-  const nomeAbreviadoDisciplina = nomeDisciplina
-    .split(/[\s-]+/)
-    .filter(palavra => palavra !== 'de' && palavra !== 'e' && palavra !== 'do' && palavra !== 'da' && palavra !== '(LCD)') 
-    .map(palavra => palavra.length > 8 ?
-      ('aeiou'.includes(palavra[5]) ?
-        palavra.slice(0, 5) + '.'
-        : palavra.slice(0, 6) + '.'
-      )
-      : palavra)
-    .join(" ")
+    // abrevia palavras com mais de 6 caracteres
+    const nomeAbreviadoDisciplina = nomeDisciplina
+      .split(/[\s-]+/)
+      .filter(palavra => palavra !== 'de' && palavra !== 'e' && palavra !== 'do' && palavra !== 'da' && palavra !== '(LCD)') 
+      .map(palavra => palavra.length > 8 ?
+        ('aeiou'.includes(palavra[5]) ?
+          palavra.slice(0, 5) + '.'
+          : palavra.slice(0, 6) + '.'
+        )
+        : palavra)
+      .join(" ")
 
     return nomeAbreviadoDisciplina; 
   }
 
-  if (largura > 100 && nomeDisciplina.length < 25) {
+  if (largura > 100 && nomeDisciplina.length < 20) {
     return nomeDisciplina;
   } else {
     caracteres = 25;
@@ -64,8 +64,6 @@ export function abreviarNomeDisciplina(nomeDisciplina: string, largura: number =
     return listaDePalavrasAbreviada.slice(0, 3).join(' ') + ' ' + listaDePalavrasAbreviada.slice(-2).join(' ');
 
   }
-
-
 }
 
 
