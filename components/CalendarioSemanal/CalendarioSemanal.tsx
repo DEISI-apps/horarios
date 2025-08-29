@@ -16,8 +16,8 @@ import { gerarCorDisciplina, atualizaDisciplinasHoras } from '@/lib/utils';
 import CalendarGrid from './CalendarioGrid';
 import AulaModal from './AulaModal';
 import styles from './CalendarioSemanal.module.css';
-import TimeMarkers from './TimeMarkers';
-import { CALENDAR_HEIGHT } from '@/lib/constants';
+// import TimeMarkers from './TimeMarkers';
+// import { CALENDAR_HEIGHT } from '@/lib/constants';
 
 export default function CalendarioSemanal({ horario }: { horario: Horario }) {
 
