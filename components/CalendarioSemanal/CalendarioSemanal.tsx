@@ -19,7 +19,7 @@ import styles from './CalendarioSemanal.module.css';
 // import TimeMarkers from './TimeMarkers';
 // import { CALENDAR_HEIGHT } from '@/lib/constants';
 
-export default function CalendarioSemanal({ horario }: { horario: Horario }) {
+export default function CalendarioSemanal({ horario, editar }: { horario: Horario, editar: boolean }) {
 
   //
   // A. Gestão de estados do componente
@@ -163,7 +163,7 @@ export default function CalendarioSemanal({ horario }: { horario: Horario }) {
           onSlotEdit={openEditSlotModal}
         />
 
-        <AulaModal
+        {editar && (<AulaModal
           isOpen={modalOpen}
           setModalOpen={setModalOpen}
           aulaSelecionada={aulaSelecionada}
@@ -177,7 +177,7 @@ export default function CalendarioSemanal({ horario }: { horario: Horario }) {
           setAulaSelecionada={setAulaSelecionada}
           mutateAulas={mutateAulas}
           handleDuplicate={handleDuplicate}
-        />
+        />)}
       </div>
 
       <div className="mt-4 text-sm text-emerald-700">

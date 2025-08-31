@@ -9,15 +9,16 @@ export const gerarCorDisciplina = (id: number, claro: boolean = true) => {
 
 export function abreviarNomeDisciplina(nomeDisciplina: string, largura: number = 100) {
 
-  let caracteres = 0;
+  const palavrasDesprezar = ['de', 'e', 'do', 'da', 'para', 'por', '(LCD)'];
+  const caracteres = 8;
 
   if (largura > 150) {
 
     // abrevia palavras com mais de 6 caracteres
     const nomeAbreviadoDisciplina = nomeDisciplina
       .split(/[\s-]+/)
-      .filter(palavra => palavra !== 'de' && palavra !== 'e' && palavra !== 'do' && palavra !== 'da' && palavra !== '(LCD)') 
-      .map(palavra => palavra.length > 8 ?
+      .filter(palavra => !palavrasDesprezar.includes(palavra))
+      .map(palavra => palavra.length > caracteres ?
         ('aeiou'.includes(palavra[5]) ?
           palavra.slice(0, 5) + '.'
           : palavra.slice(0, 6) + '.'
@@ -30,15 +31,14 @@ export function abreviarNomeDisciplina(nomeDisciplina: string, largura: number =
 
   if (largura > 100 && nomeDisciplina.length < 20) {
     return nomeDisciplina;
-  } else {
-    caracteres = 25;
-  }
+  } 
+  
 
   // abrevia palavras com mais de 6 caracteres
   const nomeAbreviadoDisciplina = nomeDisciplina
     .split(/[\s-]+/)
-    .filter(palavra => palavra !== 'de' && palavra !== 'e' && palavra !== 'do' && palavra !== 'da' && palavra !== '(LCD)') 
-    .map(palavra => palavra.length > 8 ?
+    .filter(palavra => !palavrasDesprezar.includes(palavra))
+    .map(palavra => palavra.length > caracteres ?
       ('aeiou'.includes(palavra[3]) ?
         palavra.slice(0, 3) + '.'
         : palavra.slice(0, 4) + '.'
@@ -48,7 +48,7 @@ export function abreviarNomeDisciplina(nomeDisciplina: string, largura: number =
 
   const listaDePalavras = nomeAbreviadoDisciplina.trim().split(/[\s-]+/);
 
-  if (listaDePalavras.length <= 5 && listaDePalavras.join(' ').length < caracteres) {
+  if (listaDePalavras.length < 5 && listaDePalavras.join(' ').length < caracteres) {
     // abrevia dessa forma o nome de disciplina se tiver menos de 3 palavras e 20 carateres
     return nomeAbreviadoDisciplina;
   } 
@@ -56,12 +56,21 @@ export function abreviarNomeDisciplina(nomeDisciplina: string, largura: number =
     // senão, retira vogais, 'de', e mostra apenas 3 palavras com 3 carateres
     const listaDePalavrasAbreviada = nomeDisciplina
       .split(/[\s-]+/)
-      .filter(palavra => palavra !== 'de' && palavra !== 'e' && palavra !== 'do' && palavra !== 'da' && palavra !== '(LCD)') 
-//      .map(palavra => palavra.slice(0, 2) + palavra.split('').slice(2).map(letra => 'aeiou'.includes(letra) ? '' : letra).join(''))
-      .map(palavra => palavra.slice(0, 3) + '.');
+      .filter(palavra => !palavrasDesprezar.includes(palavra))
+      .map(palavra => palavra.length <= 3 ?
+        palavra 
+        : 'aeiou'.includes(palavra[3]) ?
+        palavra.slice(0, 3) + '.'
+        : palavra.slice(0, 4) + '.'
+      );
 
     // mostra as 2 primeiras e a última palavra
-    return listaDePalavrasAbreviada.slice(0, 3).join(' ') + ' ' + listaDePalavrasAbreviada.slice(-2).join(' ');
+    if (listaDePalavrasAbreviada.length < 4) 
+      return listaDePalavrasAbreviada.join(' ');
+    if (listaDePalavrasAbreviada.length == 4) 
+      return listaDePalavrasAbreviada.slice(0, 3).join(' ') + ' ' + listaDePalavrasAbreviada.slice(-1).join(' ');
+    else
+      return listaDePalavrasAbreviada.slice(0, 3).join(' ') + ' ' + listaDePalavrasAbreviada.slice(-2).join(' ');
 
   }
 }

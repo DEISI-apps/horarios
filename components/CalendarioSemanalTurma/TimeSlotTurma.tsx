@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Aula } from '@/types/interfaces';
 import { calculateSlotPosition } from '@/lib/calendario';
 import { MINUTE_HEIGHT } from '@/lib/constants';
@@ -9,6 +10,15 @@ interface TimeSlotProps {
 }
 
 export default function TimeSlot({ slot }: TimeSlotProps) {
+
+  const [width, setWidth] = useState<number>(0);
+
+  new ResizeObserver(entries => {
+    for (const entry of entries) {
+      setWidth(entry.contentRect.width);
+    }
+  });
+
 
   const top = calculateSlotPosition(slot.hora_inicio);
   const height = slot.duracao * MINUTE_HEIGHT - 5;
@@ -32,19 +42,19 @@ export default function TimeSlot({ slot }: TimeSlotProps) {
         }}
       >
         <div className={styles.slotTitle}>
-          {abreviarNomeDisciplina(slot.disciplina_nome)}
+          {abreviarNomeDisciplina(slot.disciplina_nome, width)}
         </div>
         <div className={styles.slotDetails}  >
           {slot.tipo === 'T' ? 'Teórica ' : 'Prática '}
 
           {slot.sala_nome !== 'sala?' && (
-              <span>· {slot.sala_nome}</span>
+            <span>· {slot.sala_nome}</span>
           )}
         </div>
 
         <div className={styles.slotDetails} >
           {(!slot.juncao || slot.juncao_visivel) && (
-              <span>{slot.docente_nome}</span>
+            <span>{slot.docente_nome}</span>
           )}
         </div>
       </div>

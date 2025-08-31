@@ -39,26 +39,32 @@ export default function RootLayout({
           bg-black
         `}
       >
-        
+
         <header className=" 
               w-[90vw] pb-3
               flex flex-row justify-between items-center
               text-white 
         ">
           <div className="flex flex-row items-center gap-4 mt-8 mb-4">
-            <Image 
-              src="/deisi-ball.png" 
-              alt="DEISI Logo" 
-              width={40} 
+            <Image
+              src="/deisi-ball.png"
+              alt="DEISI Logo"
+              width={40}
               height={40}
               className="rounded-full invert"
             />
             <h1 className="text-4xl font-bold">Horários do DEISI</h1>
           </div>
-          {<nav className="flex flex-row gap-6">
-            <Link  className="hover:underline" href="/">Cursos</Link>
-            <Link className="hover:underline" href="/docentes">Docentes</Link>
-          </nav> }
+          {<nav className="flex flex-row gap-8">
+            <div className="flex flex-row gap-4">
+              <div className="text-gray-400">Consultar horários de:</div>
+              <Link className="hover:underline" href="/cursos">Cursos</Link>
+              <Link className="hover:underline" href="/docentes">Docentes</Link>
+              <Link className="hover:underline" href="/disciplinas">Disciplinas</Link>
+              <Link className="hover:underline" href="/salas">Salas</Link>
+            </div>
+            <Link className="hover:underline pl-8" href="/editarHorarios">Editar Horários</Link>
+          </nav>}
         </header>
 
         <main className="min-h-[70vh] w-[90vw] p-5 rounded-xl bg-gray-100">{children}</main>

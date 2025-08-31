@@ -1,7 +1,7 @@
 'use client';
 
 import styles from './CalendarioSemanalSala.module.css';
-import CalendarioSemanalDisciplina from './CalendarioSemanalSala';
+import CalendarioSemanalSala from './CalendarioSemanalSala';
 
 interface SalaModalProps {
   isOpen: boolean;
@@ -40,7 +40,7 @@ export default function SalaModal({
         </div>
 
         <div className={styles.modalBody}>
-          <CalendarioSemanalDisciplina
+          <CalendarioSemanalSala
             sala_id={sala_id}
             ano_lectivo_id={ano_lectivo_id}
             semestre={semestre}

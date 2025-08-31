@@ -62,8 +62,7 @@ export default function CalendarioSemanalDocente({
   // F. Lógica de renderização
 
   // Fallbacks primeiro...
-  if (isLoadingAulas) return <p className="text-gray-500">A carregar aulas...</p>;
-  if (!aulasDocente) return <p className="text-gray-500">A carregar aulas...</p>;
+  if (isLoadingAulas || !aulasDocente) return <p className="text-gray-500">A carregar horário...</p>;
   if (aulasDocente.length === 0) return <p className="text-gray-500">Sem aulas para este docente.</p>;
 
   // render principal

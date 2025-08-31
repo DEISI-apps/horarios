@@ -1,8 +1,8 @@
 import React from 'react'
-// import SelectDisciplina from '@/components/SelectDisciplina/SelectDisciplina'
+import HorarioDisciplina from '@/components/HorarioDisciplina/HorarioDisciplina'
 
 export default function page() {
   return <>
-    {/* <SelectDisciplina /> */}
+    <HorarioDisciplina />
   </>
 }

@@ -1,12 +1,12 @@
 "use client";
 import { useAnosLectivos } from "@/hooks/useAnosLectivos";
-import { useDocentes } from "@/hooks/useDocentes";
-import {  useState } from "react";
-import CalendarioSemanalDocente from "../CalendarioSemanalDocente";
-import { DocenteBase } from "@/types/interfaces";
+import { useState } from "react";
+import { Disciplina } from "@/types/interfaces";
+import { useDisciplinasAnoSemestre } from "@/hooks/useDisciplinasAnoSemestre";
+import CalendarioSemanalDisciplina from "../CalendarioSemanalDisciplina";
 
 
-export default function HorarioDocente() {
+export default function HorarioDisciplina() {
 
   //
   // A. Gestão de estado do componente
@@ -14,16 +14,17 @@ export default function HorarioDocente() {
   setSelectedAnoLectivo(35);
   const [selectedSemestre, setSelectedSemestre] = useState<number | null>(1);
   setSelectedSemestre(1);
-  const [selectedDocente, setSelectedDocente] = useState<DocenteBase | null>(null);
+  const [selectedDisciplina, setSelectedDisciplina] = useState<Disciplina | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectOpened, setSelectOpened] = useState(true);
+
   //
   // B. Obtenção de dados da API usando SWR
   const { anosLectivos, isLoadingAnosLectivos } = useAnosLectivos();
-  const { docentes, isLoadingDocentes } = useDocentes(selectedAnoLectivo, selectedSemestre);
+  const { disciplinas, isLoadingDisciplinas } = useDisciplinasAnoSemestre(selectedAnoLectivo, selectedSemestre);
 
   //
-  // C. Handlers
+  // D. Handlers
 
   // const handleAnoLectivoSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
   //   setSelectedAnoLectivo(parseInt(e.target.value));
@@ -33,21 +34,21 @@ export default function HorarioDocente() {
   //   setSelectedSemestre(parseInt(e.target.value));
   // };
 
-  const handleDocenteSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const docenteId = e.target.value;
-    const docenteObj = docentes?.find((docente) => String(docente.id) === docenteId) || null;
-    setSelectedDocente(docenteObj);
-    setSearchTerm(docenteObj?.nome ? docenteObj.nome : "");
+  const handleDisciplinaSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const disciplinaId = e.target.value;
+    const disciplinaObj = disciplinas?.find((disciplina) => String(disciplina.id) === disciplinaId) || null;
+    setSelectedDisciplina(disciplinaObj);
+    setSearchTerm(disciplinaObj?.nome ? disciplinaObj.nome : "");
     setSelectOpened(false);
   };
 
   //
-  // D. Renderização
-  if (isLoadingAnosLectivos || isLoadingDocentes) return <div>A carregar informação...</div>;
+  // E. Renderização
+  if (isLoadingAnosLectivos || isLoadingDisciplinas || !disciplinas) return <div>A carregar informação...</div>;
   if (!anosLectivos) return <div>Nenhum ano lectivo disponível.</div>;
 
   return (<>
-    <div className="flex gap-4 pl-4 items-start">
+    <div className="flex gap-4 mb-4 items-start">
 
       {/* Seletor de Ano Lectivo */}
       {/* <select
@@ -76,36 +77,36 @@ export default function HorarioDocente() {
         <option key={2} value="2">2º Semestre</option>
       </select> */}
 
-      {/* Seletor de Docente */}
-      {selectedAnoLectivo && selectedSemestre && docentes && (
-        <div className="flex flex-col">
+      {/* Seletor de Disciplina */}
+      {selectedAnoLectivo && selectedSemestre && disciplinas && (
+        <div className="flex flex-col w-[65ch]">
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => {
-              setSelectedDocente(null)
+              setSelectedDisciplina(null)
               setSearchTerm(e.target.value);
               setSelectOpened(true);
             }}
-            placeholder="Escreva o nome do docente..."
-            className="border rounded p-2 font-bold text-lg mb-2 leading-3"
+            placeholder="Escreva o nome da disciplina..."
+            className="border rounded p-2 font-bold text-lg mb-2 leading-3 width-[30ch]"
           />
 
           {selectOpened && (
             <select
-              value={selectedDocente ? String(selectedDocente.id) : ""}
-              onChange={handleDocenteSelection}
-              size={Math.min(5, docentes.length)} // mostra várias opções
+              value={selectedDisciplina ? String(selectedDisciplina.id) : ""}
+              onChange={handleDisciplinaSelection}
+              size={Math.min(5, disciplinas.length)} // mostra várias opções
               className="border rounded p-2 font-bold text-lg cursor-pointer"
             >
-              <option value="">Escolha um docente...</option>
-              {docentes
-                .filter((doc) =>
-                  doc.nome.toLowerCase().includes(searchTerm.toLowerCase())
+              <option value="">Escolha uma disciplina...</option>
+              {disciplinas
+                  .filter((disciplina) =>
+                  disciplina.nome.toLowerCase().includes(searchTerm.toLowerCase())
                 )
-                .map((docente) => (
-                  <option key={docente.id} value={docente.id}>
-                    {docente.nome}
+                .map((disciplina) => (
+                  <option key={disciplina.id} value={disciplina.id}>
+                    {disciplina.nome}
                   </option>
                 ))}
             </select>)}
@@ -114,9 +115,9 @@ export default function HorarioDocente() {
 
     </div>
 
-    { selectedAnoLectivo && selectedSemestre && selectedDocente && (<div className="p-4">
-      <CalendarioSemanalDocente 
-        docente_id={selectedDocente.id} 
+    { selectedAnoLectivo && selectedSemestre && selectedDisciplina && (<div className="p-4">
+      <CalendarioSemanalDisciplina 
+        disciplina_id={selectedDisciplina.id} 
         ano_lectivo_id={selectedAnoLectivo} 
         semestre={selectedSemestre} />
     </div>)}

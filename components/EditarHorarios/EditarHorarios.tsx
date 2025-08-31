@@ -9,7 +9,7 @@ import { useHorarios } from "@/hooks/useHorarios";
 import SalasSection from "../SalasSection/SalasSection";
 
 
-export default function Horarios() {
+export default function EditarHorarios() {
 
   //
   // A. Definição do estado
@@ -31,11 +31,14 @@ export default function Horarios() {
       <SelectHorario onSelect={setSelectedHorarioId} />
 
       {selectedHorarioId && horario && (
-        <>
-        
-          <CalendarioSemanal horario={horario} />
+        <>       
+          <CalendarioSemanal horario={horario} editar={true} />
+
+          <h2 className="pt-8 mt-4 mb-2 text-2xl font-semibold">Ocupação dos Labs do DEISI Hub</h2>
           <SalasSection ano_lectivo_id={horario.ano_lectivo_id} semestre={horario.semestre} />
+
           <TurmasSection horario={horario} />
+
           <DisciplinasSection horario={horario} />
         </>
       )}

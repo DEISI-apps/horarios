@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react";
 import { AulaDocente } from '@/types/interfaces';
 import { calculateSlotPosition } from '@/lib/calendario';
 import { MINUTE_HEIGHT } from '@/lib/constants';
@@ -7,7 +8,6 @@ import styles from './CalendarioSemanalDisciplina.module.css';
 interface TimeSlotProps {
   slot: AulaDocente;
 }
-
 
 function formataTurmas(turmas: Map<string, string[]>): string {
   return Array.from(turmas.entries())
@@ -23,9 +23,28 @@ export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
   const height = slot.duracao * MINUTE_HEIGHT - 5;
   const baseColor = gerarCorDisciplina(slot.disciplina_id);
 
+  const [width, setWidth] = useState<number>(0);
+  const slotRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!slotRef.current) return;
+
+    const observer = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        setWidth(entry.contentRect.width);
+      }
+    });
+
+    observer.observe(slotRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   return (
     <div
+      ref={slotRef}
       key={`slot-${slot.id}`}
       className={styles.slot}
       style={{
@@ -40,13 +59,15 @@ export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
       }}
     >
       <div className={styles.slotTitle}>
-        {abreviarNomeDisciplina(slot.disciplina_nome)}
+        {abreviarNomeDisciplina(slot.disciplina_nome, width)}
       </div>
       <div className={`${styles.slotDetails}`}>
-        <span style={{ fontWeight: 'bold' }}>{slot.tipo === 'T' ? 'Teórica' : 'Prática'}</span>, {slot.sala_nome !== 'sala?' ?  slot.sala_nome + ', ' : ''}  {formataTurmas(slot.turmas)}
+        <span style={{ fontWeight: 'bold' }}>
+          {slot.tipo === 'T' ? 'Teórica' : 'Prática'}
+        </span>, {formataTurmas(slot.turmas)} {slot.sala_nome !== 'outra' ? '(' + slot.sala_nome + ')' : ''}
       </div>
       <div className={`${styles.slotDocente}`}>
-         {slot.docente_nome}
+        {slot.docente_nome}
       </div>
     </div>
   );
