@@ -1,9 +1,9 @@
-import { useState } from "react";
 import { Aula } from '@/types/interfaces';
 import { calculateSlotPosition } from '@/lib/calendario';
 import { MINUTE_HEIGHT } from '@/lib/constants';
 import { gerarCorDisciplina, abreviarNomeDisciplina } from '@/lib/utils';
 import styles from './CalendarioSemanal.module.css';
+import { useEffect, useRef, useState } from 'react';
 
 interface TimeSlotProps {
   slot: Aula;
@@ -12,12 +12,21 @@ interface TimeSlotProps {
 export default function TimeSlot({ slot }: TimeSlotProps) {
 
   const [width, setWidth] = useState<number>(0);
+  const slotRef = useRef<HTMLDivElement | null>(null);
 
-  new ResizeObserver(entries => {
-    for (const entry of entries) {
-      setWidth(entry.contentRect.width);
-    }
-  });
+  // observar largura do slot dinamicamente
+  useEffect(() => {
+    if (!slotRef.current || typeof ResizeObserver === 'undefined') return;
+
+    const observer = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        setWidth(entry.contentRect.width);
+      }
+    });
+
+    observer.observe(slotRef.current);
+    return () => observer.disconnect();
+  }, []);
 
 
   const top = calculateSlotPosition(slot.hora_inicio);
@@ -27,6 +36,7 @@ export default function TimeSlot({ slot }: TimeSlotProps) {
   return (
     <>
       <div
+        ref={slotRef}
         key={`slot-${slot.id}`}
         className={styles.slot}
         style={{

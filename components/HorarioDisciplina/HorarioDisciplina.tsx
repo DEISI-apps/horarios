@@ -1,6 +1,6 @@
 "use client";
 import { useAnosLectivos } from "@/hooks/useAnosLectivos";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Disciplina } from "@/types/interfaces";
 import { useDisciplinasAnoSemestre } from "@/hooks/useDisciplinasAnoSemestre";
 import CalendarioSemanalDisciplina from "../CalendarioSemanalDisciplina";
@@ -11,12 +11,15 @@ export default function HorarioDisciplina() {
   //
   // A. Gestão de estado do componente
   const [selectedAnoLectivo, setSelectedAnoLectivo] = useState<number | null>(35);
-  setSelectedAnoLectivo(35);
   const [selectedSemestre, setSelectedSemestre] = useState<number | null>(1);
-  setSelectedSemestre(1);
   const [selectedDisciplina, setSelectedDisciplina] = useState<Disciplina | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectOpened, setSelectOpened] = useState(true);
+
+  useEffect(() => {
+    setSelectedAnoLectivo(35);
+    setSelectedSemestre(1);
+  }, []);
 
   //
   // B. Obtenção de dados da API usando SWR
@@ -36,6 +39,13 @@ export default function HorarioDisciplina() {
 
   const handleDisciplinaSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const disciplinaId = e.target.value;
+
+    if (disciplinaId == "-1") {
+      setSelectedDisciplina(null);
+      setSearchTerm("");
+      setSelectOpened(true);
+      return;
+    }
     const disciplinaObj = disciplinas?.find((disciplina) => String(disciplina.id) === disciplinaId) || null;
     setSelectedDisciplina(disciplinaObj);
     setSearchTerm(disciplinaObj?.nome ? disciplinaObj.nome : "");
@@ -88,6 +98,7 @@ export default function HorarioDisciplina() {
               setSearchTerm(e.target.value);
               setSelectOpened(true);
             }}
+            onClick={() => setSelectOpened(true)}
             placeholder="Escreva o nome da disciplina..."
             className="border rounded p-2 font-bold text-lg mb-2 leading-3 width-[30ch]"
           />
@@ -99,9 +110,16 @@ export default function HorarioDisciplina() {
               size={Math.min(5, disciplinas.length)} // mostra várias opções
               className="border rounded p-2 font-bold text-lg cursor-pointer"
             >
-              <option value="">Escolha uma disciplina...</option>
+              <option 
+                value="-1"
+                onClick={() => {
+                  setSelectedDisciplina(null);
+                  setSearchTerm("");
+                  setSelectOpened(true);
+                }}              
+              >[ver todas...]</option>
               {disciplinas
-                  .filter((disciplina) =>
+                .filter((disciplina) =>
                   disciplina.nome.toLowerCase().includes(searchTerm.toLowerCase())
                 )
                 .map((disciplina) => (
@@ -115,10 +133,10 @@ export default function HorarioDisciplina() {
 
     </div>
 
-    { selectedAnoLectivo && selectedSemestre && selectedDisciplina && (<div className="p-4">
-      <CalendarioSemanalDisciplina 
-        disciplina_id={selectedDisciplina.id} 
-        ano_lectivo_id={selectedAnoLectivo} 
+    {selectedAnoLectivo && selectedSemestre && selectedDisciplina && (<div className="p-4">
+      <CalendarioSemanalDisciplina
+        disciplina_id={selectedDisciplina.id}
+        ano_lectivo_id={selectedAnoLectivo}
         semestre={selectedSemestre} />
     </div>)}
   </>

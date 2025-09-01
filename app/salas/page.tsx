@@ -1,9 +1,9 @@
 import React from 'react'
-import SalasSection from '@/components/SalasSection/SalasSection'
+import HorarioSala from '@/components/HorarioSala/HorarioSala'
 
 
 export default function page() {
   return <>
-    <SalasSection ano_lectivo_id={35} semestre={1} />
+    <HorarioSala />
   </>
 }

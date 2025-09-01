@@ -1,6 +1,5 @@
 import { Aula, Disciplina, DisciplinaHoras } from "@/types/interfaces";
 
-
 // Função para gerar cor
 export const gerarCorDisciplina = (id: number, claro: boolean = true) => {
   const hue = (id * 137) % 360;
@@ -14,13 +13,18 @@ export function abreviarNomeDisciplina(nomeDisciplina: string, largura: number =
 
   if (largura > 150) {
 
+    if (nomeDisciplina.split(/[\s-]+/).length < 5)
+      return nomeDisciplina;
+
     // abrevia palavras com mais de 6 caracteres
     const nomeAbreviadoDisciplina = nomeDisciplina
       .split(/[\s-]+/)
       .filter(palavra => !palavrasDesprezar.includes(palavra))
       .map(palavra => palavra.length > caracteres ?
         ('aeiou'.includes(palavra[5]) ?
-          palavra.slice(0, 5) + '.'
+          ('aeiou'.includes(palavra[4]) ? 
+            palavra.slice(0, 4) + '.'
+            : palavra.slice(0, 4) + '.')
           : palavra.slice(0, 6) + '.'
         )
         : palavra)
@@ -29,11 +33,10 @@ export function abreviarNomeDisciplina(nomeDisciplina: string, largura: number =
     return nomeAbreviadoDisciplina; 
   }
 
-  if (largura > 100 && nomeDisciplina.length < 20) {
+  if (largura > 105 && nomeDisciplina.length < 20) {
     return nomeDisciplina;
   } 
   
-
   // abrevia palavras com mais de 6 caracteres
   const nomeAbreviadoDisciplina = nomeDisciplina
     .split(/[\s-]+/)
@@ -71,7 +74,6 @@ export function abreviarNomeDisciplina(nomeDisciplina: string, largura: number =
       return listaDePalavrasAbreviada.slice(0, 3).join(' ') + ' ' + listaDePalavrasAbreviada.slice(-1).join(' ');
     else
       return listaDePalavrasAbreviada.slice(0, 3).join(' ') + ' ' + listaDePalavrasAbreviada.slice(-2).join(' ');
-
   }
 }
 

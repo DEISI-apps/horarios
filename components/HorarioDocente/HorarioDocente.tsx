@@ -1,7 +1,7 @@
 "use client";
 import { useAnosLectivos } from "@/hooks/useAnosLectivos";
 import { useDocentes } from "@/hooks/useDocentes";
-import {  useState } from "react";
+import {  useEffect, useState } from "react";
 import CalendarioSemanalDocente from "../CalendarioSemanalDocente";
 import { DocenteBase } from "@/types/interfaces";
 
@@ -11,12 +11,17 @@ export default function HorarioDocente() {
   //
   // A. Gestão de estado do componente
   const [selectedAnoLectivo, setSelectedAnoLectivo] = useState<number | null>(35);
-  setSelectedAnoLectivo(35);
   const [selectedSemestre, setSelectedSemestre] = useState<number | null>(1);
-  setSelectedSemestre(1);
   const [selectedDocente, setSelectedDocente] = useState<DocenteBase | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectOpened, setSelectOpened] = useState(true);
+
+  useEffect(() => { 
+      setSelectedAnoLectivo(35);
+    setSelectedSemestre(1);
+  }, []);
+
+
   //
   // B. Obtenção de dados da API usando SWR
   const { anosLectivos, isLoadingAnosLectivos } = useAnosLectivos();
@@ -35,6 +40,14 @@ export default function HorarioDocente() {
 
   const handleDocenteSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const docenteId = e.target.value;
+
+    if (docenteId == "-1") {
+      setSelectedDocente(null);
+      setSearchTerm("");
+      setSelectOpened(true);
+      return;
+    }
+
     const docenteObj = docentes?.find((docente) => String(docente.id) === docenteId) || null;
     setSelectedDocente(docenteObj);
     setSearchTerm(docenteObj?.nome ? docenteObj.nome : "");
@@ -87,6 +100,7 @@ export default function HorarioDocente() {
               setSearchTerm(e.target.value);
               setSelectOpened(true);
             }}
+            onClick={() => setSelectOpened(true)}
             placeholder="Escreva o nome do docente..."
             className="border rounded p-2 font-bold text-lg mb-2 leading-3"
           />
@@ -98,7 +112,13 @@ export default function HorarioDocente() {
               size={Math.min(5, docentes.length)} // mostra várias opções
               className="border rounded p-2 font-bold text-lg cursor-pointer"
             >
-              <option value="">Escolha um docente...</option>
+              <option value="-1"
+                onClick={() => {
+                  setSelectedDocente(null);
+                  setSearchTerm("");
+                  setSelectOpened(true);
+                }}
+              >listar todos...</option>
               {docentes
                 .filter((doc) =>
                   doc.nome.toLowerCase().includes(searchTerm.toLowerCase())

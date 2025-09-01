@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from 'react';
 import { AulaDocente } from '@/types/interfaces';
 import { calculateSlotPosition } from '@/lib/calendario';
 import { MINUTE_HEIGHT } from '@/lib/constants';
@@ -26,8 +26,9 @@ export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
   const [width, setWidth] = useState<number>(0);
   const slotRef = useRef<HTMLDivElement | null>(null);
 
+  // observar largura do slot dinamicamente
   useEffect(() => {
-    if (!slotRef.current) return;
+    if (!slotRef.current || typeof ResizeObserver === 'undefined') return;
 
     const observer = new ResizeObserver(entries => {
       for (const entry of entries) {
@@ -36,15 +37,11 @@ export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
     });
 
     observer.observe(slotRef.current);
-
-    return () => {
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, []);
 
   return (
     <div
-      ref={slotRef}
       key={`slot-${slot.id}`}
       className={styles.slot}
       style={{

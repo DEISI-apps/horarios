@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Aula } from '@/types/interfaces';
 import { calculateSlotPosition } from '@/lib/calendario';
 import { MINUTE_HEIGHT } from '@/lib/constants';
@@ -18,16 +18,17 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
   const [isModalOpen, setModalOpen] = useState(false);
   const [isModalSalaOpen, setModalSalaOpen] = useState(false);
 
-  const [width, setWidth] = useState<number>(0);
-  const slotRef = useRef<HTMLDivElement>(null);
-
-  const top = calculateSlotPosition(slot.hora_inicio)+2.5;
+  const top = calculateSlotPosition(slot.hora_inicio) + 2.5;
   const height = slot.duracao * MINUTE_HEIGHT - 5;
   const baseColor = gerarCorDisciplina(slot.disciplina_id, true);
 
+
+  const [width, setWidth] = useState<number>(0);
+  const slotRef = useRef<HTMLDivElement | null>(null);
+
   // observar largura do slot dinamicamente
   useEffect(() => {
-    if (!slotRef.current) return;
+    if (!slotRef.current || typeof ResizeObserver === 'undefined') return;
 
     const observer = new ResizeObserver(entries => {
       for (const entry of entries) {
@@ -39,91 +40,91 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
     return () => observer.disconnect();
   }, []);
 
-  return (
-    <>
-      <div
-        ref={slotRef}
-        key={`slot-${slot.id}`}
-        className={styles.slot}
-        style={{
-          top: `${top}px`,
-          height: `${height}px`,
-          backgroundColor: baseColor,
-          color: (slot.juncao && !slot.juncao_visivel) ? 'transparent' : 'black',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'flex-start',
-          textAlign: 'left',
-          paddingLeft: '8px',
-          lineHeight: '14px',
-        }}
-        onClick={(e) => {
-          e.stopPropagation();
-          onEdit(slot);
-        }}
-      >
-        <div className={`${styles.slotTitle} mb-1`}>
-          {abreviarNomeDisciplina(slot.disciplina_nome, width)} 
-        </div>
-
+    return (
+      <>
         <div
-          className={styles.slotDetails}
-          style={{ color: (slot.juncao && !slot.juncao_visivel) ? 'transparent' : 'black' }}
+          ref={slotRef}
+          key={`slot-${slot.id}`}
+          className={styles.slot}
+          style={{
+            top: `${top}px`,
+            height: `${height}px`,
+            backgroundColor: baseColor,
+            color: (slot.juncao && !slot.juncao_visivel) ? 'transparent' : 'black',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'flex-start',
+            textAlign: 'left',
+            paddingLeft: '8px',
+            lineHeight: '14px',
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            onEdit(slot);
+          }}
         >
-          {slot.tipo === 'T' ? 'Teórica ' : 'Prática '}
+          <div className={`${styles.slotTitle} mb-1`}>
+            {abreviarNomeDisciplina(slot.disciplina_nome, width)}
+          </div>
 
-          {slot.sala_nome !== 'sala?' && (
-            <>
-              <span>· </span>
+          <div
+            className={styles.slotDetails}
+            style={{ color: (slot.juncao && !slot.juncao_visivel) ? 'transparent' : 'black' }}
+          >
+            {slot.tipo === 'T' ? 'Teórica ' : 'Prática '}
+
+            {slot.sala_nome !== 'sala?' && (
+              <>
+                <span>· </span>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setModalSalaOpen(true);
+                  }}
+                  className="underline focus:outline-none cursor-help"
+                >
+                  {slot.sala_nome}
+                </button>
+              </>
+            )}
+          </div>
+
+          <div
+            className={styles.slotDetails}
+            style={{ color: (slot.juncao && !slot.juncao_visivel) ? 'transparent' : 'black' }}
+          >
+            {(!slot.juncao || slot.juncao_visivel) && (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  setModalSalaOpen(true);
+                  setModalOpen(true);
                 }}
-                className="underline focus:outline-none cursor-help"
+                className="underline focus:outline-none cursor-help text-left"
               >
-                {slot.sala_nome}
+                {slot.docente_nome}
               </button>
-            </>
-          )}
+            )}
+          </div>
         </div>
 
-        <div
-          className={styles.slotDetails}
-          style={{ color: (slot.juncao && !slot.juncao_visivel) ? 'transparent' : 'black' }}
-        >
-          {(!slot.juncao || slot.juncao_visivel) && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setModalOpen(true);
-              }}
-              className="underline focus:outline-none cursor-help text-left"
-            >
-              {slot.docente_nome}
-            </button>
-          )}
-        </div>
-      </div>
+        <DocenteModal
+          isOpen={isModalOpen}
+          setModalOpen={setModalOpen}
+          docente_id={slot.docente_id}
+          docente_nome={slot.docente_nome}
+          ano_lectivo_id={ano_lectivo_id}
+          semestre={semestre}
+        />
 
-      <DocenteModal
-        isOpen={isModalOpen}
-        setModalOpen={setModalOpen}
-        docente_id={slot.docente_id}
-        docente_nome={slot.docente_nome}
-        ano_lectivo_id={ano_lectivo_id}
-        semestre={semestre}
-      />
-
-      <SalaModal
-        isOpen={isModalSalaOpen}
-        setModalOpen={setModalSalaOpen}
-        sala_id={slot.sala_id}
-        sala_nome={slot.sala_nome}
-        ano_lectivo_id={ano_lectivo_id}
-        semestre={semestre}
-      />
-    </>
-  );
-}
+        <SalaModal
+          isOpen={isModalSalaOpen}
+          setModalOpen={setModalSalaOpen}
+          sala_id={slot.sala_id}
+          sala_nome={slot.sala_nome}
+          ano_lectivo_id={ano_lectivo_id}
+          semestre={semestre}
+        />
+      </>
+    );
+  }
