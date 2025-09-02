@@ -19,7 +19,7 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
   const [isModalSalaOpen, setModalSalaOpen] = useState(false);
 
   const top = calculateSlotPosition(slot.hora_inicio) + 2.5;
-  const height = slot.duracao * MINUTE_HEIGHT - 5;
+  const height = slot.duracao * MINUTE_HEIGHT - 4;
   const baseColor = gerarCorDisciplina(slot.disciplina_id, true);
 
 

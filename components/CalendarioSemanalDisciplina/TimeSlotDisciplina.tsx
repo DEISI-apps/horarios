@@ -13,14 +13,14 @@ function formataTurmas(turmas: Map<string, string[]>): string {
   return Array.from(turmas.entries())
     .map(([curso, turmasList]) => {
       turmasList.sort((a, b) => a.localeCompare(b));
-      return `${curso} ${turmasList.join('+')}`;
+      return `${curso} ${turmasList.join('')}`;
     })
     .join(', ');
 }
 
 export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
-  const top = calculateSlotPosition(slot.hora_inicio);
-  const height = slot.duracao * MINUTE_HEIGHT - 5;
+  const top = calculateSlotPosition(slot.hora_inicio) + 2;
+  const height = slot.duracao * MINUTE_HEIGHT - 4;
   const baseColor = gerarCorDisciplina(slot.disciplina_id);
 
   const [width, setWidth] = useState<number>(0);
@@ -42,6 +42,7 @@ export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
 
   return (
     <div
+      ref={slotRef}
       key={`slot-${slot.id}`}
       className={styles.slot}
       style={{
@@ -51,19 +52,19 @@ export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center',
-        textAlign: 'center',
+        alignItems: 'flex-start',
+        textAlign: 'left',
       }}
     >
       <div className={styles.slotTitle}>
         {abreviarNomeDisciplina(slot.disciplina_nome, width)}
       </div>
       <div className={`${styles.slotDetails}`}>
-        <span style={{ fontWeight: 'bold' }}>
+        <span style={{ fontWeight: 'normal' }}>
           {slot.tipo === 'T' ? 'Teórica' : 'Prática'}
         </span>, {formataTurmas(slot.turmas)} {slot.sala_nome !== 'outra' ? '(' + slot.sala_nome + ')' : ''}
       </div>
-      <div className={`${styles.slotDocente}`}>
+      <div className={`${styles.slotDocente}`} style={{ fontWeight: 'bold' }}>
         {slot.docente_nome}
       </div>
     </div>

@@ -92,7 +92,7 @@
 
 .timeMarker.halfHour {
   font-size: 10px;
-  color: #999;
+  color: white;
 }
 
 .daysContainer {
@@ -147,6 +147,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: left;
+  line-height: 0.9
 }
 
 .slotDetails, .slotDocente {

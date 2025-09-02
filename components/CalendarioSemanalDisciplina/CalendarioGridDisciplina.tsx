@@ -3,22 +3,23 @@ import { DAYS, CALENDAR_HEIGHT } from '@/lib/constants';
 import TimeMarkers from './TimeMarkers';
 import styles from './CalendarioSemanalDisciplina.module.css';
 import TimeSlotDisciplina from './TimeSlotDisciplina';
+import { TimeLines } from '../CalendarioSemanal/TimeLines';
 
 interface CalendarGridProps {
   aulas: AulaDocente[];
   isLoadingAulas: boolean;
 }
 
-export default function CalendarioGridDocente({ 
-  aulas, 
-  isLoadingAulas, 
+export default function CalendarioGridDocente({
+  aulas,
+  isLoadingAulas,
 }: CalendarGridProps) {
-  
-  const renderSlotsForDayAndClass = ( dayId: number ) => {
+
+  const renderSlotsForDayAndClass = (dayId: number) => {
     if (isLoadingAulas) return <div>A carregar aulas...</div>;
-    
+
     return aulas
-      .filter((slot: AulaDocente) => slot.dia_semana === dayId )
+      .filter((slot: AulaDocente) => slot.dia_semana === dayId)
       .map((slot: AulaDocente) => (
         <TimeSlotDisciplina key={`slot-${slot.id}`} slot={slot} />
       ));
@@ -26,7 +27,7 @@ export default function CalendarioGridDocente({
 
   //
   // C. renderiza
-  
+
   return (
     <div className={styles.calendarContainer}>
       <div className={styles.calendarHeader}>
@@ -38,28 +39,31 @@ export default function CalendarioGridDocente({
           </div>
         ))}
       </div>
-      
+
       <div className={styles.calendarBody}>
-        <div 
-          className={styles.timeSlots} 
+        <div
+          className={styles.timeSlots}
           style={{ height: `${CALENDAR_HEIGHT}px` }}
         >
           <TimeMarkers />
         </div>
-        
-        <div 
-          className={styles.daysContainer} 
+
+        <div
+          className={styles.daysContainer}
           style={{ height: `${CALENDAR_HEIGHT}px` }}
         >
+          {/* linhas horizontais das horas */}
+          <TimeLines />
+
           {DAYS.map(day => (
             <div key={`day-${day.id}`} className={styles.dayColumn}>
-                <div
-                  key={`slot-${day.id}`}
-                  className={styles.classSlotColumn}
-                >
-                  {renderSlotsForDayAndClass(day.id)}
-                </div>
-              
+              <div
+                key={`slot-${day.id}`}
+                className={styles.classSlotColumn}
+              >
+                {renderSlotsForDayAndClass(day.id)}
+              </div>
+
             </div>
           ))}
         </div>

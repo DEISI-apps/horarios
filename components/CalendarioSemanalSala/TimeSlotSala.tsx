@@ -11,8 +11,8 @@ interface TimeSlotProps {
 
 
 export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
-  const top = calculateSlotPosition(slot.hora_inicio);
-  const height = slot.duracao * MINUTE_HEIGHT - 5;
+  const top = calculateSlotPosition(slot.hora_inicio) + 2;
+  const height = slot.duracao * MINUTE_HEIGHT - 2;
   const baseColor = gerarCorDisciplina(slot.disciplina_id);
 
   const [width, setWidth] = useState<number>(0);
@@ -44,8 +44,8 @@ export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center',
-        textAlign: 'center',
+        alignItems: 'flex-start',
+        textAlign: 'left',
         border: '1px solid white',
       }}
     >
@@ -55,7 +55,7 @@ export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
       <div className={`${styles.slotDetails}`}>
         {slot.tipo === 'T' ? 'Teórica' : 'Prática'}{slot.sala_nome !== 'sala?' ? ', ' + slot.sala_nome : ''}
       </div>
-      <div className={`${styles.slotDocente}`}>
+      <div className={`${styles.slotDocente}`} style={{ fontWeight: 'bold' }}>
         {slot.docente_nome}
       </div>
     </div>

@@ -3,6 +3,7 @@ import { DAYS, CALENDAR_HEIGHT } from '@/lib/constants';
 import TimeMarkers from './TimeMarkers';
 import styles from './CalendarioSemanalSala.module.css';
 import TimeSlotSala from './TimeSlotSala';
+import { TimeLines } from '../CalendarioSemanal/TimeLines';
 
 interface CalendarGridProps {
   aulas: Aula[];
@@ -51,6 +52,9 @@ export default function CalendarioGridSala({
           className={styles.daysContainer} 
           style={{ height: `${CALENDAR_HEIGHT}px` }}
         >
+          {/* linhas horizontais das horas */}
+          <TimeLines />
+
           {DAYS.map(day => (
             <div key={`day-${day.id}`} className={styles.dayColumn}>
                 <div

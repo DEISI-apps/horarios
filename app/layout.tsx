@@ -39,31 +39,31 @@ export default function RootLayout({
           bg-black
         `}
       >
-
         <header className=" 
               w-[90vw] pb-3
-              flex flex-row justify-between items-center
+              flex flex-row items-center
+              gap-16
               text-white 
         ">
           <div className="flex flex-row items-center gap-4 mt-8 mb-4">
-            <Image
+            <h1 className="text-2xl font-bold">DEISI</h1><Image
               src="/deisi-ball.png"
               alt="DEISI Logo"
               width={40}
               height={40}
               className="rounded-full invert"
             />
-            <h1 className="text-4xl font-bold">Horários do DEISI</h1>
+            <h1 className="text-2xl font-bold">Horários</h1>
           </div>
-          {<nav className="flex flex-row gap-8">
-            <div className="flex flex-row gap-4">
-              <div className="text-gray-400">Consultar horários de:</div>
-              <Link className="hover:underline" href="/cursos">Cursos</Link>
-              <Link className="hover:underline" href="/docentes">Docentes</Link>
-              <Link className="hover:underline" href="/disciplinas">Disciplinas</Link>
-              <Link className="hover:underline" href="/salas">Salas</Link>
+          {<nav className="flex flex-row gap-8 text-gray-300 items-center mt-8 mb-4 w-[80vw]">
+            <div className="flex flex-row gap-2 justify-start items-center">
+              {/* <div className="text-gray-400">Consultar horários de:</div> */}
+              <Link className="px-4 py-1 rounded hover:bg-gray-800" href="/cursos">curso</Link>
+              <Link className="px-4 py-1 rounded hover:bg-gray-800" href="/docentes">docente</Link>
+              <Link className="px-4 py-1 rounded hover:bg-gray-800" href="/disciplinas">disciplina</Link>
+              <Link className="px-4 py-1 rounded hover:bg-gray-800" href="/salas">sala</Link>
             </div>
-            <Link className="hover:underline pl-8" href="/editarHorarios">Editar Horários</Link>
+            <Link className="px-4 py-1 rounded hover:bg-gray-800 ml-auto" href="/editarHorarios">editar</Link>
           </nav>}
         </header>
 

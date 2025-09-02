@@ -92,8 +92,8 @@
   position: absolute;
   left: 0;
   right: 0;
-  height: 1px;
-  background-color: #ddd;
+  /* height: 1px; */
+  /* background-color: purple; */
   z-index: 0; 
 }
 

@@ -21,8 +21,8 @@ export function formataTurmas(turmas: Map<string, string[]>): string {
 
 
 export default function TimeSlotDocente({ slot }: TimeSlotProps) {
-  const top = calculateSlotPosition(slot.hora_inicio);
-  const height = slot.duracao * MINUTE_HEIGHT - 5;
+  const top = calculateSlotPosition(slot.hora_inicio) + 2;
+  const height = slot.duracao * MINUTE_HEIGHT - 4;
   const baseColor = gerarCorDisciplina(slot.disciplina_id);
   
   const [width, setWidth] = useState<number>(0);
@@ -54,7 +54,7 @@ export default function TimeSlotDocente({ slot }: TimeSlotProps) {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'left',
+        alignItems: 'flex-start',
         textAlign: 'left',
         paddingLeft:'5px',
       }}
