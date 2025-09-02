@@ -34,7 +34,7 @@ export default function Cursos() {
         <>
 
           <CalendarioSemanal horario={horario} editar={false} />
-          <h2 className="mt-4 mb-2 text-2xl font-semibold">Ocupação dos Labs do DEISI Hub</h2>
+          <h2 className="mt-4 mb-2 text-2xl font-semibold pt-8">Ocupação dos Labs do DEISI Hub</h2>
           <SalasSection ano_lectivo_id={horario.ano_lectivo_id} semestre={horario.semestre} />
           <TurmasSection horario={horario} />
           <DisciplinasSection horario={horario} />
