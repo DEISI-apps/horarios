@@ -1,6 +1,5 @@
 import { generateTimeMarkers } from '@/lib/calendario';
 import styles from './CalendarioSemanal.module.css';
-import { text } from 'stream/consumers';
 
 
 export function TimeLines() {
