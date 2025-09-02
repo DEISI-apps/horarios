@@ -58,7 +58,7 @@ export default function HorarioDisciplina() {
   if (!anosLectivos) return <div>Nenhum ano lectivo disponível.</div>;
 
   return (<>
-    <div className="flex gap-4 mb-4 items-start">
+    <div className="flex gap-4 pl-4 items-start">
 
       {/* Seletor de Ano Lectivo */}
       {/* <select
