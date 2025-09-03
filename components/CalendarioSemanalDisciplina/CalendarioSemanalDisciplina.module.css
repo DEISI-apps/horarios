@@ -99,6 +99,7 @@
   display: flex;
   flex: 1;
   position: relative;
+  margin-left: -1px;
   height: 720px; /* Mesma altura que timeSlots */
 }
 

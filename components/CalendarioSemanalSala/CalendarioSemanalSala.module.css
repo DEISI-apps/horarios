@@ -14,7 +14,7 @@
   width: fit-content;
   min-width: 100%;
   margin: 0 auto;
-  border: 1px solid #ddd;
+  /* border: 1px solid #ddd; */
   border-radius: 5px;
   overflow: hidden;
 }
@@ -22,7 +22,7 @@
 .calendarHeader {
   display: flex;
   /* background-color: #f5f5f5; */
-  border-bottom: 1px solid #ddd;
+  /* border-bottom: 1px solid #ddd; */
 }
 
 .timeColumn {
@@ -36,7 +36,7 @@
   text-align: center;
   padding: 10px 10px 0 10px;
   font-weight: bold;
-  border-right: 1px solid #dddada;
+  /* border-right: 1px solid #dddada; */
   display: flex;
   flex-direction: column;
 }
@@ -99,6 +99,7 @@
   display: flex;
   flex: 1;
   position: relative;
+  margin-left: -1px;
   height: 720px; /* Mesma altura que timeSlots */
 }
 
@@ -281,4 +282,5 @@
 
 .timeMarkersFixed{
   background:white;
+  border: 1px solid white;
 }
