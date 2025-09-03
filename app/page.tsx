@@ -1,21 +1,11 @@
 import React from "react";
 import Image from "next/image";
-import calendarImage from "@/public/calendar.png"; // Coloque a imagem na pasta public
 
 export default function Page() {
   return (
     <div className="flex flex-col items-center justify-center h-[550px] text-center px-4 md:px-0">
-      {/* Imagem ilustrativa */}
-      <div className="mb-6">
-        {/* <Image
-          src={calendarImage}
-          alt="Calendário"
-          width={120}
-          height={120}
-          className="mx-auto"
-        /> */}
-      </div>
-
+      
+     
       {/* Título */}
       <h1 className="text-3xl font-semibold mb-4">
         Bem-vindo à aplicação de horários
@@ -25,6 +15,17 @@ export default function Page() {
       <p className="text-gray-700 mb-8">
         Esta aplicação permite gerir e consultar horários de forma rápida e intuitiva.
       </p>
+
+ {/* Imagem ilustrativa */}
+      <div className="mb-6">
+        <Image
+          src="/horario.png"
+          alt="Calendário"
+          width={300}
+          height={300}
+          className="mx-auto"
+        />
+      </div>
 
       {/* Lista de funcionalidades */}
       <div className="text-left mb-6">
