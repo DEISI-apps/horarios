@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSalas } from "@/hooks/useSalas";
 import CalendarioSemanalSala from "../CalendarioSemanalSala";
+import { useAnosLectivos } from "@/hooks/useAnosLectivos";
 
 
 export default function HorarioSala() {
@@ -23,17 +24,18 @@ export default function HorarioSala() {
   // B. Obtenção de dados da API usando SWR
   // const { anosLectivos, isLoadingAnosLectivos } = useAnosLectivos();
   const { salas, isLoadingSalas } = useSalas();
+  const { anosLectivos, isLoadingAnosLectivos } = useAnosLectivos();
 
   //
   // C. Handlers
 
-  // const handleAnoLectivoSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  //   setSelectedAnoLectivo(parseInt(e.target.value));
-  // };
+  const handleAnoLectivoSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedAnoLectivo(parseInt(e.target.value));
+  };
 
-  // const handleSemestreSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  //   setSelectedSemestre(parseInt(e.target.value));
-  // };
+  const handleSemestreSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedSemestre(parseInt(e.target.value));
+  };
 
 
   const handleSalaSelection = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -45,16 +47,18 @@ export default function HorarioSala() {
 
   //
   // D. Renderização
-  if (isLoadingSalas) return <div>A carregar informação...</div>;
+  if (isLoadingSalas || isLoadingAnosLectivos || !anosLectivos) return <div>A carregar informação...</div>;
 
   return (<>
-    <div className="flex gap-4 pl-4 items-start">
-
+    <div className="p-4 flex flex-col gap-6">
+      {/* Barra de Filtros */}
+      <div className="flex flex-wrap gap-4 items-start bg-white p-4 rounded-xl shadow-md">
+        
       {/* Seletor de Ano Lectivo */}
-      {/* <select
+      <select
         value={selectedAnoLectivo ?? ""}
         onChange={handleAnoLectivoSelection}
-        className="border rounded p-2 font-bold text-lg cursor-pointer"
+        className="border rounded p-2 text-lg cursor-pointer"
       >
         <option value="35">25-26</option>
         {anosLectivos
@@ -65,17 +69,17 @@ export default function HorarioSala() {
             </option>
           ))
         }
-      </select> */}
+      </select>
 
       {/* Seletor de Semestre */}
-      {/* <select
+      <select
         value={selectedSemestre ?? ""}
         onChange={handleSemestreSelection}
-        className="border rounded p-2 font-bold text-lg cursor-pointer"
+        className="border rounded p-2 text-lg cursor-pointer"
       >
         <option key={1} value="1">1º Semestre</option>
         <option key={2} value="2">2º Semestre</option>
-      </select> */}
+      </select>
 
       {/* Seletor de Docente */}
       {selectedAnoLectivo && selectedSemestre && salas && (
@@ -93,15 +97,17 @@ export default function HorarioSala() {
           ))}
         </select>
       )}
+      </div>
     </div>
 
-    {selectedAnoLectivo && selectedSemestre && selectedSala && (<div className="p-4">
-      <CalendarioSemanalSala
-        sala_id={selectedSala}
-        ano_lectivo_id={selectedAnoLectivo}
-        semestre={selectedSemestre}
-      />
-    </div>)}
+    {selectedAnoLectivo && selectedSemestre && selectedSala && (
+      <div className="p-4 bg-white rounded-xl shadow-md">
+        <CalendarioSemanalSala
+          sala_id={selectedSala}
+          ano_lectivo_id={selectedAnoLectivo}
+          semestre={selectedSemestre}
+        />
+      </div>)}
   </>
   );
 }

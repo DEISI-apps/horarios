@@ -36,9 +36,9 @@ export default function RootLayout({
       >
         <Navbar /> {/* Menu separado */}
         <main className="flex-1 w-full max-w-7xl mx-auto">
-          <div className="rounded-2xl p-6 shadow-sm">{children}</div>
+          <div>{children}</div>
         </main>
-        <footer className="w-full border-t border-gray-200 py-4">
+        <footer className="w-full py-4">
           <div className="text-center text-xs text-gray-500">
             © 2025 DEISI · Universidade Lusófona
           </div>

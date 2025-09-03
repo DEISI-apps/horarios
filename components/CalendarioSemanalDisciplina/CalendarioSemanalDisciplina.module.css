@@ -14,7 +14,7 @@
   width: fit-content;
   min-width: 100%;
   margin: 0 auto;
-  border: 1px solid #ddd;
+  /* border: 1px solid #ddd; */
   border-radius: 5px;
   overflow: hidden;
 }
@@ -22,12 +22,12 @@
 .calendarHeader {
   display: flex;
   /* background-color: #f5f5f5; */
-  border-bottom: 1px solid #ddd;
+  /* border-bottom: 1px solid #ddd; */
 }
 
 .timeColumn {
-  width: 80px;
-  min-width: 80px;
+  width:40px;
+  min-width:40px;
   background-color: #f5f5f5;
 }
 
@@ -36,7 +36,7 @@
   text-align: center;
   padding: 10px 10px 0 10px;
   font-weight: bold;
-  border-right: 1px solid #dddada;
+  /* border-right: 1px solid #dddada; */
   display: flex;
   flex-direction: column;
 }
@@ -71,8 +71,8 @@
 }
 
 .timeSlots {
-  width: 80px;
-  min-width: 80px;
+  width:40px;
+  min-width:40px;
   position: relative;
   height: 720px; /* Altura total baseada em 12 horas (8h-20h) */
 }
@@ -92,7 +92,7 @@
 
 .timeMarker.halfHour {
   font-size: 10px;
-  color: #999;
+  color: white; /* #999; */
 }
 
 .daysContainer {

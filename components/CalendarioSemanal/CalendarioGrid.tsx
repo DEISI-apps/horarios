@@ -68,14 +68,14 @@ export default function CalendarGrid({
       {/* quadrado no topo esquerdo do horario (podemos eventualmente por cor do fundo cinza) */}
       <div
         className={`${styles.timeSlots} ${styles.timeMarkersFixed}`}
-        style={{ height: `82px`, position: 'absolute', top: 0, left: -1, zIndex: 1, borderRight: '1px solid #dddada' }}
+        style={{ height: `82px`, position: 'absolute', top: 0, left: -1, zIndex: 1 }}
       >
       </div>
       
       {/* linhas horizontais das horas */}
       <div
         className={`${styles.timeSlots} ${styles.timeMarkersFixed}`}
-        style={{ height: `${CALENDAR_HEIGHT}px`, position: 'absolute', top: '67px', left: -1, zIndex: 1, borderRight: '1px solid #dddada' }}
+        style={{ height: `${CALENDAR_HEIGHT}px`, position: 'absolute', top: '67px', left: -1, zIndex: 1 }}
       >
         <TimeMarkers />
       </div>

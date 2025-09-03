@@ -14,7 +14,7 @@ export default function HorarioDisciplina() {
   const [selectedSemestre, setSelectedSemestre] = useState<number | null>(1);
   const [selectedDisciplina, setSelectedDisciplina] = useState<Disciplina | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectOpened, setSelectOpened] = useState(true);
+  const [selectOpened, setSelectOpened] = useState(false);
 
   useEffect(() => {
     setSelectedAnoLectivo(35);
@@ -29,13 +29,13 @@ export default function HorarioDisciplina() {
   //
   // D. Handlers
 
-  // const handleAnoLectivoSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  //   setSelectedAnoLectivo(parseInt(e.target.value));
-  // };
+  const handleAnoLectivoSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedAnoLectivo(parseInt(e.target.value));
+  };
 
-  // const handleSemestreSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  //   setSelectedSemestre(parseInt(e.target.value));
-  // };
+  const handleSemestreSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedSemestre(parseInt(e.target.value));
+  };
 
   const handleDisciplinaSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const disciplinaId = e.target.value;
@@ -58,34 +58,35 @@ export default function HorarioDisciplina() {
   if (!anosLectivos) return <div>Nenhum ano lectivo disponível.</div>;
 
   return (<>
-    <div className="flex gap-4 pl-4 items-start">
-
+    <div className="p-4 flex flex-col gap-6">
+      {/* Barra de Filtros */}
+      <div className="flex flex-wrap gap-4 items-start bg-white p-4 rounded-xl shadow-md">
       {/* Seletor de Ano Lectivo */}
-      {/* <select
+      <select
         value={selectedAnoLectivo ?? ""}
         onChange={handleAnoLectivoSelection}
-        className="border rounded p-2 font-bold text-lg cursor-pointer"
+        className="border rounded p-2 text-lg cursor-pointer"
       >
         <option value="35">25-26</option>
-        {anosLectivos
+        {/* {anosLectivos
           .sort((a, b) => b.ano_lectivo.localeCompare(a.ano_lectivo))
           .map((ano, idx) => (
             <option key={idx} value={ano.id}>
               {ano.ano_lectivo}
             </option>
           ))
-        }
-      </select> */}
+        } */}
+      </select>
 
       {/* Seletor de Semestre */}
-      {/* <select
+      <select
         value={selectedSemestre ?? ""}
         onChange={handleSemestreSelection}
-        className="border rounded p-2 font-bold text-lg cursor-pointer"
+        className="border rounded p-2 text-lg cursor-pointer"
       >
         <option key={1} value="1">1º Semestre</option>
-        <option key={2} value="2">2º Semestre</option>
-      </select> */}
+        {/* <option key={2} value="2">2º Semestre</option> */}
+      </select>
 
       {/* Seletor de Disciplina */}
       {selectedAnoLectivo && selectedSemestre && disciplinas && (
@@ -100,7 +101,9 @@ export default function HorarioDisciplina() {
             }}
             onClick={() => setSelectOpened(true)}
             placeholder="Escreva o nome da disciplina..."
-            className="border rounded p-2 font-bold text-lg mb-2 leading-3 width-[30ch]"
+            className="border rounded-lg p-2 font-bold text-lg mb-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            style={{ padding: "5px" }}
+            autoFocus
           />
 
           {selectOpened && (
@@ -131,14 +134,17 @@ export default function HorarioDisciplina() {
         </div>
       )}
 
+      </div>
+
     </div>
 
-    {selectedAnoLectivo && selectedSemestre && selectedDisciplina && (<div className="p-4">
-      <CalendarioSemanalDisciplina
-        disciplina_id={selectedDisciplina.id}
-        ano_lectivo_id={selectedAnoLectivo}
-        semestre={selectedSemestre} />
-    </div>)}
+    {selectedAnoLectivo && selectedSemestre && selectedDisciplina && (
+      <div className="p-4 bg-white rounded-xl shadow-md">
+        <CalendarioSemanalDisciplina
+          disciplina_id={selectedDisciplina.id}
+          ano_lectivo_id={selectedAnoLectivo}
+          semestre={selectedSemestre} />
+      </div>)}
   </>
   );
 }

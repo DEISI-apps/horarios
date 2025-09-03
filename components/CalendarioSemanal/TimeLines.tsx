@@ -11,7 +11,7 @@ export function TimeLines() {
         <div
           key={`line-${marker.key}`}
           className={`${styles.timeMarkerLine}`}
-          style={{ top: `${marker.top}px`, border: marker.isHalf ? '1px dashed lightgray' : '1px solid lightgray' }}
+          style={{ top: `${marker.top}px`, border: marker.isHalf ? '1px solid whitesmoke' : '1px solid #dddada' }}
         />
       ))}
     </>
