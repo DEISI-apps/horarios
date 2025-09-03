@@ -45,7 +45,7 @@ export default function CalendarioSemanalSala({
 
   // render principal
   return (
-    <section className="pt-3">
+    <section>
       <div className={styles.container} style={{ position: 'relative' }}>
         <div
           className={`${styles.timeSlots} ${styles.timeMarkersFixed}`}

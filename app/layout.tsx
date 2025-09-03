@@ -40,7 +40,10 @@ export default function RootLayout({
         </main>
         <footer className="w-full py-4">
           <div className="text-center text-xs text-gray-500">
-            © 2025 DEISI · Universidade Lusófona
+            DEISI · Universidade Lusófona © 2025 ·
+            <a href="mailto:lucio.studer@ulusofona.pt" className="underline hover:text-gray-700 pl-1">
+              lucio.studer@ulusofona.pt
+            </a>
           </div>
         </footer>
       </body>

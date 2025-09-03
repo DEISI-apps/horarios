@@ -1,4 +1,4 @@
-export const HOUR_HEIGHT = 37;
+export const HOUR_HEIGHT = 35;
 export const MINUTE_HEIGHT = HOUR_HEIGHT / 60;
 export const START_HOUR = 8;
 export const END_HOUR = 24;

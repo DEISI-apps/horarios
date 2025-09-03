@@ -74,7 +74,8 @@
   width:40px;
   min-width:40px;
   position: relative;
-  height: 720px; /* Altura total baseada em 12 horas (8h-20h) */
+  /* height: 720px;  */
+  /* Altura total baseada em 12 horas (8h-20h) */
 }
 
 .timeMarker {
@@ -100,7 +101,8 @@
   flex: 1;
   position: relative;
   margin-left: -1px;
-  height: 720px; /* Mesma altura que timeSlots */
+  /* height: 720px;  */
+  /* Mesma altura que timeSlots */
 }
 
 .dayColumn {
