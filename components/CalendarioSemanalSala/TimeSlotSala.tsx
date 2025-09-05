@@ -53,7 +53,9 @@ export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
         {abreviarNomeDisciplina(slot.disciplina_nome, width)}
       </div>
       <div className={`${styles.slotDetails}`}>
-        {slot.tipo === 'T' ? 'Teórica' : 'Prática'}{slot.sala_nome !== 'sala?' ? ', ' + slot.sala_nome : ''}
+        {slot.tipo}
+        {slot.turma_nome}
+        {slot.sala_nome !== 'sala?' ? ', ' + slot.sala_nome : ''}
       </div>
       <div className={`${styles.slotDocente}`} style={{ fontWeight: 'bold' }}>
         {slot.docente_nome}

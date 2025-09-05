@@ -61,9 +61,9 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
   // E. Renderização
   if (isError) return <div>Erro ao carregar cursos.</div>;
   if (isLoading) return <div>A carregar...</div>;
-
+      
   return (
-    <div className="flex gap-4 mb-4">
+    <div className="flex flex-wrap gap-4 items-start bg-white p-4 rounded-xl shadow-md">
       
       {/* Seletor de Curso */}
       <select

@@ -12,8 +12,9 @@ interface TimeSlotProps {
 function formataTurmas(turmas: Map<string, string[]>): string {
   return Array.from(turmas.entries())
     .map(([curso, turmasList]) => {
-      turmasList.sort((a, b) => a.localeCompare(b));
-      return `${curso} ${turmasList.join('')}`;
+      return turmasList
+      .sort((a, b) => a.localeCompare(b))
+      .map(turma => 'P' + turma)
     })
     .join(', ');
 }
@@ -61,8 +62,8 @@ export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
       </div>
       <div className={`${styles.slotDetails}`}>
         <span style={{ fontWeight: 'normal' }}>
-          {slot.tipo === 'T' ? 'Teórica' : 'Prática'}
-        </span>, {formataTurmas(slot.turmas)} {slot.sala_nome !== 'outra' ? '(' + slot.sala_nome + ')' : ''}
+          {slot.tipo === 'T' ? 'Teórica' :  formataTurmas(slot.turmas) }
+        </span> {slot.sala_nome !== 'outra' ? '(' + slot.sala_nome + ')' : ''}
       </div>
       <div className={`${styles.slotDocente}`} style={{ fontWeight: 'bold' }}>
         {slot.docente_nome}

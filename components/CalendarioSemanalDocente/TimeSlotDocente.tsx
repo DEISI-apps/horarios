@@ -14,7 +14,7 @@ export function formataTurmas(turmas: Map<string, string[]>): string {
   return Array.from(turmas.entries())
     .map(([curso, turmasList]) => {
       turmasList.sort((a, b) => a.localeCompare(b));
-      return `${curso} T${turmasList.join('+')}`;
+      return `${curso} ${turmasList.join(',')}`;
     })
     .join(', ');
 }

@@ -64,11 +64,11 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
             onEdit(slot);
           }}
         >
-          <div className={`${styles.slotTitle} mb-1`}>
-            {abreviarNomeDisciplina(slot.disciplina_nome, width)}
+          <div className={`${styles.slotTitle}`}>
+            {abreviarNomeDisciplina(slot.disciplina_nome, width, slot.duracao)}
           </div>
 
-          <div
+          {slot.duracao > 60 && (<div
             className={styles.slotDetails}
             style={{ color: (slot.juncao && !slot.juncao_visivel) ? 'transparent' : 'black' }}
           >
@@ -88,7 +88,7 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
                 </button>
               </>
             )}
-          </div>
+          </div>)}
 
           <div
             className={styles.slotDetails}
