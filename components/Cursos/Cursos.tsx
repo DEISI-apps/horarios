@@ -31,9 +31,8 @@ export default function Cursos() {
 
       {selectedHorarioId && horario && (
         <>
-
           <CalendarioSemanal horario={horario} editar={false} />
-          <h2 className="mt-4 mb-2 text-2xl font-semibold pt-8">Ocupação dos Labs do DEISI Hub</h2>
+          <p className="mt-4 text-center text-gray-500"><b className="text-black">Nomes sublinhados</b> permitem visualizar o horário da turma, disciplina, docente ou sala.</p>
           <TurmasSection horario={horario} />
           <DisciplinasSection horario={horario} />
         </>
