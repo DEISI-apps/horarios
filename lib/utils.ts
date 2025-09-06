@@ -6,40 +6,46 @@ export const gerarCorDisciplina = (id: number, claro: boolean = true) => {
   return `hsl(${hue}, 80%, ${claro ? 75 : 50}%)`;
 };
 
-export function abreviarNomeDisciplina(nomeDisciplina: string, largura: number = 100, duracao: number = 120) {
+export function abreviarNomeDisciplina(nomeDisciplina: string, nomeDisciplinaShort: string = '', largura: number = 100, duracao: number = 120) {
 
   const palavrasDesprezar = ['de', 'e', 'do', 'da', 'para', 'por', '(LCD)'];
   const caracteres = 8;
 
-  if (duracao > 120) 
-      return nomeDisciplina;
+  if (nomeDisciplina != nomeDisciplinaShort && nomeDisciplinaShort.length > 2)
+    return nomeDisciplinaShort;
 
+  if (duracao > 120)
+    return nomeDisciplina;
 
   if (largura > 150 && duracao >= 120) {
 
     if (nomeDisciplina.split(/[\s-]+/).length < 5)
       return nomeDisciplina;
 
-    // abrevia palavras com mais de 6 caracteres
-    const nomeAbreviadoDisciplina = nomeDisciplina
-      .split(/[\s-]+/)
-      .filter(palavra => !palavrasDesprezar.includes(palavra))
-      .map(palavra => palavra.length > caracteres ?
-        ('áéaeiou'.includes(palavra[5]) ?
-          ('áéaeiou'.includes(palavra[4]) ?
-            palavra.slice(0, 4) + '.'
-            : palavra.slice(0, 4) + '.')
-          : palavra.slice(0, 6) + '.'
-        )
-        : palavra)
-      .join(" ")
+    else {   // abrevia palavras com mais de 6 caracteres
+      const nomeAbreviadoDisciplina = nomeDisciplina
+        .split(/[\s-]+/)
+        .filter(palavra => !palavrasDesprezar.includes(palavra))
+        .map(palavra => palavra.length > caracteres ?
+          ('áéaeiou'.includes(palavra[5]) ?
+            ('áéaeiou'.includes(palavra[4]) ?
+              palavra.slice(0, 4) + '.'
+              : palavra.slice(0, 4) + '.')
+            : palavra.slice(0, 6) + '.'
+          )
+          : palavra)
+        .join(" ")
 
-    return nomeAbreviadoDisciplina;
+      return nomeAbreviadoDisciplina;
+    }
   }
 
   if (largura > 105 && nomeDisciplina.length < 20) {
     return nomeDisciplina;
   }
+
+  if (nomeDisciplina != nomeDisciplinaShort && nomeDisciplinaShort.length > 2)
+    return nomeDisciplinaShort;
 
   if ((largura < 105 || duracao < 120) && nomeDisciplina.length > 15) {
     const nomeAbreviadoDisciplina = nomeDisciplina
@@ -58,15 +64,15 @@ export function abreviarNomeDisciplina(nomeDisciplina: string, largura: number =
 
     else {
       const nomAbreviado2 = nomeAbreviadoDisciplina
-      .split(/[\s-]+/)
-      .filter(palavra => !palavrasDesprezar.includes(palavra))
-      .map(palavra => palavra.length > 3 ?
-        ('áéaeiou'.includes(palavra[2]) ?
-          palavra.slice(0, 2) + '.'
-          : palavra.slice(0, 3) + '.'
-        )
-        : palavra)
-      .join(" ")
+        .split(/[\s-]+/)
+        .filter(palavra => !palavrasDesprezar.includes(palavra))
+        .map(palavra => palavra.length > 3 ?
+          ('áéaeiou'.includes(palavra[2]) ?
+            palavra.slice(0, 2) + '.'
+            : palavra.slice(0, 3) + '.'
+          )
+          : palavra)
+        .join(" ")
       return nomAbreviado2;
     }
   }
@@ -77,8 +83,8 @@ export function abreviarNomeDisciplina(nomeDisciplina: string, largura: number =
     .filter(palavra => !palavrasDesprezar.includes(palavra))
     .map(palavra => palavra.length > caracteres ?
       ('áéaeiou'.includes(palavra[5]) ?
-        palavra.slice(0, 5) + '.'
-        : palavra.slice(0, 6) + '.'
+         palavra.length==4 ? palavra : palavra.slice(0, 5) + '.'
+        :  palavra.length==5 ? palavra : palavra.slice(0, 6) + '.'
       )
       : palavra)
     .join(" ")
@@ -97,8 +103,8 @@ export function abreviarNomeDisciplina(nomeDisciplina: string, largura: number =
       .map(palavra => palavra.length <= 3 ?
         palavra
         : 'áéaeiou'.includes(palavra[5]) ?
-          palavra.slice(0, 5) + '.'
-          : palavra.slice(0, 6) + '.'
+           palavra.length==4 ? palavra : palavra.slice(0, 5) + '.'
+          : palavra.length==5 ? palavra : palavra.slice(0, 6) + '.'
       );
 
     // mostra as 2 primeiras e a última palavra

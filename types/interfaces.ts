@@ -47,6 +47,7 @@ export interface Sala {
 export interface Disciplina {
   id: number;
   nome: string;
+  nome_abreviado: string;
   semestre: number;
   cursos: string;
   aula_teorica_duracao: number;
@@ -88,6 +89,7 @@ export interface AulaIn {
 export interface AulaAPI extends AulaIn {
   id: number;
   disciplina: string;
+  disciplina_nome_abreviado: string;
   docente: string;
   sala: string;
   docente_nome: string;
@@ -100,6 +102,7 @@ export interface AulaAPI extends AulaIn {
 export interface Aula extends AulaIn {
   id: number;
   disciplina_nome: string;
+  disciplina_nome_abreviado: string;
   docente_nome: string;
   sala_nome: string;
   curso_sigla: string;
@@ -138,6 +141,7 @@ export interface AulaDocente {
 
   disciplina_id: number;
   disciplina_nome: string;
+  disciplina_nome_abreviado: string;
   docente_id: number;
   docente_nome: string;
   sala_id: number;

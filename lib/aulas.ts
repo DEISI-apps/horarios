@@ -9,6 +9,7 @@ export const convertAulaToSlot = (aula: AulaAPI): Aula => {
         turma_id: aula.turma_id,
         disciplina_id: aula.disciplina_id,
         disciplina_nome: aula.disciplina,
+        disciplina_nome_abreviado: aula.disciplina_nome_abreviado,
         docente_id: aula.docente_id,
         docente_nome: aula.docente,
         sala_id: aula.sala_id || 7,

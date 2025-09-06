@@ -50,7 +50,7 @@ export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
       }}
     >
       <div className={styles.slotTitle}>
-        {abreviarNomeDisciplina(slot.disciplina_nome, width)}
+        {abreviarNomeDisciplina(slot.disciplina_nome, slot.disciplina_nome_abreviado, width, slot.duracao)}
       </div>
       <div className={`${styles.slotDetails}`}>
         {slot.tipo}

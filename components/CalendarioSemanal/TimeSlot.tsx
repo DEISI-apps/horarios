@@ -65,7 +65,7 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
           }}
         >
           <div className={`${styles.slotTitle}`}>
-            {abreviarNomeDisciplina(slot.disciplina_nome, width, slot.duracao)}
+            {abreviarNomeDisciplina(slot.disciplina_nome, slot.disciplina_nome_abreviado, width, slot.duracao)}
           </div>
 
           {slot.duracao > 60 && (<div
