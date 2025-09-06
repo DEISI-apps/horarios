@@ -39,13 +39,34 @@ export default function Page() {
           </ul>
         </div>
       </div>
+      <div className="text-center mt-10 mb-4 font-semibold">Ver Horário de: </div>
       {/* Call to Action */}
-      <a
-        href="/cursos"
-        className="bg-blue-600 text-white px-6 py-3 mt-20 rounded-lg shadow hover:bg-blue-700 transition-colors"
-      >
-        Ver Horário dum Curso
-      </a>
+      <div className="flex flex-col sm:flex-row gap-4 mb-10">
+        <a
+          href="/cursos"
+          className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700 transition-colors"
+        >
+          Curso
+        </a>
+        <a
+          href="/disciplinas"
+          className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700 transition-colors"
+        >
+          Disciplina
+        </a>
+        <a
+          href="/docentes"
+          className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700 transition-colors"
+        >
+          Docente
+        </a>
+        <a
+          href="/salas"
+          className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700 transition-colors"
+        >
+          Sala
+        </a>
+      </div>
     </div>
   );
 }
