@@ -11,7 +11,7 @@ export function abreviarNomeDisciplina(nomeDisciplina: string, nomeDisciplinaSho
   const palavrasDesprezar = ['de', 'e', 'do', 'da', 'para', 'por', '(LCD)'];
   const caracteres = 8;
 
-  if (nomeDisciplina != nomeDisciplinaShort && nomeDisciplinaShort.length > 2)
+  if (nomeDisciplina != nomeDisciplinaShort && nomeDisciplinaShort?.length > 2)
     return nomeDisciplinaShort;
 
   if (duracao > 120)
@@ -44,7 +44,7 @@ export function abreviarNomeDisciplina(nomeDisciplina: string, nomeDisciplinaSho
     return nomeDisciplina;
   }
 
-  if (nomeDisciplina != nomeDisciplinaShort && nomeDisciplinaShort.length > 2)
+  if (nomeDisciplina != nomeDisciplinaShort && nomeDisciplinaShort?.length > 2)
     return nomeDisciplinaShort;
 
   if ((largura < 105 || duracao < 120) && nomeDisciplina.length > 15) {

@@ -37,7 +37,7 @@ export default function Cursos() {
       {selectedHorarioId && horario && (
         <>
           <CalendarioSemanal horario={horario} editar={false} />
-          <p className="mt-4 text-center text-gray-500"><b className="text-black">Nomes sublinhados</b> permitem visualizar o horário da turma, disciplina, docente ou sala.</p>
+          <p className="mt-4 text-center text-gray-500"><b className="text-black">Nomes sublinhados</b> permitem visualizar diretamente o horário da turma, disciplina, docente ou sala. No telemóvel é limitado, podendo alternativamente escolher no menu o que pretende.</p>
           <TurmasSection horario={horario} />
           <DisciplinasSection horario={horario} />
         </>
