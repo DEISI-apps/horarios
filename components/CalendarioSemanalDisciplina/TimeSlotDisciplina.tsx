@@ -11,7 +11,7 @@ interface TimeSlotProps {
 
 function formataTurmas(turmas: Map<string, string[]>): string {
   return Array.from(turmas.entries())
-    .map(([curso, turmasList]) => {
+    .map(([, turmasList]) => {
       return turmasList
       .sort((a, b) => a.localeCompare(b))
       .map(turma => 'P' + turma)
