@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Disciplina } from "@/types/interfaces";
 import { useDisciplinasAnoSemestre } from "@/hooks/useDisciplinasAnoSemestre";
 import CalendarioSemanalDisciplina from "../CalendarioSemanalDisciplina";
+import { Loader2 } from "lucide-react";
 
 
 export default function HorarioDisciplina() {
@@ -54,7 +55,11 @@ export default function HorarioDisciplina() {
 
   //
   // E. Renderização
-  if (isLoadingAnosLectivos || isLoadingDisciplinas || !disciplinas) return <div>A carregar informação...</div>;
+  if (isLoadingAnosLectivos || isLoadingDisciplinas || !disciplinas) return <div className="flex justify-center items-center h-32">
+      <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+      <p className="text-gray-500">A carregar disciplinas...</p>
+    </div>;
+    
   if (!anosLectivos) return <div>Nenhum ano lectivo disponível.</div>;
 
   return (

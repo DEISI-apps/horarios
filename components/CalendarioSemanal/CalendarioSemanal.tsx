@@ -16,6 +16,7 @@ import { gerarCorDisciplina, atualizaDisciplinasHoras } from '@/lib/utils';
 import CalendarGrid from './CalendarioGrid';
 import AulaModal from './AulaModal';
 import styles from './CalendarioSemanal.module.css';
+import { Loader2 } from 'lucide-react';
 // import TimeMarkers from './TimeMarkers';
 // import { CALENDAR_HEIGHT } from '@/lib/constants';
 
@@ -139,7 +140,12 @@ export default function CalendarioSemanal({ horario, editar }: { horario: Horari
   // F. Lógica de renderização
 
   // Fallbacks primeiro...
-  if (isLoadingDisciplinas) return <p className="text-gray-500">A carregar disciplinas...</p>;
+  if (isLoadingDisciplinas) return     <div className="flex justify-center items-center h-32">
+      <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+      <p className="text-gray-500">A carregar disciplinas...</p>
+    </div>
+    ;
+
   if (isLoadingTurmas) return <p className="text-gray-500">A carregar turmas...</p>;
   if (!turmas) return <p className="text-red-500">Erro ao carregar turmas.</p>;
   if (!disciplinas) return <p className="text-red-500">Erro ao carregar disciplinas.</p>;

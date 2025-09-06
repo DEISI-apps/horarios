@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSalas } from "@/hooks/useSalas";
 import CalendarioSemanalSala from "../CalendarioSemanalSala";
 import { useAnosLectivos } from "@/hooks/useAnosLectivos";
+import { Loader2 } from "lucide-react";
 
 
 export default function HorarioSala() {
@@ -47,7 +48,10 @@ export default function HorarioSala() {
 
   //
   // D. Renderização
-  if (isLoadingSalas || isLoadingAnosLectivos || !anosLectivos) return <div>A carregar informação...</div>;
+  if (isLoadingSalas || isLoadingAnosLectivos || !anosLectivos) return <div className="flex justify-center items-center h-32">
+      <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+      <p className="text-gray-500">A carregar salas...</p>
+    </div>;
 
   return (
     <div className="p-4 flex flex-col gap-6">

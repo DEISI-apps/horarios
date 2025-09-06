@@ -4,6 +4,7 @@ import { useDocentes } from "@/hooks/useDocentes";
 import { useEffect, useState } from "react";
 import CalendarioSemanalDocente from "../CalendarioSemanalDocente";
 import { DocenteBase } from "@/types/interfaces";
+import { Loader2 } from "lucide-react";
 
 export default function HorarioDocente() {
   // Estado
@@ -46,7 +47,10 @@ export default function HorarioDocente() {
 
   // Loading
   if (isLoadingAnosLectivos || isLoadingDocentes)
-    return <div className="p-4 text-lg font-medium">A carregar informação...</div>;
+    return <div className="flex justify-center items-center h-32">
+      <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+      <p className="text-gray-500">A carregar docentes...</p>
+    </div>;
   if (!anosLectivos) return <div className="p-4 text-lg font-medium">Nenhum ano lectivo disponível.</div>;
 
   // Render
