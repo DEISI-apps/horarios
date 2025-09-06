@@ -6,7 +6,6 @@ import DisciplinasSection from "@/components/DisciplinasSection/DisciplinasSecti
 import TurmasSection from "../TurmasSection/TurmasSection";
 import CalendarioSemanal from "../CalendarioSemanal";
 import { useHorarios } from "@/hooks/useHorarios";
-import SalasSection from "../SalasSection/SalasSection";
 
 
 export default function Cursos() {
