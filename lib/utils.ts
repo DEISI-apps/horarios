@@ -11,6 +11,10 @@ export function abreviarNomeDisciplina(nomeDisciplina: string, largura: number =
   const palavrasDesprezar = ['de', 'e', 'do', 'da', 'para', 'por', '(LCD)'];
   const caracteres = 8;
 
+  if (duracao > 120) 
+      return nomeDisciplina;
+
+
   if (largura > 150 && duracao >= 120) {
 
     if (nomeDisciplina.split(/[\s-]+/).length < 5)
@@ -21,8 +25,8 @@ export function abreviarNomeDisciplina(nomeDisciplina: string, largura: number =
       .split(/[\s-]+/)
       .filter(palavra => !palavrasDesprezar.includes(palavra))
       .map(palavra => palavra.length > caracteres ?
-        ('aeiou'.includes(palavra[5]) ?
-          ('aeiou'.includes(palavra[4]) ?
+        ('áéaeiou'.includes(palavra[5]) ?
+          ('áéaeiou'.includes(palavra[4]) ?
             palavra.slice(0, 4) + '.'
             : palavra.slice(0, 4) + '.')
           : palavra.slice(0, 6) + '.'
@@ -37,17 +41,34 @@ export function abreviarNomeDisciplina(nomeDisciplina: string, largura: number =
     return nomeDisciplina;
   }
 
-  if (largura < 105 && nomeDisciplina.length > 15) {
-    return nomeDisciplina
+  if ((largura < 105 || duracao < 120) && nomeDisciplina.length > 15) {
+    const nomeAbreviadoDisciplina = nomeDisciplina
       .split(/[\s-]+/)
       .filter(palavra => !palavrasDesprezar.includes(palavra))
       .map(palavra => palavra.length > 3 ?
-        ('aeiou'.includes(palavra[3]) ?
+        ('áéaeiou'.includes(palavra[3]) ?
           palavra.slice(0, 3) + '.'
           : palavra.slice(0, 4) + '.'
         )
         : palavra)
       .join(" ")
+
+    if (nomeAbreviadoDisciplina.length < 13)
+      return nomeAbreviadoDisciplina;
+
+    else {
+      const nomAbreviado2 = nomeAbreviadoDisciplina
+      .split(/[\s-]+/)
+      .filter(palavra => !palavrasDesprezar.includes(palavra))
+      .map(palavra => palavra.length > 3 ?
+        ('áéaeiou'.includes(palavra[2]) ?
+          palavra.slice(0, 2) + '.'
+          : palavra.slice(0, 3) + '.'
+        )
+        : palavra)
+      .join(" ")
+      return nomAbreviado2;
+    }
   }
 
   // abrevia palavras com mais de 6 caracteres
@@ -55,7 +76,7 @@ export function abreviarNomeDisciplina(nomeDisciplina: string, largura: number =
     .split(/[\s-]+/)
     .filter(palavra => !palavrasDesprezar.includes(palavra))
     .map(palavra => palavra.length > caracteres ?
-      ('aeiou'.includes(palavra[5]) ?
+      ('áéaeiou'.includes(palavra[5]) ?
         palavra.slice(0, 5) + '.'
         : palavra.slice(0, 6) + '.'
       )
@@ -75,7 +96,7 @@ export function abreviarNomeDisciplina(nomeDisciplina: string, largura: number =
       .filter(palavra => !palavrasDesprezar.includes(palavra))
       .map(palavra => palavra.length <= 3 ?
         palavra
-        : 'aeiou'.includes(palavra[5]) ?
+        : 'áéaeiou'.includes(palavra[5]) ?
           palavra.slice(0, 5) + '.'
           : palavra.slice(0, 6) + '.'
       );

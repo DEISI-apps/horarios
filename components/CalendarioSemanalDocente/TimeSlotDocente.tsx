@@ -57,6 +57,7 @@ export default function TimeSlotDocente({ slot }: TimeSlotProps) {
         alignItems: 'flex-start',
         textAlign: 'left',
         paddingLeft:'5px',
+        lineHeight: '14px',
       }}
     >
       <div className={styles.slotTitle}>
@@ -66,7 +67,7 @@ export default function TimeSlotDocente({ slot }: TimeSlotProps) {
         {slot.tipo === 'T' ? 'Teórica' : 'Prática'} {slot.sala_nome !== 'sala?' ? ' - ' + slot.sala_nome : ''}
       </div>
       <div className={styles.slotDetails} >
-        {formataTurmas(slot.turmas)}
+        {slot.tipo === 'T' ? '' : formataTurmas(slot.turmas)}
       </div>
     </div>
   );
