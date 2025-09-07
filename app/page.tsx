@@ -33,20 +33,21 @@ export default function Page() {
 
         {/* Lista de funcionalidades */}
         <div className="text-left mb-6">
-          <p className="font-medium font-semibold">Funcionalidades disponíveis:</p>
+          <p className="font-medium font-semibold">Esta versão está ainda em desenvolvimento, mas já tem as seguintes funcionalidades disponíveis:</p>
           <ul className="list-disc list-inside space-y-1">
             <li>Consultar horários de cursos, docentes, disciplinas e salas do DEISI.</li>
             <li>Editar horários existentes (acesso restrito).</li>
-            <li>Exportar horário em formato ICS para importar no calendário Google/Outlook.</li>
+            <li>Exportar horário de docente em formato ICS, para importar no calendário Google/Outlook.</li>
           </ul>
 
           <p className="font-medium  font-semibold mt-6">Funcionalidades futuras:</p>
           <ul className="list-disc list-inside space-y-1">
             <li>Autenticação.</li>
+            <li>Alojamento da aplicação em servidor da Lusófona.</li>
             <li>Especificação de salas de aula teóricas.</li>
             <li>Exportar horário em PDF.</li>
             <li>Exportar horário de curso em formato ICS para alunos.</li>
-            <li>Integração com sistemas académicos da universidade.</li>
+            <li>Integração da API com sistemas académicos da universidade.</li>
             <li>Integração com Class Ping.</li>
           </ul>
         </div>
