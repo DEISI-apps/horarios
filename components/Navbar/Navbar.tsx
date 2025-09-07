@@ -10,17 +10,20 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 w-full bg-black/90 backdrop-blur-md border-b border-gray-800">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         {/* Branding */}
-        <div className="flex items-center gap-3">
-          <h1 className="text-xl font-bold text-white">DEISI</h1>
-          <Image
-            src="/deisi-ball.png"
-            alt="DEISI Logo"
-            width={40}
-            height={40}
-            className="rounded-full invert"
-          />
-          <h1 className="text-xl font-bold text-white">Horários</h1>
-        </div>
+
+        <a href="/">
+          <div className="flex items-center gap-3">
+            <h1 className="text-xl font-bold text-white">DEISI</h1>
+            <Image
+              src="/deisi-ball.png"
+              alt="DEISI Logo"
+              width={40}
+              height={40}
+              className="rounded-full invert"
+            />
+            <h1 className="text-xl font-bold text-white">Horários</h1>
+          </div>
+        </a>
 
         {/* Botão hambúrguer - só no mobile */}
         <button

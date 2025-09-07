@@ -36,7 +36,7 @@ export default function Page() {
           <p className="font-medium font-semibold">Funcionalidades disponíveis:</p>
           <ul className="list-disc list-inside space-y-1">
             <li>Consultar horários de cursos, docentes, disciplinas e salas do DEISI.</li>
-            <li>Editar horários existentes (restrito).</li>
+            <li>Editar horários existentes (acesso restrito).</li>
             <li>Exportar horário em formato ICS para importar no calendário Google/Outlook.</li>
           </ul>
 
