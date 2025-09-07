@@ -45,6 +45,7 @@ export default function Page() {
             <li>Autenticação.</li>
             <li>Alojamento da aplicação em servidor da Lusófona.</li>
             <li>Especificação de salas de aula teóricas.</li>
+            <li>Melhorar visualização de disciplina, mostrando em aulas simultâneas nome de todos os docentes.</li>
             <li>Exportar horário em PDF.</li>
             <li>Exportar horário de curso em formato ICS para alunos.</li>
             <li>Integração da API com sistemas académicos da universidade.</li>
