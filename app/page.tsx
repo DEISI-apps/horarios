@@ -5,22 +5,6 @@ import Image from "next/image";
 
 export default function Page() {
 
-
-const handleDownload = async () => {
-    const res = await fetch("/api/export-ics");
-    const blob = await res.blob();
-
-    // Create a link dynamically
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "events.ics"; // filename
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    window.URL.revokeObjectURL(url);
-  };
-
   return (
     <div className="flex flex-col items-center justify-between text-center px-4 md:px-0 mt-10 sm:mt-5">
       <div>
@@ -58,6 +42,7 @@ const handleDownload = async () => {
 
           <p className="font-medium  font-semibold mt-6">Funcionalidades futuras:</p>
           <ul className="list-disc list-inside space-y-1">
+            <li>Autenticação.</li>
             <li>Especificação de salas de aula teóricas.</li>
             <li>Exportar horário em PDF.</li>
             <li>Exportar horário de curso em formato ICS para alunos.</li>

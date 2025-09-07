@@ -146,7 +146,10 @@ export default function CalendarioSemanalDocente({
       const [classStartHour, classStartMinute] = aula.hora_inicio.split(':').map(Number);
       let classEndHour = classStartHour + Math.floor((classStartMinute + aula.duracao) / 60);
       let classEndMinute = (classStartMinute + aula.duracao) % 60;
-      if (classEndHour >= 24) classEndHour = 23, classEndMinute = 59;
+      if (classEndHour >= 24) {
+        classEndHour = 23;
+        classEndMinute = 59;
+      }
 
       const semesterStartDay = aula.curso_sigla[0] === 'L' ? SEMESTER_CICLE_1_START_DAY : SEMESTER_CICLE_23_START_DAY;
       const classDay = (semesterStartDay - 1 + aula.dia_semana) % SEMESTER_START_MONTH_NUMBER_OF_DAYS;
