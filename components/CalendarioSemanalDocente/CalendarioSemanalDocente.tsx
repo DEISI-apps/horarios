@@ -224,7 +224,7 @@ export default function CalendarioSemanalDocente({
       </div>
       <div className="mt-4 flex justify-center">
         <button className="py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2" onClick={handleDownload}>
-          <span className="font-bold">Descarregar ICS com horário <span className="sup">*</span></span>
+          <span className="font-bold">Descarregar Horário em formato ICS <span className="sup">*</span></span>
         </button>
       </div>
       <div className="text-center mt-2 text-sm">
