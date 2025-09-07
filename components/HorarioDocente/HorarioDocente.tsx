@@ -56,6 +56,7 @@ export default function HorarioDocente() {
   // Render
   return (
     <div className="p-4 flex flex-col gap-6">
+      
       {/* Barra de Filtros */}
       <div className="flex flex-wrap gap-4 items-start bg-white p-4 rounded-xl shadow-md">
         {/* Ano Lectivo */}
