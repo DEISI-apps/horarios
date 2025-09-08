@@ -6,7 +6,7 @@ import styles from './CalendarioSemanalDisciplina.module.css';
 import TimeMarkers from './TimeMarkers';
 import { CALENDAR_HEIGHT } from '@/lib/constants';
 import CalendarioGridDisciplina from './CalendarioGridDisciplina';
-import { AulaDocente } from '@/types/interfaces';
+import { AulaDisciplina, AulaDocente } from '@/types/interfaces';
 
 interface Props {
   disciplina_id: number;
@@ -14,10 +14,10 @@ interface Props {
   semestre: number;
 }
 
-export default function CalendarioSemanalDisciplina({ 
-  disciplina_id, 
-  ano_lectivo_id, 
-  semestre 
+export default function CalendarioSemanalDisciplina({
+  disciplina_id,
+  ano_lectivo_id,
+  semestre
 }: Props) {
 
   // 
@@ -30,28 +30,56 @@ export default function CalendarioSemanalDisciplina({
   const aulasDisciplina = useMemo(() => {
     if (!aulas?.length || !disciplina_id) return;
 
-    const aulasAgrupadas =  aulas
-      .filter(aula => aula.disciplina_id === disciplina_id)  // filtra aulas da disciplina
+    const aulasAgrupadas = aulas
+      // 1. filtra aulas da disciplina
+      .filter(aula => aula.disciplina_id === disciplina_id) 
+
+      // agrupa aulas por dia+hora+docente (junção)
       .reduce((acc, aula) => {
-        const timeKey = `${aula.dia_semana}-${aula.hora_inicio}`;  // agrega aulas junção
+        const timeKey = `${aula.dia_semana}-${aula.hora_inicio}-${aula.docente_id}`;  
 
-      if (!acc.has(timeKey)) {
-        // Cria nova aula agregada com mapa inicial de turmas 
-        acc.set(timeKey, {
-          ...aula,
-          turmas: new Map([[aula.curso_sigla, [aula.turma_nome]]])
-        });
-      } else {
-        // Adiciona turma ao mapa de turmas existente
-        const aulaAgregada = acc.get(timeKey)!;
-        const turmasAtuais = aulaAgregada.turmas.get(aula.curso_sigla) || [];
-        aulaAgregada.turmas.set(aula.curso_sigla, [...turmasAtuais, aula.turma_nome]);
-      }
+        if (!acc.has(timeKey)) {
+          // Cria nova aula agregada com mapa inicial de turmas 
+          acc.set(timeKey, {
+            ...aula,
+            turmas: new Map([[aula.curso_sigla, [aula.turma_nome]]])
+          });
+        } else {
+          // Adiciona turma ao mapa de turmas existente
+          const aulaAgregada = acc.get(timeKey)!;
+          const turmasAtuais = aulaAgregada.turmas.get(aula.curso_sigla) || [];
+          aulaAgregada.turmas.set(aula.curso_sigla, [...turmasAtuais, aula.turma_nome]);
+        }
 
-      return acc;
-    }, new Map<string, AulaDocente>());
+        return acc;
+      }, new Map<string, AulaDocente>())
 
-    // Converte o mapa de aulas agregadas numa lista
+      // extrai apenas valores do mapa 
+      .values()
+
+      // 3. Agrupa aulas em paralelo (mesmo dia, hora) para criar timeslot com múltiplos docentes
+      .reduce((acc, aula) => {
+        const key = `${aula.dia_semana}-${aula.hora_inicio}`;
+        if (!acc.has(key)) {
+          acc.set(key, {
+            id: key,
+            disciplina_id: aula.disciplina_id,
+            tipo: aula.tipo,
+            dia_semana: aula.dia_semana,
+            hora_inicio: aula.hora_inicio,
+            duracao: aula.duracao,
+            cor: aula.cor,
+            docentes: [aula]
+          });
+        } else {
+          const aulaExistente = acc.get(key)!;
+          aulaExistente.docentes.push(aula);
+        }
+        return acc;
+      }, new Map<string, AulaDisciplina>())
+
+      
+    // Converte o mapa numa lista
     return Array.from(aulasAgrupadas.values());
 
   }, [aulas, disciplina_id]);

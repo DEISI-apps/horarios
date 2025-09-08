@@ -46,7 +46,7 @@ export default function TimeSlotDocente({ slot }: TimeSlotProps) {
     <div
       ref={slotRef}
       key={`slot-${slot.id}`}
-      className={styles.slot}
+      className={`${styles.slot} ${slot.tipo === 'T' ? styles.theoretical : styles.practical}`}
       style={{
         top: `${top}px`,
         height: `${height}px`,
@@ -66,8 +66,8 @@ export default function TimeSlotDocente({ slot }: TimeSlotProps) {
       <div className={styles.slotDetails}  >
         {slot.tipo === 'T' ? 'Teórica' : 'Prática'} {slot.sala_nome !== 'sala?' ? ' - ' + slot.sala_nome : ''}
       </div>
-      <div className={styles.slotDetails} >
-        {slot.tipo === 'T' ? '' : formataTurmas(slot.turmas)}
+      <div className={styles.slotDetails} style={{ fontSize: '8px' }}>
+        {slot.tipo === 'T' ? slot.curso_sigla : formataTurmas(slot.turmas)}
       </div>
     </div>
   );

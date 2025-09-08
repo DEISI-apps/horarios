@@ -132,8 +132,6 @@ export interface SlotForm extends Omit<AulaIn,
 }
 
 
-
-
 export interface AulaDocente {
   id: number | null;
 
@@ -158,3 +156,19 @@ export interface AulaDocente {
   curso_sigla: string;
   turma_nome: string;
 }
+
+
+export interface AulaDisciplina {
+  id: string | null;
+
+  disciplina_id: number;
+  tipo: string;
+
+  dia_semana: number;
+  hora_inicio: string; // Formato "HH:MM"
+  duracao: number;
+  cor: string;
+  
+  docentes: AulaDocente[];
+}
+

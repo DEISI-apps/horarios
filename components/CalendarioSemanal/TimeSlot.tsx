@@ -45,7 +45,7 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
         <div
           ref={slotRef}
           key={`slot-${slot.id}`}
-          className={styles.slot}
+          className={`${styles.slot} ${slot.tipo === 'T' ? styles.theoretical : styles.practical}`}
           style={{
             top: `${top}px`,
             height: `${height}px`,

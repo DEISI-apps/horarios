@@ -133,6 +133,14 @@
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
+.theoretical {
+  border: 1px solid black;
+}
+
+.practical {
+  border: 1px dashed black;
+}
+
 .slot:hover {
   opacity: 0.9;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);

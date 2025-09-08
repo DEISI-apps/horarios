@@ -1,20 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
-import { AulaDocente } from '@/types/interfaces';
+import { AulaDisciplina } from '@/types/interfaces';
 import { calculateSlotPosition } from '@/lib/calendario';
 import { MINUTE_HEIGHT } from '@/lib/constants';
-import { gerarCorDisciplina, abreviarNomeDisciplina } from '@/lib/utils';
+import { gerarCorDisciplina } from '@/lib/utils';
 import styles from './CalendarioSemanalDisciplina.module.css';
 
 interface TimeSlotProps {
-  slot: AulaDocente;
+  slot: AulaDisciplina;
 }
 
 function formataTurmas(turmas: Map<string, string[]>): string {
   return Array.from(turmas.entries())
     .map(([, turmasList]) => {
       return turmasList
-      .sort((a, b) => a.localeCompare(b))
-      .map(turma => 'P' + turma)
+        .sort((a, b) => a.localeCompare(b))
+        .map(turma => 'P' + turma)
     })
     .join(', ');
 }
@@ -24,7 +24,7 @@ export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
   const height = slot.duracao * MINUTE_HEIGHT - 4;
   const baseColor = gerarCorDisciplina(slot.disciplina_id);
 
-  const [width, setWidth] = useState<number>(0);
+  const [, setWidth] = useState<number>(0);
   const slotRef = useRef<HTMLDivElement | null>(null);
 
   // observar largura do slot dinamicamente
@@ -45,7 +45,7 @@ export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
     <div
       ref={slotRef}
       key={`slot-${slot.id}`}
-      className={styles.slot}
+      className={`${styles.slot} ${slot.tipo === 'T' ? styles.theoretical : styles.practical}`}
       style={{
         top: `${top}px`,
         height: `${height}px`,
@@ -57,17 +57,20 @@ export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
         textAlign: 'left',
       }}
     >
-      <div className={styles.slotTitle}>
-        {abreviarNomeDisciplina(slot.disciplina_nome, slot.disciplina_nome_abreviado, width, slot.duracao)}
-      </div>
-      <div className={`${styles.slotDetails}`}>
-        <span style={{ fontWeight: 'normal' }}>
-          {slot.tipo === 'T' ? 'Teórica' :  formataTurmas(slot.turmas) }
-        </span> {slot.sala_nome !== 'outra' ? '(' + slot.sala_nome + ')' : ''}
-      </div>
-      <div className={`${styles.slotDocente}`} style={{ fontWeight: 'bold' }}>
-        {slot.docente_nome}
-      </div>
+      {slot.docentes.map((docente) => (
+        <div key={`docente-${docente.id}`} className="leading-tight"> 
+          <div className={`${styles.slotDocente}`} style={{ fontWeight: 'bold' }}>
+            {docente.docente_nome}
+          </div>
+          <div className={`${styles.slotDetails}  ${styles.slotDisciplinaDocenteDetails}`}>
+            <span style={{ fontWeight: 'normal' }}>
+              {docente.tipo === 'T' ? 'Teórica' : formataTurmas(docente.turmas)}
+            </span> {docente.sala_nome !== 'outra' ? '(' + docente.sala_nome + ')' : ''}
+          </div>
+        </div>
+      ))}
+
     </div>
   );
+
 }

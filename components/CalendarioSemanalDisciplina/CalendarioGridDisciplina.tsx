@@ -1,4 +1,4 @@
-import { AulaDocente } from '@/types/interfaces';
+import { AulaDisciplina } from '@/types/interfaces';
 import { DAYS, CALENDAR_HEIGHT } from '@/lib/constants';
 import TimeMarkers from './TimeMarkers';
 import styles from './CalendarioSemanalDisciplina.module.css';
@@ -6,7 +6,7 @@ import TimeSlotDisciplina from './TimeSlotDisciplina';
 import { TimeLines } from '../CalendarioSemanal/TimeLines';
 
 interface CalendarGridProps {
-  aulas: AulaDocente[];
+  aulas: AulaDisciplina[];
   isLoadingAulas: boolean;
 }
 
@@ -19,8 +19,8 @@ export default function CalendarioGridDocente({
     if (isLoadingAulas) return <div>A carregar aulas...</div>;
 
     return aulas
-      .filter((slot: AulaDocente) => slot.dia_semana === dayId)
-      .map((slot: AulaDocente) => (
+      .filter((slot: AulaDisciplina) => slot.dia_semana === dayId)
+      .map((slot: AulaDisciplina) => (
         <TimeSlotDisciplina key={`slot-${slot.id}`} slot={slot} />
       ));
   };
