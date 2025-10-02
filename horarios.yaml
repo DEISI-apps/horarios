@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: horarios
+  namespace: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: horarios
+  template:
+    metadata:
+      labels:
+        app: horarios
+    spec:
+      containers:
+        - name: horarios
+          image: horarios:1.0.0
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: "production"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: horarios
+  namespace: demo
+spec:
+  selector:
+    app: horarios
+  ports:
+    - port: 80
+      targetPort: 3000
+      protocol: TCP
+  type: ClusterIP
