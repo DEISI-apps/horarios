@@ -16,7 +16,7 @@ Como trabalhar:
 
 # Como carregar novo semestre?
 1. atualizar dsd em https://dsdeisi.pythonanywhere.com/
-1. no modo admin criar para o ano academico e semestre, turmas para cada curso e ano em https://dsdeisi.pythonanywhere.com/admin
+1. no modo admin criar, para o ano academico e semestre, turmas para cada curso e ano em [https://dsdeisi.pythonanywhere.com/admin](https://dsdeisi.pythonanywhere.com/admin/horarios/turma/)
 1. criar horários em https://horarios-phi.vercel.app/editarHorarios
 
 
