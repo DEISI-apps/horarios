@@ -2,8 +2,7 @@
 
 App em produção em: https://horarios-phi.vercel.app/
 
-
-Como trabalhar:
+Como trabalhar em modo de desenvolvimento:
 1. abrir em codespaces
 2. `npm run dev` para testar funcionamento no browser em  [http://localhost:3000](http://localhost:3000).
 3. fazer alterações
@@ -16,9 +15,14 @@ Como trabalhar:
 
 # Como carregar novo semestre?
 1. atualizar dsd em https://dsdeisi.pythonanywhere.com/
-1. na app admin (https://dsdeisi.pythonanywhere.com/admin) criar, para o ano academico e semestre:
-   1. um objeto horario para cada curso e ano
-   1. as turmas para cada horario
+2. na consola da aplicação dsdeisi, copiar de um anolectivo & semestre para outro com o comando:
+```
+python manage.py copiar_horarios \
+    --ano_lectivo_origem=25-26 \
+    --semestre_origem=1 \
+    --ano_lectivo_destino=25-26 \
+    --semestre_destino=2
+```
 11. criar horários em https://horarios-phi.vercel.app/editarHorarios
 
 
