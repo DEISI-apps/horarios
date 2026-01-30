@@ -1,8 +1,8 @@
 import React from 'react'
-import Cursos from '@/components/Cursos/Cursos'
+import Turmas from '@/components/Turmas/Turmas'
 
 export default function page() {
   return <>
-    <Cursos />
+    <Turmas />
   </>
 }

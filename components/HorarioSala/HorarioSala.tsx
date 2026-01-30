@@ -12,12 +12,12 @@ export default function HorarioSala() {
   //
   // A. Gestão de estado do componente
   const [selectedAnoLectivo, setSelectedAnoLectivo] = useState<number | null>(35);
-  const [selectedSemestre, setSelectedSemestre] = useState<number | null>(1);
+  const [selectedSemestre, setSelectedSemestre] = useState<number | null>(2);
   const [selectedSala, setSelectedSala] = useState<number | null>(null);
 
   useEffect(() => {
     setSelectedAnoLectivo(35);
-    setSelectedSemestre(1);
+    setSelectedSemestre(2);
   }, []);
 
 
@@ -81,8 +81,8 @@ export default function HorarioSala() {
           onChange={handleSemestreSelection}
           className="border rounded p-2 text-lg cursor-pointer"
         >
-          <option key={1} value="1">1º Semestre</option>
-          {/* <option key={2} value="2">2º Semestre</option> */}
+          {/* <option key={1} value="1">1º Semestre</option> */}
+          <option key={2} value="2">2º Semestre</option>
         </select>
 
         {/* Seletor de Docente */}

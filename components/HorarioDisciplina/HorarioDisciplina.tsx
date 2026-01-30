@@ -12,14 +12,14 @@ export default function HorarioDisciplina() {
   //
   // A. Gestão de estado do componente
   const [selectedAnoLectivo, setSelectedAnoLectivo] = useState<number | null>(35);
-  const [selectedSemestre, setSelectedSemestre] = useState<number | null>(1);
+  const [selectedSemestre, setSelectedSemestre] = useState<number | null>(2);
   const [selectedDisciplina, setSelectedDisciplina] = useState<Disciplina | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectOpened, setSelectOpened] = useState(false);
 
   useEffect(() => {
     setSelectedAnoLectivo(35);
-    setSelectedSemestre(1);
+    setSelectedSemestre(2);
   }, []);
 
   //
@@ -66,6 +66,7 @@ export default function HorarioDisciplina() {
     <div className="p-4 flex flex-col gap-6">
       {/* Barra de Filtros */}
       <div className="flex flex-wrap gap-4 items-start bg-white p-4 rounded-xl shadow-md">
+
         {/* Seletor de Ano Lectivo */}
         <select
           value={selectedAnoLectivo ?? ""}
@@ -89,8 +90,8 @@ export default function HorarioDisciplina() {
           onChange={handleSemestreSelection}
           className="border rounded p-2 text-lg cursor-pointer"
         >
-          <option key={1} value="1">1º Semestre</option>
-          {/* <option key={2} value="2">2º Semestre</option> */}
+          {/* <option key={1} value="1">1º Semestre</option> */}
+          <option key={2} value="2">2º Semestre</option>
         </select>
 
         {/* Seletor de Disciplina */}

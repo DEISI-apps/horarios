@@ -9,7 +9,7 @@ import { Loader2 } from "lucide-react";
 export default function HorarioDocente() {
   // Estado
   const [selectedAnoLectivo, setSelectedAnoLectivo] = useState<number | null>(35);
-  const [selectedSemestre, setSelectedSemestre] = useState<number | null>(1);
+  const [selectedSemestre, setSelectedSemestre] = useState<number | null>(2);
   const [selectedDocente, setSelectedDocente] = useState<DocenteBase | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectOpened, setSelectOpened] = useState(false);
@@ -21,7 +21,7 @@ export default function HorarioDocente() {
   // Defaults
   useEffect(() => {
     setSelectedAnoLectivo(35);
-    setSelectedSemestre(1);
+    setSelectedSemestre(2);
   }, []);
 
   // Handlers
@@ -81,8 +81,8 @@ export default function HorarioDocente() {
           onChange={handleSemestreSelection}
           className="border rounded-lg p-2 font-medium text-lg cursor-pointer hover:bg-gray-50"
         >
-          <option value="1">1º Semestre</option>
-          {/* <option value="2">2º Semestre</option> */}
+          {/* <option value="1">1º Semestre</option> */}
+          <option value="2">2º Semestre</option>
         </select>
 
         {/* Docente */}
