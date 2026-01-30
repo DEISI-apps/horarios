@@ -1,8 +1,8 @@
 import React from 'react'
-import Turmas from '@/components/Turmas/Turmas'
+import TurmasLEI from '@/components/TurmasLEI/TurmasLEI'
 
 export default function page() {
   return <>
-    <Turmas />
+    <TurmasLEI />
   </>
 }

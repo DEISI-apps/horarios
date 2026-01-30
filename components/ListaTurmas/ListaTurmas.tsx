@@ -27,18 +27,19 @@ export default function ListaTurmas({ horario, editar }: { horario: Horario, edi
     <div className={styles.calendarWrapper}>
       
       
-      <h2 className="text-lg font-bold mt-6">Horário de uma turma:</h2>
+      <h2 className="text-lg font-bold mt-6">Horário da turma:</h2>
       <div className = "flex flex-wrap">
-                {turmas.map((turma: Turma) => (
+                {horario.turmas.map((turma: Turma, i) => (
                  
                     
                   
-                      <button
+                    <button
+                      key={i}
                       onClick={(e) => {
                         e.stopPropagation();
                         setSelectedTurma(turma);
                       }}
-                      className= {  `focus:outline-none hover:underlined m-2 p-2 rounded ${ turma === selectedTurma ? "bg-gray-700 text-white font-bold" : "bg-gray-300" }`}
+                      className= {  `focus:outline-none hover:underlined m-2 p-2 rounded ${ turma === selectedTurma ? "bg-blue-500 text-white font-bold" : "bg-gray-200" }`}
                     >
                      {turma.nome}
                     </button>

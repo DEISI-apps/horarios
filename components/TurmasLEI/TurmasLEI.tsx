@@ -1,13 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import SelectHorario from "@/components/SelectHorario/SelectHorario";
+import SelectHorarioLEI from "@/components/SelectHorarioLEI/SelectHorarioLEI";
 import ListaTurmas from "../ListaTurmas";
 import { useHorarios } from "@/hooks/useHorarios";
 import { Loader2 } from "lucide-react";
 
 
-export default function Turmas() {
+export default function TurmasLEI() {
 
   //
   // A. Definição do estado
@@ -30,7 +30,7 @@ export default function Turmas() {
 
   return (
     <div className="p-4">
-      <SelectHorario onSelect={setSelectedHorarioId} />
+      <SelectHorarioLEI onSelect={setSelectedHorarioId} />
 
       {selectedHorarioId && horario && (
         <>
