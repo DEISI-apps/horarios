@@ -6,21 +6,22 @@ import CalendarioSemanalTurma from '@/components/CalendarioSemanalTurma/Calendar
 import styles from './CalendarioSemanal.module.css';
 
 
-export default function ListaTurmas({ horario, editar }: { horario: Horario, editar: boolean }) {
+export default function ListaTurmas({ horario }: { horario: Horario, editar: boolean }) {
 
   const [selectedTurma, setSelectedTurma] = useState<Turma | null>(null);
   const [turmas, setTurmas] = useState<Turma[]>([])
 
-  const { aulas, isLoadingAulas, mutateAulas } = useAulas(horario.id);
+  const { aulas } = useAulas(horario.id);
   
 
   useEffect (() => {
     setTurmas(horario.turmas)
     setSelectedTurma(horario.turmas[0])
-  }, [])
+  }, [horario])
 
   //
   // C. renderiza
+
   if (!turmas || !selectedTurma) return <p className="text-gray-500">A carregar turmas...</p>;
 
   return (

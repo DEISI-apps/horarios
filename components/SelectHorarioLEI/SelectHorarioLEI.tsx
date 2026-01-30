@@ -11,7 +11,7 @@ export default function SelectHorarioLEI({ onSelect }: SelectHorarioProps) {
   //
   // A. Gestão de estado do componente
   const [selectedAnoSemestre, setSelectedAnoSemestre] = useState<string>("");
-  const [selectedCurso, setSelectedCurso] = useState<string>("LEI");
+  const selectedCurso = "LEI";
 
   //
   // B. Obtenção de dados da API usando SWR
@@ -34,10 +34,6 @@ export default function SelectHorarioLEI({ onSelect }: SelectHorarioProps) {
     new Set(horarioOptions.filter(h => h.semestre==2).map((h) => `${h.ano}ºano, ${h.semestre}ºsem (${h.anoLectivo})`))
   );
 
-  
-  // useEffect ( () => setSelectedAnoSemestre(anoSemestreOptions[0]) ,)
-  
-  const cursoOptions = Array.from(new Set(horarioOptions.map((h) => h.curso)));
 
   //
   // D. Handlers
@@ -55,7 +51,7 @@ useEffect(() => {
   );
 
   onSelect(selectedHorario ? selectedHorario.id : null);
-}, [selectedAnoSemestre, selectedCurso, horarioOptions]);
+}, [selectedAnoSemestre, selectedCurso, horarioOptions, onSelect]);
 
 const handleAnoSemestreSelection = (
   e: React.ChangeEvent<HTMLSelectElement>
@@ -63,16 +59,6 @@ const handleAnoSemestreSelection = (
   setSelectedAnoSemestre(e.target.value);
 };
 
-  // Combina ano+semestre com curso e procura o horário correspondente
-  const updateSelection = (anoSem: string, curso: string) => {
-    const selectedHorario = horarioOptions.find(
-      (h) =>
-        `${h.ano}ºano, ${h.semestre}ºsem (${h.anoLectivo})` === anoSem &&
-        h.curso === curso
-    );
-    
-    onSelect(selectedHorario ? selectedHorario.id : null);
-  };
 
   //
   // E. Renderização
