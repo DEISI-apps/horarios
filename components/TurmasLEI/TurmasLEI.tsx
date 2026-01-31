@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import SelectHorarioLEI from "@/components/SelectHorarioLEI/SelectHorarioLEI";
 import ListaTurmas from "../ListaTurmas";
 import { useHorarios } from "@/hooks/useHorarios";
@@ -20,6 +20,32 @@ export default function TurmasLEI() {
     return horarios.find(h => h.id === selectedHorarioId) || null;
   }, [selectedHorarioId, horarios]);
 
+  useEffect(() => {
+    function sendHeight() {
+      const height = document.documentElement.scrollHeight;
+      window.parent.postMessage(
+        { type: "iframe-height", height },
+        "*"
+      );
+    }
+
+    window.addEventListener("load", sendHeight);
+    window.addEventListener("resize", sendHeight);
+
+    const observer = new MutationObserver(sendHeight);
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+    });
+
+    return () => {
+      window.removeEventListener("load", sendHeight);
+      window.removeEventListener("resize", sendHeight);
+      observer.disconnect();
+    };
+  }, []);
+
   //
   // B. Renderização
 
@@ -35,8 +61,6 @@ export default function TurmasLEI() {
       {selectedHorarioId && horario && (
         <>
           <ListaTurmas horario={horario} editar={false} />
-          <p className="mt-4 text-center text-gray-500"><b className="text-black">Nomes sublinhados</b> permitem visualizar diretamente o horário da turma, disciplina, docente ou sala. No telemóvel é limitado, podendo alternativamente escolher no menu o que pretende.</p>
-          
         </>
       )}
     </div>
