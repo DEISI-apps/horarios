@@ -22,6 +22,33 @@ export default function HorarioDisciplinaLEI() {
     setSelectedSemestre(2);
   }, []);
 
+
+  useEffect(() => {
+    function sendHeight() {
+      const height = document.documentElement.scrollHeight;
+      window.parent.postMessage(
+        { type: "iframe-height", height },
+        "*"
+      );
+    }
+
+    window.addEventListener("load", sendHeight);
+    window.addEventListener("resize", sendHeight);
+
+    const observer = new MutationObserver(sendHeight);
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+    });
+
+    return () => {
+      window.removeEventListener("load", sendHeight);
+      window.removeEventListener("resize", sendHeight);
+      observer.disconnect();
+    };
+  }, []);
+
   //
   // B. Obtenção de dados da API usando SWR
   const { anosLectivos, isLoadingAnosLectivos } = useAnosLectivos();
@@ -56,10 +83,10 @@ export default function HorarioDisciplinaLEI() {
   //
   // E. Renderização
   if (isLoadingAnosLectivos || isLoadingDisciplinas || !disciplinas) return <div className="flex justify-center items-center h-32">
-      <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
-      <p className="text-gray-500">A carregar disciplinas...</p>
-    </div>;
-    
+    <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+    <p className="text-gray-500">A carregar disciplinas...</p>
+  </div>;
+
   if (!anosLectivos) return <div>Nenhum ano lectivo disponível.</div>;
 
   return (
