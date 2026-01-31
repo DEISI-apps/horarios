@@ -1,7 +1,7 @@
 "use client";
 import { useHorarios } from "@/hooks/useHorarios";
 import { Horario } from "@/types/interfaces";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 interface SelectHorarioProps {
   onSelect: (value: number | null) => void;
@@ -19,15 +19,18 @@ export default function SelectHorarioLEI({ onSelect }: SelectHorarioProps) {
 
   //
   // C. Transformação/processamento dos dados recebidos
-  const horarioOptions =
-    horarios?.map((horario: Horario) => ({
-      id: horario.id,
-      ano: horario.ano,
-      semestre: horario.semestre,
-      curso: horario.curso.sigla,
-      anoLectivo: horario.ano_lectivo.ano_lectivo,
-      label: `${horario.curso.sigla}, ${horario.ano}ºano, ${horario.semestre}ºsem (${horario.ano_lectivo.ano_lectivo})`,
-    })) || [];
+  const horarioOptions = useMemo(
+    () =>
+      horarios?.map((horario: Horario) => ({
+        id: horario.id,
+        ano: horario.ano,
+        semestre: horario.semestre,
+        curso: horario.curso.sigla,
+        anoLectivo: horario.ano_lectivo.ano_lectivo,
+        label: `${horario.curso.sigla}, ${horario.ano}ºano, ${horario.semestre}ºsem (${horario.ano_lectivo.ano_lectivo})`,
+      })) || [],
+    [horarios]
+  );
 
   // Opções únicas para ano+semestre e curso
   const anoSemestreOptions = Array.from(
