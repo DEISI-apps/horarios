@@ -24,7 +24,7 @@ export default function TurmasLEI() {
     function sendHeight() {
       const height = document.documentElement.scrollHeight;
       window.parent.postMessage(
-        { type: "iframe-height", height },
+        { type: "iframe-turmas-height", height },
         "*"
       );
     }

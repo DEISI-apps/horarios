@@ -27,7 +27,7 @@ export default function HorarioDisciplinaLEI() {
     function sendHeight() {
       const height = document.documentElement.scrollHeight;
       window.parent.postMessage(
-        { type: "iframe-height", height },
+        { type: "iframe-disciplinas-height", height },
         "*"
       );
     }
