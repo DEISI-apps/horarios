@@ -10,9 +10,9 @@ export const SEMESTER_CICLE_1_START_DAY = 9;
 export const SEMESTER_CICLE_23_START_DAY = 9;
 export const SEMESTER_START_MONTH = 2;
 export const SEMESTER_START_YEAR = 2026;
-export const SEMESTER_START_MONTH_NUMBER_OF_DAYS = 28; // Setembro tem 30 dias
-export const SEMESTER_CICLE_1_HOLIDAYS_WEEKS = [8, 9]; // Semanas de ferias
-export const SEMESTER_CICLE_23_HOLIDAYS_WEEKS = [8, 9]; // Semanas de ferias (Natal)
+export const SEMESTER_START_MONTH_NUMBER_OF_DAYS = 28; // Fevereiro tem 28
+export const SEMESTER_CICLE_1_HOLIDAYS_WEEKS = [8, 9]; // Semanas de ferias Pascoa
+export const SEMESTER_CICLE_23_HOLIDAYS_WEEKS = [8, 9]; // Semanas de ferias Pascoa
 
 export const DAYS = [
   { id: 1, name: 'Segunda' },
