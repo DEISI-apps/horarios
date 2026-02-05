@@ -61,7 +61,7 @@ function LoginForm() {
           {/* Help Text */}
           <div className="mt-6 p-4 bg-blue-50 rounded-lg">
             <p className="text-sm text-gray-700">
-              <span className="font-medium">Nota:</span> Só emails autorizados (tipicamente pxxx@ulusofona.pt) conseguem entrar.
+              <span className="font-medium">Nota:</span> Só emails autorizados (tipicamente que comecem por pxxx ou fxxx) conseguem entrar.
             </p>
           </div>
         </div>
