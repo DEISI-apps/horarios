@@ -172,3 +172,18 @@ export interface AulaDisciplina {
   docentes: AulaDocente[];
 }
 
+export interface Aluno {
+  nome: string;
+  numero: string;
+  email: string;
+}
+
+export interface TurmaComAlunos {
+  id_dsdeisi: number;
+  turma_nome: string;
+  disciplina: string;
+  turma: string;
+  alunos: Aluno[];
+  alunos_avulso: Aluno[];
+}
+
