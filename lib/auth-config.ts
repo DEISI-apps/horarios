@@ -1,33 +1,24 @@
-import { readFileSync } from "fs";
-import { join } from "path";
 import GoogleProvider from "next-auth/providers/google";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Any = any;
 
-// Função para carregar e processar emails do ficheiro
+// Função para carregar emails da variável de ambiente
 function loadAuthorizedEmails(): string[] {
-  try {
-    const filePath = join(process.cwd(), "data", "emails.txt");
-    const fileContent = readFileSync(filePath, "utf-8");
-    
-    // Extrair emails entre < e >
-    const emailRegex = /<([^>]+)>/g;
-    const emails: string[] = [];
-    let match;
-    
-    while ((match = emailRegex.exec(fileContent)) !== null) {
-      const email = match[1].trim().toLowerCase();
-      if (email && !emails.includes(email)) {
-        emails.push(email);
-      }
-    }
-    
-    console.log(`✓ Loaded ${emails.length} authorized emails`);
-    return emails;
-  } catch (error) {
-    console.error("Erro ao carregar emails autorizados:", error);
+  const emailsEnv = process.env.AUTHORIZED_EMAILS || "";
+  
+  if (!emailsEnv) {
+    console.warn("⚠️ AUTHORIZED_EMAILS environment variable not set");
     return [];
   }
+  
+  // Suporta emails separados por vírgula ou quebra de linha
+  const emails = emailsEnv
+    .split(/[,\n]/)
+    .map(email => email.trim().toLowerCase())
+    .filter(email => email && email.includes("@"));
+  
+  console.log(`✓ Loaded ${emails.length} authorized emails from AUTHORIZED_EMAILS`);
+  return emails;
 }
 
 const authorizedEmails = loadAuthorizedEmails();
