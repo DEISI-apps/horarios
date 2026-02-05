@@ -1,12 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { AlertCircle, LogIn } from "lucide-react";
 import Image from "next/image";
 
-export default function LoginPage() {
+function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const searchParams = useSearchParams();
   const error = useMemo(() => {
@@ -64,6 +64,31 @@ export default function LoginPage() {
               <span className="font-medium">Nota:</span> So emails autorizados conseguem entrar.
             </p>
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<LoginFormSkeleton />}>
+      <LoginForm />
+    </Suspense>
+  );
+}
+
+function LoginFormSkeleton() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-black from-blue-50 to-indigo-100 p-4">
+      <div className="w-full max-w-md">
+        <div className="bg-white rounded-lg shadow-lg p-8 animate-pulse">
+          <div className="mb-8 text-center">
+            <div className="w-16 h-16 mx-auto mb-4 bg-gray-200 rounded-full" />
+            <div className="h-8 bg-gray-200 rounded mb-2 w-2/3 mx-auto" />
+            <div className="h-4 bg-gray-200 rounded w-3/4 mx-auto" />
+          </div>
+          <div className="h-10 bg-gray-200 rounded" />
         </div>
       </div>
     </div>
