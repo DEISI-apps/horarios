@@ -7,7 +7,8 @@ import CalendarioSemanalDocente from "../CalendarioSemanalDocente";
 import { DocenteBase } from "@/types/interfaces";
 import { Loader2 } from "lucide-react";
 
-exconst searchParams = useSearchParams();
+export default function HorarioDocente() {
+  const searchParams = useSearchParams();
   
   // Estado
   const [selectedAnoLectivo, setSelectedAnoLectivo] = useState<number | null>(35);
@@ -15,14 +16,17 @@ exconst searchParams = useSearchParams();
   const [selectedDocente, setSelectedDocente] = useState<DocenteBase | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectOpened, setSelectOpened] = useState(false);
-  const [hasPrefilled, setHasPrefill= useState("");
-  const [selectOpened, setSelectOpened] = useState(false);
+  const [hasPrefilled, setHasPrefilled] = useState(false);
 
   // Fetch SWR
   const { anosLectivos, isLoadingAnosLectivos } = useAnosLectivos();
   const { docentes, isLoadingDocentes } = useDocentes(selectedAnoLectivo, selectedSemestre);
 
-  // Defa
+  // Defaults
+  useEffect(() => {
+    setSelectedAnoLectivo(35);
+    setSelectedSemestre(2);
+  }, []);
 
   // Pré-preencher a partir de query params
   useEffect(() => {
@@ -43,11 +47,7 @@ exconst searchParams = useSearchParams();
       setSelectOpened(false);
       setHasPrefilled(true);
     }
-  }, [hasPrefilled, docentes, searchParams]);ults
-  useEffect(() => {
-    setSelectedAnoLectivo(35);
-    setSelectedSemestre(2);
-  }, []);
+  }, [hasPrefilled, docentes, searchParams]);
 
   // Handlers
   const handleAnoLectivoSelection = (e: React.ChangeEvent<HTMLSelectElement>) =>
