@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import SelectHorario from "@/components/SelectHorario/SelectHorario";
 import DisciplinasSection from "@/components/DisciplinasSection/DisciplinasSection";
-import TurmasSection from "../TurmasSection/TurmasSection";
+// import TurmasSection from "../TurmasSection/TurmasSection";
 import CalendarioSemanal from "../CalendarioSemanal";
 import { useHorarios } from "@/hooks/useHorarios";
 import { Loader2 } from "lucide-react";
