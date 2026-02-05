@@ -175,7 +175,8 @@ export default function HorarioDisciplinaLEI() {
             <CalendarioSemanalDisciplina
               disciplina_id={selectedDisciplina.id}
               ano_lectivo_id={selectedAnoLectivo}
-              semestre={selectedSemestre} />
+              semestre={selectedSemestre}
+              showAlunos={false} />
           </div>)
       }
     </div>

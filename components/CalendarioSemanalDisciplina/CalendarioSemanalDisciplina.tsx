@@ -12,12 +12,14 @@ interface Props {
   disciplina_id: number;
   ano_lectivo_id: number;
   semestre: number;
+  showAlunos?: boolean;
 }
 
 export default function CalendarioSemanalDisciplina({
   disciplina_id,
   ano_lectivo_id,
-  semestre
+  semestre,
+  showAlunos = true,
 }: Props) {
 
   // 
@@ -111,6 +113,7 @@ export default function CalendarioSemanalDisciplina({
           <CalendarioGridDisciplina
             aulas={aulasDisciplina}
             isLoadingAulas={isLoadingAulas}
+            showAlunos={showAlunos}
           />
         </div>
 

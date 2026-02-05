@@ -8,6 +8,7 @@ import styles from './CalendarioSemanalDisciplina.module.css';
 
 interface TimeSlotProps {
   slot: AulaDisciplina;
+  showAlunos?: boolean;
 }
 
 function formataTurmas(turmas: Map<string, string[]>): string {
@@ -41,7 +42,7 @@ function formatarHorario(horaInicio: string, duracao: number): string {
   return `${horaInicioFormatada}-${horaFimFormatada}`;
 }
 
-export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
+export default function TimeSlotDisciplina({ slot, showAlunos = true }: TimeSlotProps) {
   const top = calculateSlotPosition(slot.hora_inicio) + 2;
   const height = slot.duracao * MINUTE_HEIGHT - 4;
   const baseColor = gerarCorDisciplina(slot.disciplina_id);
@@ -51,6 +52,12 @@ export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
 
   // Buscar lista de alunos do endpoint
   useEffect(() => {
+    if (!showAlunos) {
+      setModalAberto(false);
+      setAlunos([]);
+      return;
+    }
+
     // Coletar todas as turmas LEI de todos os docentes
     const todasTurmasLEI = new Set<string>();
     slot.docentes.forEach(docente => {
@@ -94,7 +101,7 @@ export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
     };
 
     fetchAlunos();
-  }, [slot]);
+  }, [slot, showAlunos]);
 
   return (
     <div
@@ -126,7 +133,7 @@ export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
         </div>
       ))}
 
-      {alunos.length > 0 && (
+      {showAlunos && alunos.length > 0 && (
         <div className={styles.slotDetails} style={{ fontSize: '8px', marginLeft: 'auto', marginRight: '5px', marginTop: 'auto' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
             <span>{alunos.length} alunos LEI</span>
@@ -158,7 +165,7 @@ export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
         </div>
       )}
 
-      {modalAberto && createPortal(
+      {showAlunos && modalAberto && createPortal(
         <div
           style={{
             position: 'fixed',

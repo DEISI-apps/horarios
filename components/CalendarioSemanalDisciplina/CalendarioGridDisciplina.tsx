@@ -8,11 +8,13 @@ import { TimeLines } from '../CalendarioSemanal/TimeLines';
 interface CalendarGridProps {
   aulas: AulaDisciplina[];
   isLoadingAulas: boolean;
+  showAlunos?: boolean;
 }
 
 export default function CalendarioGridDocente({
   aulas,
   isLoadingAulas,
+  showAlunos = true,
 }: CalendarGridProps) {
 
   const renderSlotsForDayAndClass = (dayId: number) => {
@@ -21,7 +23,7 @@ export default function CalendarioGridDocente({
     return aulas
       .filter((slot: AulaDisciplina) => slot.dia_semana === dayId)
       .map((slot: AulaDisciplina) => (
-        <TimeSlotDisciplina key={`slot-${slot.id}`} slot={slot} />
+        <TimeSlotDisciplina key={`slot-${slot.id}`} slot={slot} showAlunos={showAlunos} />
       ));
   };
 

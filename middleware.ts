@@ -11,6 +11,8 @@ export function middleware(request: NextRequest) {
   // Permite acesso à página de login e rotas de API de auth sem autenticação
   if (
     pathname === "/login" ||
+    pathname === "/disciplinas-lei" ||
+    pathname === "/turmas-lei" ||
     pathname.startsWith("/api/auth") ||
     pathname.startsWith("/_next") ||
     pathname.includes(".") // arquivos estáticos como favicon.ico
