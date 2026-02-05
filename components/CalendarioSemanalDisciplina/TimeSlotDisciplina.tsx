@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AulaDisciplina, Aluno } from '@/types/interfaces';
 import { calculateSlotPosition } from '@/lib/calendario';
 import { MINUTE_HEIGHT } from '@/lib/constants';
-import { gerarCorDisciplina, abreviarNomeDisciplina } from '@/lib/utils';
+import { gerarCorDisciplina } from '@/lib/utils';
 import styles from './CalendarioSemanalDisciplina.module.css';
 
 interface TimeSlotProps {
@@ -17,11 +17,6 @@ function formataTurmas(turmas: Map<string, string[]>): string {
       return `${curso} ${turmasList.join(',')}`;
     })
     .join(', ');
-}
-
-function extraiTurmas(turmas: Map<string, string[]>): string {
-  const turmasLEI = turmas.get("LEI") ?? [];
-  return turmasLEI.join(', ');
 }
 
 // Fetcher genérico para GET
@@ -51,12 +46,8 @@ export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
   const height = slot.duracao * MINUTE_HEIGHT - 4;
   const baseColor = gerarCorDisciplina(slot.disciplina_id);
 
-  const [width, setWidth] = useState<number>(0);
-  const slotRef = useRef<HTMLDivElement | null>(null);
-
   const [alunos, setAlunos] = useState<Aluno[]>([]);
   const [modalAberto, setModalAberto] = useState<boolean>(false);
-  const [docenteSelecionado, setDocenteSelecionado] = useState<string>('');
 
   // Buscar lista de alunos do endpoint
   useEffect(() => {
@@ -105,23 +96,8 @@ export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
     fetchAlunos();
   }, [slot]);
 
-  // observar largura do slot dinamicamente
-  useEffect(() => {
-    if (!slotRef.current || typeof ResizeObserver === 'undefined') return;
-
-    const observer = new ResizeObserver(entries => {
-      for (const entry of entries) {
-        setWidth(entry.contentRect.width);
-      }
-    });
-
-    observer.observe(slotRef.current);
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <div
-      ref={slotRef}
       key={`slot-${slot.id}`}
       className={`${styles.slot} ${slot.tipo === 'T' ? styles.theoretical : styles.practical}`}
       style={{
@@ -156,7 +132,6 @@ export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
             <span>{alunos.length} alunos LEI</span>
             <button
               onClick={() => {
-                setDocenteSelecionado(slot.docentes[0]?.docente_nome || '');
                 setModalAberto(true);
               }}
               style={{
