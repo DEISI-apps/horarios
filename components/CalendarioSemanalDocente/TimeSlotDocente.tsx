@@ -152,7 +152,7 @@ export default function TimeSlotDocente({ slot }: TimeSlotProps) {
       <div className={styles.slotDetails} style={{ fontSize: '8px', marginLeft:'auto', marginRight:"5px" }}>
         {alunos.length > 0 ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <span>{alunos.length} alunos</span>
+            <span>{alunos.length} alunos LEI</span>
             <button
               onClick={() => setModalAberto(true)}
               style={{
@@ -177,7 +177,7 @@ export default function TimeSlotDocente({ slot }: TimeSlotProps) {
             </button>
           </div>
         ) : (
-          'sem alunos'
+          ''
         )}
       </div>
 
