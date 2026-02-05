@@ -1,7 +1,7 @@
 "use client";
 import { useHorarios } from "@/hooks/useHorarios";
 import { Horario } from "@/types/interfaces";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 
 interface SelectHorarioProps {
@@ -19,11 +19,11 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
 
   //
   // B. Obtenção de dados da API usando SWR
-  const { horarios, isLoading, isError } = useHorarios();
+  const { horarios, isError } = useHorarios();
 
   //
   // C. Transformação/processamento dos dados recebidos
-  const horarioOptions =
+  const horarioOptions = useMemo(() => 
     horarios?.map((horario: Horario) => ({
       id: horario.id,
       ano: horario.ano,
@@ -31,7 +31,7 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
       curso: horario.curso.sigla,
       anoLectivo: horario.ano_lectivo.ano_lectivo,
       label: `${horario.curso.sigla}, ${horario.ano}ºano, ${horario.semestre}ºsem (${horario.ano_lectivo.ano_lectivo})`,
-    })) || [];
+    })) || [], [horarios]);
 
   // Opções únicas para ano+semestre e curso
   const anoSemestreOptions = Array.from(

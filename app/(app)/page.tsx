@@ -3,7 +3,7 @@
 import React, { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { BookOpen, Users, Building2, Calendar, GraduationCap, User, Search } from "lucide-react";
+import { BookOpen, Users, Building2, GraduationCap, User, Search } from "lucide-react";
 
 export default function Page() {
   const [isZoomed, setIsZoomed] = useState(false);
@@ -72,8 +72,8 @@ export default function Page() {
                   }`}
                   priority
                   onClick={() => window.location.href = "/cursos?curso=LEI&ano=2&sem=2"}
-                  style={isZoomed ? {
-                    transformOrigin: `${(cursorPos.x / imageContainerRef.current?.offsetWidth!) * 100}% ${(cursorPos.y / imageContainerRef.current?.offsetHeight!) * 100}%`
+                  style={isZoomed && imageContainerRef.current ? {
+                    transformOrigin: `${(cursorPos.x / imageContainerRef.current.offsetWidth) * 100}% ${(cursorPos.y / imageContainerRef.current.offsetHeight) * 100}%`
                   } : {}}
                 />
               </div>
