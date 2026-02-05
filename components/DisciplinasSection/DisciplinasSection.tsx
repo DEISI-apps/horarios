@@ -41,7 +41,7 @@ export default function DisciplinasSection({ horario }: { horario: Horario }) {
 
   // C.1. fallbacks
 
-  if (isLoadingDisciplinas) return <p className="text-gray-500">A carregar disciplinas...</p>;
+  if (isLoadingDisciplinas) return <p className="text-gray-500"></p>;
   if (errorDisciplinas) return <p className="text-red-500">Erro ao carregar disciplinas.</p>;
   if (disciplinas?.length === 0) return <p className="text-gray-500">Nenhuma disciplina encontrada.</p>;
   if (isLoadingAulasAnoSemestre) return <p className="text-gray-500">A carregar aulas...</p>;

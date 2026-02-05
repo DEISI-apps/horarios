@@ -1,17 +1,21 @@
 "use client";
 import { useHorarios } from "@/hooks/useHorarios";
 import { Horario } from "@/types/interfaces";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 interface SelectHorarioProps {
   onSelect: (value: number | null) => void;
 }
 
 export default function SelectHorario({ onSelect }: SelectHorarioProps) {
+  const searchParams = useSearchParams();
+
   //
   // A. Gestão de estado do componente
   const [selectedAnoSemestre, setSelectedAnoSemestre] = useState<string>("");
   const [selectedCurso, setSelectedCurso] = useState<string>("");
+  const [hasPrefilled, setHasPrefilled] = useState(false);
 
   //
   // B. Obtenção de dados da API usando SWR
@@ -34,6 +38,35 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
     new Set(horarioOptions.filter(h => h.semestre==2).map((h) => `${h.ano}ºano, ${h.semestre}ºsem (${h.anoLectivo})`))
   );
   const cursoOptions = Array.from(new Set(horarioOptions.map((h) => h.curso)));
+
+  useEffect(() => {
+    if (hasPrefilled || horarioOptions.length === 0) return;
+
+    const cursoParam = searchParams.get("curso");
+    const anoParam = Number(searchParams.get("ano"));
+    const semParam = Number(searchParams.get("sem"));
+
+    if (!cursoParam || !anoParam || !semParam) return;
+
+    const matching = horarioOptions
+      .filter(
+        (h) =>
+          h.curso.toLowerCase() === cursoParam.toLowerCase() &&
+          h.ano === anoParam &&
+          h.semestre === semParam
+      )
+      .sort((a, b) => b.anoLectivo.localeCompare(a.anoLectivo));
+
+    if (matching.length === 0) return;
+
+    const selected = matching[0];
+    const anoSemestre = `${selected.ano}ºano, ${selected.semestre}ºsem (${selected.anoLectivo})`;
+
+    setSelectedCurso(selected.curso);
+    setSelectedAnoSemestre(anoSemestre);
+    onSelect(selected.id);
+    setHasPrefilled(true);
+  }, [hasPrefilled, horarioOptions, onSelect, searchParams]);
 
   //
   // D. Handlers
@@ -60,7 +93,6 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
   //
   // E. Renderização
   if (isError) return <div>Erro ao carregar cursos.</div>;
-  if (isLoading) return <div>A carregar...</div>;
       
   return (
     <div className="flex flex-wrap gap-4 items-start bg-white p-4 rounded-xl shadow-md">

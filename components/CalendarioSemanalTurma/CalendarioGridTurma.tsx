@@ -2,6 +2,7 @@ import { Aula } from '@/types/interfaces';
 import { DAYS, CALENDAR_HEIGHT } from '@/lib/constants';
 import TimeSlotTurma from './TimeSlotTurma';
 import TimeMarkers from './TimeMarkers';
+import { TimeLinesTurma } from './TimeLinesTurma';
 import styles from './CalendarioSemanal.module.css';
 
 interface CalendarGridProps {
@@ -54,6 +55,9 @@ export default function CalendarGrid({
           className={styles.daysContainer} 
           style={{ height: `${CALENDAR_HEIGHT}px` }}
         >
+          {/* linhas horizontais das horas */}
+          <TimeLinesTurma />
+
           {DAYS.map(day => (
             <div key={`day-${day.id}`} className={styles.dayColumn}>
               

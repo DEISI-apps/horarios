@@ -38,7 +38,7 @@ export default function Navbar() {
 
         {/* Navegação normal - desktop */}
         <div className="hidden md:flex items-center gap-6">
-          <nav className="flex items-center gap-1 text-white/85 text-sm font-semibold tracking-wide">
+          <nav className="flex items-center gap-1 text-white text-base font-semibold tracking-wide">
             <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/cursos">Curso</Link>
             <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/docentes">Docente</Link>
             <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/disciplinas">Disciplina</Link>
@@ -53,7 +53,7 @@ export default function Navbar() {
 
       {/* Dropdown - mobile */}
           {menuOpen && (
-            <div className="md:hidden text-gray-200 border-t border-white/10 rounded-b-2xl">
+            <div className="md:hidden text-white border-t border-white/10 rounded-b-2xl">
               <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/cursos" onClick={() => setMenuOpen(false)}>Curso</Link>
               <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/docentes" onClick={() => setMenuOpen(false)}>Docente</Link>
               <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/disciplinas" onClick={() => setMenuOpen(false)}>Disciplina</Link>

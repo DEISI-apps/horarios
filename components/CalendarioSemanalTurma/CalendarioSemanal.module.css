@@ -89,6 +89,13 @@
   /* border-top: 1px solid #eee; */
 }
 
+.timeMarkerLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 0;
+}
+
 .timeMarker.halfHour {
   font-size: 10px;
   color: #999;
@@ -99,6 +106,10 @@
   flex: 1;
   position: relative;
   height: 720px; /* Mesma altura que timeSlots */
+  background-image:
+    repeating-linear-gradient(to bottom, #d1d5db 0 1px, transparent 1px 40px),
+    repeating-linear-gradient(to bottom, transparent 0 19px, #f3f4f6 19px 20px, transparent 20px 40px);
+  background-size: 100% 40px, 100% 40px;
 }
 
 .dayColumn {

@@ -1,87 +1,160 @@
 "use client";
 
-import React from "react";
+import React, { useState, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { BookOpen, Users, Building2, Calendar, GraduationCap, User, Search } from "lucide-react";
 
 export default function Page() {
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+  const imageContainerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="flex flex-col items-center justify-between text-center px-4 md:px-0 mt-10 sm:mt-5">
-      <div>
+    <div>
+      <div className="container mt-10 mx-auto px-4 py-8 md:py-10 font-[var(--font-geist-sans)]">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 items-center max-w-6xl mx-auto">
+          <div className="text-center lg:text-left">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
+              Horários num relance, com foco no essencial
+            </h1>
+            <p className="text-lg md:text-xl text-gray-600 mt-4 max-w-2xl mx-auto lg:mx-0">
+              Consulta e gestão de horários de forma rápida e intuitiva.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3 justify-center lg:justify-start">
+              <Link
+                href="/cursos"
+                className="bg-blue-600 text-white px-6 py-3 rounded-xl shadow-md hover:bg-blue-700 transition-colors font-semibold"
+              >
+                Consultar Horário
+              </Link>
+              {/* <Link
+                href="/docentes"
+                className="bg-white text-blue-700 px-6 py-3 rounded-xl border border-blue-200 hover:border-blue-300 hover:bg-blue-50 transition-colors font-semibold"
+              >
+                Exportar ICS
+              </Link>
+              <Link
+                href="/disciplinas"
+                className="bg-white text-gray-900 px-6 py-3 rounded-xl border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors font-semibold"
+              >
+                Listar Alunos
+              </Link> */}
+            </div>
+          </div>
 
-
-        {/* Imagem ilustrativa */}
-        <div className="mb-6">
-          <Image
-            src="/horario.png"
-            alt="Calendário"
-            width={200}
-            height={200}
-            className="mx-auto rounded-lg shadow-lg"
-          />
+          <div className="relative">
+            <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-blue-100 via-white to-amber-100 blur-xl opacity-70" />
+            <div 
+              ref={imageContainerRef}
+              className="relative bg-white/80 rounded-3xl p-4 shadow-2xl overflow-hidden"
+              style={{ cursor: isZoomed ? "none" : "default" }}
+              onMouseEnter={() => setIsZoomed(true)}
+              onMouseLeave={() => setIsZoomed(false)}
+              onMouseMove={(e) => {
+                if (!imageContainerRef.current) return;
+                const rect = imageContainerRef.current.getBoundingClientRect();
+                setCursorPos({
+                  x: e.clientX - rect.left,
+                  y: e.clientY - rect.top
+                });
+              }}
+            >
+              <div className="relative">
+                <Image
+                  src="/horario.png"
+                  alt="Calendario semanal"
+                  width={560}
+                  height={560}
+                  sizes="(min-width: 1024px) 440px, (min-width: 768px) 380px, 320px"
+                  className={`w-full h-auto rounded-2xl transition-transform duration-75 ${
+                    isZoomed ? "scale-150" : "scale-100"
+                  }`}
+                  priority
+                  onClick={() => window.location.href = "/cursos?curso=LEI&ano=2&sem=2"}
+                  style={isZoomed ? {
+                    transformOrigin: `${(cursorPos.x / imageContainerRef.current?.offsetWidth!) * 100}% ${(cursorPos.y / imageContainerRef.current?.offsetHeight!) * 100}%`
+                  } : {}}
+                />
+              </div>
+              {isZoomed && (
+                <div
+                  className="absolute pointer-events-none"
+                  style={{
+                    left: `${cursorPos.x}px`,
+                    top: `${cursorPos.y}px`,
+                    transform: "translate(-50%, -50%)"
+                  }}
+                >
+                  <Search className="w-24 h-24 text-black opacity-60 drop-shadow-lg" />
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
-        {/* Título */}
-        <h1 className="text-3xl font-semibold mb-4">
-          Bem-vindo à aplicação de horários
-        </h1>
-
-        {/* Descrição */}
-        <p className="text-gray-700 mb-8">
-          Esta aplicação permite gerir e consultar horários de forma rápida e intuitiva.
-        </p>
-
-        {/* Lista de funcionalidades */}
-        <div className="text-left mb-6">
-          <p className="font-medium font-semibold">Esta versão está ainda em desenvolvimento, mas já tem as seguintes funcionalidades disponíveis:</p>
-          <ul className="list-disc list-inside space-y-1">
-            <li>Consultar horários de cursos, docentes, disciplinas e salas do DEISI.</li>
-            <li>Editar horários existentes (acesso restrito).</li>
-            <li>Exportar horário de docente em formato ICS, para importar no calendário Google/Outlook.</li>
-          </ul>
-
-          <p className="font-medium  font-semibold mt-6">Funcionalidades futuras:</p>
-          <ul className="list-disc list-inside space-y-1">
-            <li>Autenticação.</li>
-            <li>Alojamento da aplicação em servidor da Lusófona.</li>
-            <li>Especificação de salas de aula teóricas.</li>
-            <li>Exportar horário em PDF.</li>
-            <li>Exportar horário de curso em formato ICS para alunos.</li>
-            <li>Integração da API com sistemas académicos da universidade.</li>
-            <li>Integração com Class Ping.</li>
-          </ul>
+        <div className="max-w-6xl mx-auto mt-20">
+          <h2 className="text-xl md:text-2xl font-bold text-center text-gray-900 mb-6">
+            Funcionalidades Principais
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <Link
+              href="/cursos"
+              className="group bg-white p-4 rounded-2xl shadow-sm hover:shadow-md transition-shadow"
+            >
+              <GraduationCap className="w-6 h-6 text-blue-600" />
+              <div className="mt-2 font-semibold text-gray-900">Horário do Curso</div>
+              <p className="text-sm text-gray-600">Visão global das turmas de um ano ou de uma turma.</p>
+            </Link>
+            <Link
+              href="/disciplinas"
+              className="group bg-white p-4 rounded-2xl shadow-sm hover:shadow-md transition-shadow"
+            >
+              <BookOpen className="w-6 h-6 text-blue-600" />
+              <div className="mt-2 font-semibold text-gray-900">Horário da Disciplina</div>
+              <p className="text-sm text-gray-600">Distribuição das aulas pela semana.</p>
+            </Link>
+            <Link
+              href="/docentes"
+              className="group bg-white p-4 rounded-2xl shadow-sm hover:shadow-md transition-shadow"
+            >
+              <User className="w-6 h-6 text-blue-600" />
+              <div className="mt-2 font-semibold text-gray-900">Horário do Docente</div>
+              <p className="text-sm text-gray-600">Aulas da semana com listagem de alunos por aula.</p>
+            </Link>
+            <Link
+              href="/docentes"
+              className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
+            >
+              <svg className="w-6 h-6 text-blue-600 mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <div className="text-lg font-semibold text-gray-900">Google Calendar</div>
+              <p className="text-sm text-gray-600">Importação das 14 semanas de aula no calendário Google ou Outlook.</p>
+            </Link>
+            <Link
+              href="/disciplinas"
+              className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
+            >
+              <Users className="w-5 h-5 text-blue-600 mb-2" />
+              <div className="text-lg font-semibold text-gray-900">Listar alunos</div>
+              <p className="text-sm text-gray-600">Cada aula tem número e listagem de alunos.</p>
+            </Link>
+            <Link
+              href="/salas"
+              className="group bg-white p-4 rounded-2xl shadow-sm hover:shadow-md transition-shadow"
+            >
+              <Building2 className="w-6 h-6 text-blue-600" />
+              <div className="mt-2 font-semibold text-gray-900">Horário das Salas</div>
+              <p className="text-sm text-gray-600">Disponibilidade e uso das salas por disciplina.</p>
+            </Link>
+            
+          </div>
         </div>
       </div>
-
-
-      <div className="text-center mt-10 mb-4 font-semibold">Ver Horário de: </div>
-      <div className="flex flex-col sm:flex-row gap-4 mb-10">
-        <a
-          href="/cursos"
-          className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700 transition-colors"
-        >
-          Curso
-        </a>
-        <a
-          href="/disciplinas"
-          className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700 transition-colors"
-        >
-          Disciplina
-        </a>
-        <a
-          href="/docentes"
-          className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700 transition-colors"
-        >
-          Docente
-        </a>
-        <a
-          href="/salas"
-          className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700 transition-colors"
-        >
-          Sala
-        </a>
-      </div>
-
     </div>
   );
 }
