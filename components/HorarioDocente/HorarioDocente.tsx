@@ -2,23 +2,48 @@
 import { useAnosLectivos } from "@/hooks/useAnosLectivos";
 import { useDocentes } from "@/hooks/useDocentes";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import CalendarioSemanalDocente from "../CalendarioSemanalDocente";
 import { DocenteBase } from "@/types/interfaces";
 import { Loader2 } from "lucide-react";
 
-export default function HorarioDocente() {
+exconst searchParams = useSearchParams();
+  
   // Estado
   const [selectedAnoLectivo, setSelectedAnoLectivo] = useState<number | null>(35);
   const [selectedSemestre, setSelectedSemestre] = useState<number | null>(2);
   const [selectedDocente, setSelectedDocente] = useState<DocenteBase | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectOpened, setSelectOpened] = useState(false);
+  const [hasPrefilled, setHasPrefill= useState("");
+  const [selectOpened, setSelectOpened] = useState(false);
 
   // Fetch SWR
   const { anosLectivos, isLoadingAnosLectivos } = useAnosLectivos();
   const { docentes, isLoadingDocentes } = useDocentes(selectedAnoLectivo, selectedSemestre);
 
-  // Defaults
+  // Defa
+
+  // Pré-preencher a partir de query params
+  useEffect(() => {
+    if (hasPrefilled || !docentes || docentes.length === 0) return;
+
+    const docenteParam = searchParams.get("docente");
+    
+    if (!docenteParam) return;
+
+    // Procura o docente por nome (case-insensitive)
+    const matching = docentes.find(
+      (doc) => doc.nome.toLowerCase() === docenteParam.toLowerCase()
+    );
+
+    if (matching) {
+      setSelectedDocente(matching);
+      setSearchTerm(matching.nome);
+      setSelectOpened(false);
+      setHasPrefilled(true);
+    }
+  }, [hasPrefilled, docentes, searchParams]);ults
   useEffect(() => {
     setSelectedAnoLectivo(35);
     setSelectedSemestre(2);
