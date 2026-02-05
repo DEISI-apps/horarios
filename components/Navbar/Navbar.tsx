@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { UserNav } from "@/components/UserNav";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -34,13 +35,18 @@ export default function Navbar() {
         </button>
 
         {/* Navegação normal - desktop */}
-        <nav className="hidden md:flex items-center gap-6 text-gray-300 text-sm">
-          <Link className="px-3 py-2 rounded-md hover:bg-gray-800 hover:text-white transition" href="/cursos">Curso</Link>
-          <Link className="px-3 py-2 rounded-md hover:bg-gray-800 hover:text-white transition" href="/docentes">Docente</Link>
-          <Link className="px-3 py-2 rounded-md hover:bg-gray-800 hover:text-white transition" href="/disciplinas">Disciplina</Link>
-          <Link className="px-3 py-2 rounded-md hover:bg-gray-800 hover:text-white transition" href="/salas">Sala</Link>
-          {/* <Link className="ml-6 px-3 py-2 rounded-md bg-gray-800 text-white hover:bg-gray-700 transition" href="/editarHorarios">Editar</Link> */}
-        </nav>
+        <div className="hidden md:flex items-center gap-6">
+          <nav className="flex items-center gap-6 text-gray-300 text-sm">
+            <Link className="px-3 py-2 rounded-md hover:bg-gray-800 hover:text-white transition" href="/cursos">Curso</Link>
+            <Link className="px-3 py-2 rounded-md hover:bg-gray-800 hover:text-white transition" href="/docentes">Docente</Link>
+            <Link className="px-3 py-2 rounded-md hover:bg-gray-800 hover:text-white transition" href="/disciplinas">Disciplina</Link>
+            <Link className="px-3 py-2 rounded-md hover:bg-gray-800 hover:text-white transition" href="/salas">Sala</Link>
+            {/* <Link className="ml-6 px-3 py-2 rounded-md bg-gray-800 text-white hover:bg-gray-700 transition" href="/editarHorarios">Editar</Link> */}
+          </nav>
+          <div className="pl-6 border-l border-gray-700">
+            <UserNav />
+          </div>
+        </div>
       </div>
 
       {/* Dropdown - mobile */}
@@ -51,6 +57,9 @@ export default function Navbar() {
           <Link className="block px-4 py-2 hover:bg-gray-800 hover:text-white" href="/disciplinas" onClick={() => setMenuOpen(false)}>Disciplina</Link>
           <Link className="block px-4 py-2 hover:bg-gray-800 hover:text-white" href="/salas" onClick={() => setMenuOpen(false)}>Sala</Link>
           {/* <Link className="block px-4 py-2 bg-gray-800 text-white hover:bg-gray-700" href="/editarHorarios" onClick={() => setMenuOpen(false)}>Editar</Link> */}
+          <div className="border-t border-gray-700 px-4 py-3">
+            <UserNav />
+          </div>
         </div>
       )}
     </header>
