@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { AulaDocente, TurmaComAlunos, Aluno } from '@/types/interfaces';
+import { AulaDocente, Aluno } from '@/types/interfaces';
 import { calculateSlotPosition } from '@/lib/calendario';
-import { MINUTE_HEIGHT, SEMESTER_START_MONTH_NUMBER_OF_DAYS } from '@/lib/constants';
+import { MINUTE_HEIGHT } from '@/lib/constants';
 import { gerarCorDisciplina, abreviarNomeDisciplina } from '@/lib/utils';
 import styles from './CalendarioSemanalDocente.module.css';
-import useSWR from 'swr';
+
 
 interface TimeSlotProps {
   slot: AulaDocente;
