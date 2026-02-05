@@ -92,8 +92,8 @@ export default function DisciplinaCard({
         setModalOpen={() => setSelectedDocente(null)}
         docente_id={selectedDocente.id}
         docente_nome={selectedDocente.nome}
-        ano_lectivo_id={35} // You might want to pass this as a prop
-        semestre={1}      // You might want to pass this as a prop
+        ano_lectivo_id={horario.ano_lectivo_id} 
+        semestre={horario.semestre}     
       />
     )}
 

@@ -168,7 +168,7 @@ export default function CalendarioSemanalDocente({
         : SEMESTER_CICLE_23_HOLIDAYS_WEEKS;
       const excludingDates = computeExcludingDates(start, holidaysWeeks);
 
-      const semanas = 15 + excludingDates.length;
+      const semanas = 16 + excludingDates.length;
 
       return {
         start,
