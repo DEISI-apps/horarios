@@ -13,6 +13,12 @@ Como trabalhar em modo de desenvolvimento:
 # Dados
 * dados veem da API https://dsdeisi.pythonanywhere.com/api/horarios/docs
 
+# Info extra
+em DisciplinasCard há info sobre docentes que podemos adicionar
+
+
+#Disciplinas
+
 # Como carregar novo semestre?
 1. atualizar dsd em https://dsdeisi.pythonanywhere.com/
 2. na consola da aplicação dsdeisi, copiar de um anolectivo & semestre para outro com o comando:
@@ -25,9 +31,4 @@ python manage.py copiar_horarios \
 ```
 11. criar horários em https://horarios-phi.vercel.app/editarHorarios
 
-
-
-## rever conceitos de Next
-
-Veja os [video-tutoriais](https://educast.fccn.pt/vod/channels/2pld2hfi8j?locale=pt) que explicam conceitos chave do Next
 

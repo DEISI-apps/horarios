@@ -22,7 +22,7 @@ function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black from-blue-50 to-indigo-100 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-lg shadow-lg p-8">
           {/* Logo */}
@@ -80,7 +80,7 @@ export default function LoginPage() {
 
 function LoginFormSkeleton() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black from-blue-50 to-indigo-100 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-lg shadow-lg p-8 animate-pulse">
           <div className="mb-8 text-center">

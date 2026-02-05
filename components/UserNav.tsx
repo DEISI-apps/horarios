@@ -13,12 +13,12 @@ export function UserNav() {
   }
 
   return (
-    <div className="flex items-center gap-3 px-4 py-2 rounded-lg bg-gray-100">
-      <User className="w-4 h-4 text-gray-600" />
-      <span className="text-sm text-gray-700 font-medium">{session.user?.email}</span>
+    <div className="flex items-center gap-3 px-4 py-2 rounded-lg bg-white/10 border border-white/10">
+      <User className="w-4 h-4 text-white/70" />
+      <span className="text-sm text-white/90 font-medium">{session.user?.email}</span>
       <button
         onClick={handleLogout}
-        className="text-gray-600 hover:text-red-600 transition p-1"
+        className="text-white/70 hover:text-red-400 transition p-1"
         title="Sair"
       >
         <LogOut className="w-4 h-4" />
