@@ -123,7 +123,8 @@ export default function HorarioDocente() {
               }}
               onClick={() => setSelectOpened(true)}
               placeholder="Nome do docente..."
-              className="border rounded-lg p-4 font-bold text-2xl text-black mb-1 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400"
+              className="border rounded-lg p-4 font-bold text-2xl mb-1 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400"
+              style={{ color: 'black' }}
               autoFocus
             />
             {selectOpened && (

@@ -19,12 +19,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-      <>
+      <div className="min-h-screen flex flex-col">
         <Navbar /> {/* Menu separado */}
         <main className="flex-1 w-full max-w-7xl mx-auto">
           <div>{children}</div>
         </main>
-        <footer className="w-full py-4">
+        <footer className="w-full py-4 mt-auto">
           <div className="text-center text-xs text-gray-500 flex flex-row justify-center items-center">
             <span>DEISI · Universidade Lusófona © 2025 · </span>
             <a
@@ -46,6 +46,6 @@ export default function RootLayout({
             </a>
           </div>
         </footer>
-      </>
+      </div>
   );
 }
