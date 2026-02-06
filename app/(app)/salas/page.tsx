@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import HorarioSala from '@/components/HorarioSala/HorarioSala'
 
 
 export default function page() {
-  return <>
-    <HorarioSala />
-  </>
+  return (
+    <Suspense fallback={<div className="p-4">A carregar...</div>}>
+      <HorarioSala />
+    </Suspense>
+  )
 }

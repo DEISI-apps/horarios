@@ -35,7 +35,7 @@ export default function TurmaModal({
         style={{ maxWidth: '90vw', width: '1200px' }}
       >
         <div className={styles.modalHeader}>
-          <h2>{curso_sigla} - {ano}º Ano - Turma {turma_nome}</h2>
+          <h2>{curso_sigla} - {curso_nome} - {ano}º Ano - Turma {turma_nome}</h2>
           <button 
             onClick={() => setModalOpen(false)}
             className={styles.closeButton}
