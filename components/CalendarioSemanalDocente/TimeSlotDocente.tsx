@@ -62,14 +62,17 @@ export default function TimeSlotDocente({ slot }: TimeSlotProps) {
   const [alunos, setAlunos] = useState<Aluno[]>([]);
   const [modalAberto, setModalAberto] = useState<boolean>(false);
 
+  // Criar chave estável para as turmas
+  const turmasLEI = slot.turmas.get("LEI") ?? [];
+  const turmasLEIKey = turmasLEI.join(',');
+  const disciplinaId = slot.disciplina_id;
+
   // Buscar lista de alunos do endpoint
   useEffect(() => {
-    const turmasLEI = slot.turmas.get("LEI") ?? [];
-
     console.log("vou buscar alunos para as turmas:", turmasLEI);
 
     if (turmasLEI.length === 0) {
-      setAlunos([]);
+      setAlunos(prev => prev.length === 0 ? prev : []);
       return;
     }
 
@@ -80,7 +83,7 @@ export default function TimeSlotDocente({ slot }: TimeSlotProps) {
 
         for (const turma of turmasLEI) {
           const response = await fetcher(
-            `https://horariosdeisi.pythonanywhere.com/turma-alunos/${slot.disciplina_id}/${turma}`
+            `https://horariosdeisi.pythonanywhere.com/turma-alunos/${disciplinaId}/${turma}`
           );
 
           // A resposta é uma TurmaComAlunos
@@ -102,7 +105,8 @@ export default function TimeSlotDocente({ slot }: TimeSlotProps) {
     };
 
     fetchAlunos();
-  }, [slot]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [turmasLEIKey, disciplinaId]);
 
 
 

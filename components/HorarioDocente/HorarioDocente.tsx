@@ -1,11 +1,11 @@
 "use client";
 import { useAnosLectivos } from "@/hooks/useAnosLectivos";
 import { useDocentes } from "@/hooks/useDocentes";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import CalendarioSemanalDocente from "../CalendarioSemanalDocente";
 import { DocenteBase } from "@/types/interfaces";
-import { Loader2 } from "lucide-react";
+import { Loader2, Download, Info } from "lucide-react";
 
 export default function HorarioDocente() {
   const searchParams = useSearchParams();
@@ -18,6 +18,12 @@ export default function HorarioDocente() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectOpened, setSelectOpened] = useState(false);
   const [hasPrefilled, setHasPrefilled] = useState(false);
+  const [downloadFn, setDownloadFn] = useState<(() => void) | null>(null);
+
+  // Callback para receber a função de download do CalendarioSemanalDocente
+  const handleDownloadReady = useCallback((fn: () => void) => {
+    setDownloadFn(() => fn);
+  }, []);
 
   // Fetch SWR
   const { anosLectivos, isLoadingAnosLectivos } = useAnosLectivos();
@@ -63,6 +69,7 @@ export default function HorarioDocente() {
       setSelectedDocente(null);
       setSearchTerm("");
       setSelectOpened(true);
+      setDownloadFn(null);
       router.replace('/docentes', { scroll: false });
       return;
     }
@@ -70,6 +77,7 @@ export default function HorarioDocente() {
     setSelectedDocente(docenteObj);
     setSearchTerm(docenteObj?.nome || "");
     setSelectOpened(false);
+    setDownloadFn(null); // Reset download function until new calendar loads
     
     // Atualiza a URL com o nome do docente
     if (docenteObj) {
@@ -120,26 +128,48 @@ export default function HorarioDocente() {
         {/* Docente */}
         {selectedAnoLectivo && selectedSemestre && docentes && (
           <div className="flex flex-col w-full">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => {
-                setSelectedDocente(null);
-                setSearchTerm(e.target.value);
-                setSelectOpened(true);
-              }}
-              onClick={() => setSelectOpened(true)}
-              placeholder="Nome do docente..."
-              className="border rounded-lg p-4 font-bold text-2xl mb-1 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400"
-              style={{ color: 'black' }}
-              autoFocus
-            />
+            <div className="flex gap-2 items-center">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => {
+                  setSelectedDocente(null);
+                  setSearchTerm(e.target.value);
+                  setSelectOpened(true);
+                  setDownloadFn(null);
+                }}
+                onClick={() => setSelectOpened(true)}
+                placeholder="Nome do docente..."
+                className="flex-1 border rounded-lg p-4 font-bold text-2xl focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400"
+                style={{ color: 'black' }}
+                autoFocus
+              />
+              {selectedDocente && downloadFn && (
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={downloadFn}
+                    className="p-4 bg-blue-500 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 font-bold whitespace-nowrap"
+                  >
+                    <Download className="w-5 h-5" />
+                    Descarregar Horário
+                  </button>
+                  <div className="relative group">
+                    <Info className="w-5 h-5 text-gray-400 hover:text-gray-600 cursor-help" />
+                    <div className="absolute right-0 top-full mt-2 w-64 p-3 bg-gray-800 text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                      <p className="mb-2">O ficheiro ICS contém o horário completo das semanas lectivas.</p>
+                      <p>Pode importar no <strong>Google Calendar</strong> ou <strong>Outlook</strong>: clique no ficheiro descarregado ou importe-o nas definições do calendário.</p>
+                      <div className="absolute right-4 -top-2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-gray-800"></div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
             {selectOpened && (
               <select
                 value={selectedDocente ? String(selectedDocente.id) : ""}
                 onChange={handleDocenteSelection}
                 size={Math.min(5, docentes.length)}
-                className="border rounded-lg p-3 font-bold text-2xl cursor-pointer hover:bg-gray-50"
+                className="border rounded-lg p-3 font-bold text-2xl cursor-pointer hover:bg-gray-50 mt-1"
               >
                 <option value="-1">Listar todos...</option>
                 {docentes
@@ -162,6 +192,8 @@ export default function HorarioDocente() {
             docente_id={selectedDocente.id}
             ano_lectivo_id={selectedAnoLectivo}
             semestre={selectedSemestre}
+            showDownloadButton={false}
+            onDownloadReady={handleDownloadReady}
           />
         </div>
       )}

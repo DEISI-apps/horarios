@@ -1,7 +1,7 @@
 'use client';
 
 import { useAulasAnoSemestre } from '@/hooks/useAulasAnoSemestre';
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect, useCallback, useRef } from 'react';
 import styles from './CalendarioSemanalDocente.module.css';
 import TimeMarkers from './TimeMarkers';
 import {
@@ -17,12 +17,14 @@ import {
 import CalendarioGridDocente from './CalendarioGridDocente';
 import { AulaDocente } from '@/types/interfaces';
 import ICAL from 'ical.js';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Download, Info } from 'lucide-react';
 
 interface Props {
   docente_id: number;
   ano_lectivo_id: number;
   semestre: number;
+  showDownloadButton?: boolean;
+  onDownloadReady?: (downloadFn: () => void) => void;
 }
 
 interface EventProps {
@@ -112,7 +114,9 @@ function createIcs(events: EventProps[]) {
 export default function CalendarioSemanalDocente({
   docente_id,
   ano_lectivo_id,
-  semestre
+  semestre,
+  showDownloadButton = true,
+  onDownloadReady
 }: Props) {
   const { aulas, isLoadingAulas } = useAulasAnoSemestre(ano_lectivo_id, semestre);
 
@@ -182,13 +186,18 @@ export default function CalendarioSemanalDocente({
     });
   }, [aulasDocente]);
 
-  const handleDownload = () => {
-    if (!events || events.length === 0) {
+  // Usar ref para evitar loop infinito no useEffect
+  const eventsRef = useRef(events);
+  eventsRef.current = events;
+
+  const handleDownload = useCallback(() => {
+    const currentEvents = eventsRef.current;
+    if (!currentEvents || currentEvents.length === 0) {
       alert("Sem aulas para exportar!");
       return;
     }
 
-    const icsContent = createIcs(events);
+    const icsContent = createIcs(currentEvents);
     const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
     const url = URL.createObjectURL(blob);
 
@@ -199,7 +208,22 @@ export default function CalendarioSemanalDocente({
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-  };
+  }, []);
+
+  // Notifica o componente pai quando a função de download está pronta
+  const hasCalledOnDownloadReady = useRef(false);
+  
+  // Reset quando o docente muda
+  useEffect(() => {
+    hasCalledOnDownloadReady.current = false;
+  }, [docente_id]);
+  
+  useEffect(() => {
+    if (onDownloadReady && events.length > 0 && !hasCalledOnDownloadReady.current) {
+      hasCalledOnDownloadReady.current = true;
+      onDownloadReady(handleDownload);
+    }
+  }, [onDownloadReady, handleDownload, events.length]);
 
   if (isLoadingAulas || !aulasDocente)
     return (
@@ -222,14 +246,22 @@ export default function CalendarioSemanalDocente({
           <CalendarioGridDocente aulas={aulasDocente} isLoadingAulas={isLoadingAulas} />
         </div>
       </div>
-      <div className="mt-4 flex justify-center">
-        <button className="py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2" onClick={handleDownload}>
-          <span className="font-bold">Descarregar Horário em formato ICS <span className="sup">*</span></span>
-        </button>
-      </div>
-      <div className="text-center mt-2 text-sm">
-        <span className="text-gray-500"><span className="sup">*</span> O ficheiro ICS contém o seu horário ao longo das semanas lectivas. Pode ser importado no seu calendário Google/Outlook. Clique no ficheiro para importá-lo automáticamente, ou abra a sua aplicação de calendário e nas definições importe-o. </span>
-      </div>
+      {showDownloadButton && (
+        <div className="mt-4 flex justify-center items-center gap-2">
+          <button className="py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 font-bold" onClick={handleDownload}>
+            <Download className="w-4 h-4" />
+            Descarregar Horário
+          </button>
+          <div className="relative group">
+            <Info className="w-5 h-5 text-gray-400 hover:text-gray-600 cursor-help" />
+            <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-64 p-3 bg-gray-800 text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+              <p className="mb-2">O ficheiro ICS contém o horário completo das semanas lectivas.</p>
+              <p>Pode importar no <strong>Google Calendar</strong> ou <strong>Outlook</strong>: clique no ficheiro descarregado ou importe-o nas definições do calendário.</p>
+              <div className="absolute left-1/2 -translate-x-1/2 -top-2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-gray-800"></div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

@@ -5,8 +5,13 @@ import CalendarioSemanalTurma from '@/components/CalendarioSemanalTurma/Calendar
 
 import styles from './CalendarioSemanal.module.css';
 
+interface ListaTurmasProps {
+  horario: Horario;
+  editar: boolean;
+  onTurmaChange?: (turmaId: number) => void;
+}
 
-export default function ListaTurmas({ horario }: { horario: Horario, editar: boolean }) {
+export default function ListaTurmas({ horario, editar, onTurmaChange }: ListaTurmasProps) {
 
   const [selectedTurma, setSelectedTurma] = useState<Turma | null>(null);
   const [turmas, setTurmas] = useState<Turma[]>([])
@@ -17,7 +22,17 @@ export default function ListaTurmas({ horario }: { horario: Horario, editar: boo
   useEffect (() => {
     setTurmas(horario.turmas)
     setSelectedTurma(horario.turmas[0])
-  }, [horario])
+    if (horario.turmas[0] && onTurmaChange) {
+      onTurmaChange(horario.turmas[0].id);
+    }
+  }, [horario, onTurmaChange])
+
+  const handleTurmaClick = (turma: Turma) => {
+    setSelectedTurma(turma);
+    if (onTurmaChange) {
+      onTurmaChange(turma.id);
+    }
+  };
 
   //
   // C. renderiza
@@ -38,7 +53,7 @@ export default function ListaTurmas({ horario }: { horario: Horario, editar: boo
                       key={i}
                       onClick={(e) => {
                         e.stopPropagation();
-                        setSelectedTurma(turma);
+                        handleTurmaClick(turma);
                       }}
                       className= {  `focus:outline-none hover:underlined m-2 p-2 rounded ${ turma === selectedTurma ? "bg-blue-500 text-white font-bold" : "bg-gray-200" }`}
                     >

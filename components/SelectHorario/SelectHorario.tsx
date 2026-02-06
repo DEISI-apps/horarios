@@ -1,13 +1,14 @@
 "use client";
 import { useHorarios } from "@/hooks/useHorarios";
 import { Horario } from "@/types/interfaces";
-import { useState } from "react";
+import { useState, ReactNode } from "react";
 
 interface SelectHorarioProps {
   onSelect: (value: number | null) => void;
+  children?: ReactNode;
 }
 
-export default function SelectHorario({ onSelect }: SelectHorarioProps) {
+export default function SelectHorario({ onSelect, children }: SelectHorarioProps) {
   //
   // A. Gestão de estado do componente
   const [selectedAnoSemestre, setSelectedAnoSemestre] = useState<string>("");
@@ -63,7 +64,7 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
   if (isLoading) return <div>A carregar...</div>;
       
   return (
-    <div className="flex flex-wrap gap-4 items-start bg-white p-4 rounded-xl shadow-md">
+    <div className="flex flex-wrap gap-4 items-center bg-white p-4 rounded-xl shadow-md">
       
       {/* Seletor de Curso */}
       <select
@@ -93,6 +94,8 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
         ))}
       </select>
 
+      {/* Conteúdo adicional (botões, etc.) */}
+      {children}
       
     </div>
   );
