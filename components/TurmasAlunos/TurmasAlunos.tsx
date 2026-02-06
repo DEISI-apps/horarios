@@ -263,7 +263,7 @@ export default function TurmasAlunos() {
 
       {selectedHorarioId && horario && (
         <>
-          <ListaTurmas horario={horario} editar={false} onTurmaChange={handleTurmaChange} />
+          <ListaTurmas horario={horario} onTurmaChange={handleTurmaChange} />
         </>
       )}
     </div>

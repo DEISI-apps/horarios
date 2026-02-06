@@ -60,7 +60,7 @@ export default function TurmasLEI() {
 
       {selectedHorarioId && horario && (
         <>
-          <ListaTurmas horario={horario} editar={false} />
+          <ListaTurmas horario={horario} />
         </>
       )}
     </div>

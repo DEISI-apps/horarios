@@ -7,11 +7,11 @@ import styles from './CalendarioSemanal.module.css';
 
 interface ListaTurmasProps {
   horario: Horario;
-  editar: boolean;
+  editar?: boolean;
   onTurmaChange?: (turmaId: number) => void;
 }
 
-export default function ListaTurmas({ horario, editar, onTurmaChange }: ListaTurmasProps) {
+export default function ListaTurmas({ horario, onTurmaChange }: ListaTurmasProps) {
 
   const [selectedTurma, setSelectedTurma] = useState<Turma | null>(null);
   const [turmas, setTurmas] = useState<Turma[]>([])
