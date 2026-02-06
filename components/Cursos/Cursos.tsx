@@ -32,10 +32,11 @@ export default function Cursos() {
     
     const cursoParam = searchParams.get("curso");
     const anoParam = searchParams.get("ano");
+    const semestreParam = searchParams.get("semestre");
     
     if (cursoParam && anoParam) {
       const horarioObj = horarios.find(h => 
-        h.curso.sigla === cursoParam && String(h.ano) === anoParam
+        h.curso.sigla === cursoParam && String(h.ano) === anoParam && String(h.semestre) === semestreParam
       );
       if (horarioObj) {
         setSelectedHorarioId(horarioObj.id);
@@ -47,7 +48,7 @@ export default function Cursos() {
   // Atualiza URL quando seleciona horário
   useEffect(() => {
     if (horario) {
-      router.replace(`/cursos?curso=${encodeURIComponent(horario.curso.sigla)}&ano=${horario.ano}`, { scroll: false });
+      router.replace(`/cursos?curso=${encodeURIComponent(horario.curso.sigla)}&ano=${horario.ano}&semestre=${horario.semestre}`, { scroll: false });
     } else if (selectedHorarioId === null && hasPrefilled) {
       router.replace('/cursos', { scroll: false });
     }
