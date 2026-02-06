@@ -178,8 +178,8 @@ export default function Page() {
               className="group bg-white p-4 rounded-2xl shadow-sm hover:shadow-md transition-shadow"
             >
               <Building2 className="w-6 h-6 text-blue-600" />
-              <div className="mt-2 font-semibold text-gray-900">Horário das Salas</div>
-              <p className="text-sm text-gray-600">Informação da ocupação e disponibilidade das salas do DEISI Hub.</p>
+              <div className="mt-2 font-semibold text-gray-900">Edição de Horários</div>
+              <p className="text-sm text-gray-600">Edição ágil e integrada dos horários, atualizada em tempo real.</p>
             </Link>
             
           </div>
