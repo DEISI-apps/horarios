@@ -5,9 +5,15 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { UserNav } from "@/components/UserNav";
 
+
+const ALLOWED_EMAILS = ["p6069@ulusofona.pt", "p718@ulusofona.pt"];
+
+
 export default function Navbar() {
   const { data: session } = useSession();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const canEdit = session?.user?.email && ALLOWED_EMAILS.includes(session.user.email);
 
   return (
     <header className="sticky top-0 z-50 w-full">
@@ -43,6 +49,9 @@ export default function Navbar() {
               {session && (
                 <>
                   <nav className="flex items-center gap-1 text-white text-base font-semibold tracking-wide">
+                    {canEdit && (
+                      <Link href="/editarHorarios">Editar</Link>
+                    )}
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/cursos">Curso</Link>
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/docentes">Docente</Link>
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/disciplinas">Disciplina</Link>
