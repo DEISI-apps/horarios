@@ -1,6 +1,7 @@
 "use client";
 import { useAnosLectivos } from "@/hooks/useAnosLectivos";
 import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Disciplina } from "@/types/interfaces";
 import { useDisciplinasAnoSemestre } from "@/hooks/useDisciplinasAnoSemestre";
 import CalendarioSemanalDisciplina from "../CalendarioSemanalDisciplina";
@@ -8,6 +9,8 @@ import { Loader2 } from "lucide-react";
 
 
 export default function HorarioDisciplina() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   //
   // A. Gestão de estado do componente
@@ -16,6 +19,7 @@ export default function HorarioDisciplina() {
   const [selectedDisciplina, setSelectedDisciplina] = useState<Disciplina | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectOpened, setSelectOpened] = useState(false);
+  const [hasPrefilled, setHasPrefilled] = useState(false);
 
   useEffect(() => {
     setSelectedAnoLectivo(35);
@@ -26,6 +30,22 @@ export default function HorarioDisciplina() {
   // B. Obtenção de dados da API usando SWR
   const { anosLectivos, isLoadingAnosLectivos } = useAnosLectivos();
   const { disciplinas, isLoadingDisciplinas } = useDisciplinasAnoSemestre(selectedAnoLectivo, selectedSemestre);
+
+  // Prefill da disciplina a partir da URL
+  useEffect(() => {
+    if (!disciplinas || hasPrefilled) return;
+    
+    const disciplinaParam = searchParams.get("disciplina");
+    if (disciplinaParam) {
+      const disciplinaObj = disciplinas.find(d => d.nome === disciplinaParam);
+      if (disciplinaObj) {
+        setSelectedDisciplina(disciplinaObj);
+        setSearchTerm(disciplinaObj.nome);
+        setSelectOpened(false);
+        setHasPrefilled(true);
+      }
+    }
+  }, [disciplinas, searchParams, hasPrefilled]);
 
   //
   // D. Handlers
@@ -45,12 +65,18 @@ export default function HorarioDisciplina() {
       setSelectedDisciplina(null);
       setSearchTerm("");
       setSelectOpened(true);
+      router.replace('/disciplinas', { scroll: false });
       return;
     }
     const disciplinaObj = disciplinas?.find((disciplina) => String(disciplina.id) === disciplinaId) || null;
     setSelectedDisciplina(disciplinaObj);
     setSearchTerm(disciplinaObj?.nome ? disciplinaObj.nome : "");
     setSelectOpened(false);
+    
+    // Atualiza a URL com o nome da disciplina
+    if (disciplinaObj) {
+      router.replace(`/disciplinas?disciplina=${encodeURIComponent(disciplinaObj.nome)}`, { scroll: false });
+    }
   };
 
   //

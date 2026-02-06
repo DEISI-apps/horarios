@@ -1,6 +1,7 @@
 "use client";
 // import { useAnosLectivos } from "@/hooks/useAnosLectivos";
 import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useSalas } from "@/hooks/useSalas";
 import CalendarioSemanalSala from "../CalendarioSemanalSala";
 import { useAnosLectivos } from "@/hooks/useAnosLectivos";
@@ -8,24 +9,40 @@ import { Loader2 } from "lucide-react";
 
 
 export default function HorarioSala() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   //
   // A. Gestão de estado do componente
   const [selectedAnoLectivo, setSelectedAnoLectivo] = useState<number | null>(35);
   const [selectedSemestre, setSelectedSemestre] = useState<number | null>(2);
   const [selectedSala, setSelectedSala] = useState<number | null>(null);
+  const [hasPrefilled, setHasPrefilled] = useState(false);
 
   useEffect(() => {
     setSelectedAnoLectivo(35);
     setSelectedSemestre(2);
   }, []);
 
-
   //
   // B. Obtenção de dados da API usando SWR
   // const { anosLectivos, isLoadingAnosLectivos } = useAnosLectivos();
   const { salas, isLoadingSalas } = useSalas();
   const { anosLectivos, isLoadingAnosLectivos } = useAnosLectivos();
+
+  // Prefill da sala a partir da URL
+  useEffect(() => {
+    if (!salas || hasPrefilled) return;
+    
+    const salaParam = searchParams.get("sala");
+    if (salaParam) {
+      const salaObj = salas.find(s => s.nome === salaParam);
+      if (salaObj) {
+        setSelectedSala(salaObj.id);
+        setHasPrefilled(true);
+      }
+    }
+  }, [salas, searchParams, hasPrefilled]);
 
   //
   // C. Handlers
@@ -41,7 +58,18 @@ export default function HorarioSala() {
 
   const handleSalaSelection = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = event.target.value;
-    setSelectedSala(selectedId ? parseInt(selectedId) : null);
+    const salaId = selectedId ? parseInt(selectedId) : null;
+    setSelectedSala(salaId);
+    
+    // Atualiza a URL com o nome da sala
+    if (salaId && salas) {
+      const salaObj = salas.find(s => s.id === salaId);
+      if (salaObj) {
+        router.replace(`/salas?sala=${encodeURIComponent(salaObj.nome)}`, { scroll: false });
+      }
+    } else {
+      router.replace('/salas', { scroll: false });
+    }
   };
 
 

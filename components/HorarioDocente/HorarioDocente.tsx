@@ -2,13 +2,14 @@
 import { useAnosLectivos } from "@/hooks/useAnosLectivos";
 import { useDocentes } from "@/hooks/useDocentes";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import CalendarioSemanalDocente from "../CalendarioSemanalDocente";
 import { DocenteBase } from "@/types/interfaces";
 import { Loader2 } from "lucide-react";
 
 export default function HorarioDocente() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   
   // Estado
   const [selectedAnoLectivo, setSelectedAnoLectivo] = useState<number | null>(35);
@@ -62,12 +63,18 @@ export default function HorarioDocente() {
       setSelectedDocente(null);
       setSearchTerm("");
       setSelectOpened(true);
+      router.replace('/docentes', { scroll: false });
       return;
     }
     const docenteObj = docentes?.find((doc) => String(doc.id) === docenteId) || null;
     setSelectedDocente(docenteObj);
     setSearchTerm(docenteObj?.nome || "");
     setSelectOpened(false);
+    
+    // Atualiza a URL com o nome do docente
+    if (docenteObj) {
+      router.replace(`/docentes?docente=${encodeURIComponent(docenteObj.nome)}`, { scroll: false });
+    }
   };
 
   // Loading
