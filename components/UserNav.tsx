@@ -1,15 +1,30 @@
 "use client";
 
-import { useSession, signOut } from "next-auth/react";
-import { LogOut, User } from "lucide-react";
+import { useSession, signOut, signIn } from "next-auth/react";
+import { LogOut, User, LogIn } from "lucide-react";
 
 export function UserNav() {
   const { data: session } = useSession();
 
-  if (!session) return null;
-
   async function handleLogout() {
-    await signOut({ callbackUrl: "/login" });
+    await signOut({ callbackUrl: "/" });
+  }
+
+  async function handleLogin() {
+    await signIn("google", { callbackUrl: "/" });
+  }
+
+  if (!session) {
+    return (
+      <button
+        onClick={handleLogin}
+        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition"
+        title="Entrar"
+      >
+        <LogIn className="w-4 h-4" />
+        <span className="text-sm">Entrar</span>
+      </button>
+    );
   }
 
   return (

@@ -8,9 +8,9 @@ export function middleware(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
 
-  // Permite acesso à página de login e rotas de API de auth sem autenticação
+  // Permite acesso à página inicial, rotas públicas e rotas de API de auth sem autenticação
   if (
-    pathname === "/login" ||
+    pathname === "/" ||
     pathname === "/disciplinas-lei" ||
     pathname === "/turmas-lei" ||
     pathname.startsWith("/api/auth") ||
@@ -20,9 +20,9 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Redireciona para login se não estiver autenticado
+  // Redireciona para a página inicial se não estiver autenticado
   if (!sessionToken) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   return NextResponse.next();

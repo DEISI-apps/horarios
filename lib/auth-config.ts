@@ -1,4 +1,5 @@
 import GoogleProvider from "next-auth/providers/google";
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Any = any;
 
@@ -17,7 +18,7 @@ function loadAuthorizedEmails(): string[] {
     .map(email => email.trim().toLowerCase())
     .filter(email => email && email.includes("@"));
   
-  console.log(`✓ Loaded ${emails.length} authorized emails from AUTHORIZED_EMAILS`);
+  console.log(`✓ Loaded ${emails.length} authorized emails`);
   return emails;
 }
 
@@ -26,34 +27,43 @@ const authorizedEmails = loadAuthorizedEmails();
 export const authConfig = {
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
   pages: {
-    signIn: "/login",
-    error: "/login",
+    signIn: "/",
+    error: "/",
   },
   callbacks: {
-    async signIn({ profile }: Any) {
-      const email = profile?.email?.toLowerCase().trim();
-      if (!email) {
+    signIn: async ({ profile }: Any) => {
+      if (!profile?.email) {
+        console.error("❌ No email in profile");
         return false;
       }
 
-      return authorizedEmails.includes(email);
+      const email = profile.email.toLowerCase().trim();
+      const isAuthorized = authorizedEmails.includes(email);
+      
+      if (!isAuthorized) {
+        console.warn(`⚠️ Unauthorized email: ${email}`);
+      }
+      
+      return isAuthorized;
     },
-    async jwt({ token, user }: Any) {
+    jwt: async ({ token, user }: Any) => {
       if (user) {
         token.email = user.email;
+        token.id = user.id;
       }
       return token;
     },
-    async session({ session, token }: Any) {
+    session: async ({ session, token }: Any) => {
       if (session.user) {
         session.user.email = token.email as string;
       }
       return session;
     },
   },
+  secret: process.env.NEXTAUTH_SECRET,
 };

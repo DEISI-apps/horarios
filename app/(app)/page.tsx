@@ -4,11 +4,21 @@ import React, { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { BookOpen, Users, Building2, GraduationCap, User, Search } from "lucide-react";
+import { useSession, signIn } from "next-auth/react";
 
 export default function Page() {
   const [isZoomed, setIsZoomed] = useState(false);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const imageContainerRef = useRef<HTMLDivElement>(null);
+  const { data: session } = useSession();
+
+  // Se não está logado, redireciona para login
+  const handleUnauthenticatedClick = (e: React.MouseEvent) => {
+    if (!session) {
+      e.preventDefault();
+      signIn("google", { callbackUrl: "/" });
+    }
+  };
 
   return (
     <div>
@@ -16,7 +26,7 @@ export default function Page() {
         <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 items-center max-w-6xl mx-auto">
           <div className="text-center lg:text-left">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
-              Horários num relance, com foco no essencial
+              Horários simples <br></br> e focados no essencial
             </h1>
             <p className="text-lg md:text-xl text-gray-600 mt-4 max-w-2xl mx-auto lg:mx-0">
               Consulta e gestão de horários de forma rápida e intuitiva.
@@ -24,6 +34,7 @@ export default function Page() {
             <div className="mt-6 flex flex-wrap gap-3 justify-center lg:justify-start">
               <Link
                 href="/cursos"
+                onClick={handleUnauthenticatedClick}
                 className="bg-blue-600 text-white px-6 py-3 rounded-xl shadow-md hover:bg-blue-700 transition-colors font-semibold"
               >
                 Consultar Horário
@@ -71,7 +82,13 @@ export default function Page() {
                     isZoomed ? "scale-150" : "scale-100"
                   }`}
                   priority
-                  onClick={() => window.location.href = "/cursos?curso=LEI&ano=2&sem=2"}
+                  onClick={() => {
+                    if (!session) {
+                      signIn("google", { callbackUrl: "/" });
+                    } else {
+                      window.location.href = "/cursos?curso=LEI&ano=2&sem=2";
+                    }
+                  }}
                   style={isZoomed && imageContainerRef.current ? {
                     transformOrigin: `${(cursorPos.x / imageContainerRef.current.offsetWidth) * 100}% ${(cursorPos.y / imageContainerRef.current.offsetHeight) * 100}%`
                   } : {}}
@@ -100,6 +117,7 @@ export default function Page() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <Link
               href="/cursos"
+              onClick={handleUnauthenticatedClick}
               className="group bg-white p-4 rounded-2xl shadow-sm hover:shadow-md transition-shadow"
             >
               <GraduationCap className="w-6 h-6 text-blue-600" />
@@ -108,6 +126,7 @@ export default function Page() {
             </Link>
             <Link
               href="/disciplinas"
+              onClick={handleUnauthenticatedClick}
               className="group bg-white p-4 rounded-2xl shadow-sm hover:shadow-md transition-shadow"
             >
               <BookOpen className="w-6 h-6 text-blue-600" />
@@ -116,6 +135,7 @@ export default function Page() {
             </Link>
             <Link
               href="/docentes"
+              onClick={handleUnauthenticatedClick}
               className="group bg-white p-4 rounded-2xl shadow-sm hover:shadow-md transition-shadow"
             >
               <User className="w-6 h-6 text-blue-600" />
@@ -124,6 +144,7 @@ export default function Page() {
             </Link>
             <Link
               href="/docentes"
+              onClick={handleUnauthenticatedClick}
               className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
             >
               <svg className="w-6 h-6 text-blue-600 mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -137,6 +158,7 @@ export default function Page() {
             </Link>
             <Link
               href="/disciplinas"
+              onClick={handleUnauthenticatedClick}
               className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
             >
               <Users className="w-5 h-5 text-blue-600 mb-2" />
@@ -145,6 +167,7 @@ export default function Page() {
             </Link>
             <Link
               href="/salas"
+              onClick={handleUnauthenticatedClick}
               className="group bg-white p-4 rounded-2xl shadow-sm hover:shadow-md transition-shadow"
             >
               <Building2 className="w-6 h-6 text-blue-600" />
