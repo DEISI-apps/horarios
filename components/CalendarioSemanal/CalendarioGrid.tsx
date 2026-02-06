@@ -1,8 +1,10 @@
 import { useRef, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { Aula, Turma } from '@/types/interfaces';
 import { DAYS, CALENDAR_HEIGHT } from '@/lib/constants';
 import { calculateClickTime } from '@/lib/calendario';
 import TimeSlot from './TimeSlot';
+import TimeSlotTurma from '../CalendarioSemanalTurma/TimeSlotTurma';
 import TimeMarkers from './TimeMarkers';
 import styles from './CalendarioSemanal.module.css';
 import TurmaModal from '../CalendarioSemanalTurma/TurmaModal';
@@ -35,6 +37,7 @@ export default function CalendarGrid({
   onSlotEdit
 }: CalendarGridProps) {
 
+  const { data: session } = useSession();
   const [isModalTurmaOpen, setModalTurmaOpen] = useState(false);
   const [selectedTurma, setSelectedTurma] = useState<Turma | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -70,15 +73,22 @@ export default function CalendarGrid({
 
     return aulas
       .filter((slot: Aula) => slot.dia_semana === dayId && slot.turma_id === classId)
-      .map((slot: Aula) => (
-        <TimeSlot
-          key={`slot-${slot.id}`}
-          slot={slot}
-          ano_lectivo_id={ano_lectivo_id}
-          semestre={semestre}
-          onEdit={onSlotEdit}
-        />
-      ));
+      .map((slot: Aula) => 
+        session ? (
+          <TimeSlot
+            key={`slot-${slot.id}`}
+            slot={slot}
+            ano_lectivo_id={ano_lectivo_id}
+            semestre={semestre}
+            onEdit={onSlotEdit}
+          />
+        ) : (
+          <TimeSlotTurma
+            key={`slot-${slot.id}`}
+            slot={slot}
+          />
+        )
+      );
   };
 
   // detecta clique de um slot

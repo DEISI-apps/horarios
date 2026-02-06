@@ -33,11 +33,16 @@ export default function Page() {
             </p>
             <div className="mt-6 flex flex-wrap gap-3 justify-center lg:justify-start">
               <Link
+                href="/turmas-alunos"
+                className="bg-blue-600 text-white px-6 py-3 rounded-xl shadow-md hover:bg-blue-700 transition-colors font-semibold"
+              >
+                Horários para Alunos
+              </Link><Link
                 href="/cursos"
                 onClick={handleUnauthenticatedClick}
                 className="bg-blue-600 text-white px-6 py-3 rounded-xl shadow-md hover:bg-blue-700 transition-colors font-semibold"
               >
-                Consultar Horário
+                Horários para Docentes
               </Link>
               {/* <Link
                 href="/docentes"

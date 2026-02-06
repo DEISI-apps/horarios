@@ -3,8 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import SelectHorario from "@/components/SelectHorario/SelectHorario";
-import DisciplinasSection from "@/components/DisciplinasSection/DisciplinasSection";
-// import TurmasSection from "../TurmasSection/TurmasSection";
 import CalendarioSemanal from "../CalendarioSemanal";
 import { useHorarios } from "@/hooks/useHorarios";
 import { Loader2 } from "lucide-react";
@@ -69,8 +67,6 @@ export default function Cursos() {
       {selectedHorarioId && horario && (
         <>
           <CalendarioSemanal horario={horario} editar={false} />
-          {/* <TurmasSection horario={horario} /> */}
-          <DisciplinasSection horario={horario} />
         </>
       )}
     </div>

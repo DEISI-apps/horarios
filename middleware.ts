@@ -13,6 +13,7 @@ export function middleware(request: NextRequest) {
     pathname === "/" ||
     pathname === "/disciplinas-lei" ||
     pathname === "/turmas-lei" ||
+    pathname === "/turmas-alunos" ||
     pathname.startsWith("/api/auth") ||
     pathname.startsWith("/_next") ||
     pathname.includes(".") // arquivos estáticos como favicon.ico
