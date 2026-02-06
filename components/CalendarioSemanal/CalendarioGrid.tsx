@@ -14,6 +14,9 @@ interface CalendarGridProps {
   isLoadingAulas: boolean;
   ano_lectivo_id: number;
   semestre: number;
+  curso_nome: string;
+  curso_sigla: string;
+  ano: number;
   onSlotClick: (day: number, classId: number, startTime?: string) => void;
   onSlotEdit: (slot: Aula) => void;
 }
@@ -25,6 +28,9 @@ export default function CalendarGrid({
   isLoadingAulas,
   ano_lectivo_id,
   semestre,
+  curso_nome,
+  curso_sigla,
+  ano,
   onSlotClick,
   onSlotEdit
 }: CalendarGridProps) {
@@ -146,6 +152,9 @@ export default function CalendarGrid({
           setModalOpen={setModalTurmaOpen}
           turma_id={selectedTurma.id}
           turma_nome={selectedTurma.nome}
+          curso_nome={curso_nome}
+          curso_sigla={curso_sigla}
+          ano={ano}
           aulas={aulas}
         />
       )}

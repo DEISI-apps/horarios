@@ -9,6 +9,9 @@ interface TurmaModalProps {
   setModalOpen: (open: boolean) => void;
   turma_id: number;
   turma_nome: string;
+  curso_nome: string;
+  curso_sigla: string;
+  ano: number;
   aulas: Aula[];
 }
 
@@ -17,6 +20,9 @@ export default function TurmaModal({
   setModalOpen,
   turma_id,
   turma_nome,
+  curso_nome,
+  curso_sigla,
+  ano,
   aulas,
 }: TurmaModalProps) {
   if (!isOpen) return null;
@@ -29,7 +35,7 @@ export default function TurmaModal({
         style={{ maxWidth: '90vw', width: '1200px' }}
       >
         <div className={styles.modalHeader}>
-          <h2>Horário da Turma {turma_nome}</h2>
+          <h2>{curso_sigla} - {ano}º Ano - Turma {turma_nome}</h2>
           <button 
             onClick={() => setModalOpen(false)}
             className={styles.closeButton}

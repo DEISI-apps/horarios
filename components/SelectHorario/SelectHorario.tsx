@@ -116,7 +116,7 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
       <select
         value={selectedCurso}
         onChange={handleCursoSelection}
-        className="md:hidden border rounded p-3 font-bold text-xl cursor-pointer"
+        className="md:hidden border rounded p-3 font-bold text-2xl cursor-pointer"
       >
         <option value="">Curso...</option>
         {cursoOptions.sort((a, b) => a.sigla.localeCompare(b.sigla)).map((curso, idx) => (
@@ -130,7 +130,7 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
       <select
         value={selectedCurso}
         onChange={handleCursoSelection}
-        className="hidden md:block border rounded p-3 font-bold text-xl cursor-pointer"
+        className="hidden md:block border rounded p-3 font-bold text-2xl cursor-pointer"
       >
         <option value="">Curso...</option>
         {cursoOptions.sort((a, b) => a.sigla.localeCompare(b.sigla)).map((curso, idx) => (
@@ -144,7 +144,7 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
       <select
         value={selectedAnoSemestre}
         onChange={handleAnoSemestreSelection}
-        className="border rounded p-3 font-bold text-xl cursor-pointer"
+        className="border rounded p-3 font-bold text-2xl cursor-pointer"
       >
         <option value="">Ano...</option>
         {anoSemestreOptions.map((option, idx) => {

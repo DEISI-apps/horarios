@@ -167,6 +167,9 @@ export default function CalendarioSemanal({ horario, editar }: { horario: Horari
           isLoadingAulas={isLoadingAulas}
           ano_lectivo_id={horario.ano_lectivo.id}
           semestre={horario.semestre}
+          curso_nome={horario.curso.nome}
+          curso_sigla={horario.curso.sigla}
+          ano={horario.ano}
           onSlotClick={openNewSlotModal}
           onSlotEdit={openEditSlotModal}
         />
