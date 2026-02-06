@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Aula, Turma } from '@/types/interfaces';
 import { DAYS, CALENDAR_HEIGHT } from '@/lib/constants';
 import { calculateClickTime } from '@/lib/calendario';
@@ -37,6 +37,33 @@ export default function CalendarGrid({
 
   const [isModalTurmaOpen, setModalTurmaOpen] = useState(false);
   const [selectedTurma, setSelectedTurma] = useState<Turma | null>(null);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const dragStateRef = useRef({ isDown: false, startX: 0, scrollLeft: 0 });
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+    dragStateRef.current.isDown = true;
+    dragStateRef.current.startX = e.pageX - wrapper.offsetLeft;
+    dragStateRef.current.scrollLeft = wrapper.scrollLeft;
+  };
+
+  const handleMouseLeave = () => {
+    dragStateRef.current.isDown = false;
+  };
+
+  const handleMouseUp = () => {
+    dragStateRef.current.isDown = false;
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const wrapper = wrapperRef.current;
+    if (!wrapper || !dragStateRef.current.isDown) return;
+    e.preventDefault();
+    const x = e.pageX - wrapper.offsetLeft;
+    const walk = x - dragStateRef.current.startX;
+    wrapper.scrollLeft = dragStateRef.current.scrollLeft - walk;
+  };
 
   const renderizaSlotsDoDiaETurma = (dayId: number, classId: number, ano_lectivo_id: number, semestre: number) => {
     if (isLoadingAulas) return <div>A carregar aulas...</div>;
@@ -69,7 +96,14 @@ export default function CalendarGrid({
   if (!turmas) return <p className="text-gray-500">A carregar turmas...</p>;
 
   return (
-    <div className={styles.calendarWrapper}>
+    <div
+      ref={wrapperRef}
+      className={styles.calendarWrapper}
+      onMouseDown={handleMouseDown}
+      onMouseLeave={handleMouseLeave}
+      onMouseUp={handleMouseUp}
+      onMouseMove={handleMouseMove}
+    >
       
       {/* quadrado no topo esquerdo do horario (podemos eventualmente por cor do fundo cinza) */}
       <div

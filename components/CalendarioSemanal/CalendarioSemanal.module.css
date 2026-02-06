@@ -6,12 +6,21 @@
 .calendarWrapper {
   width: 100%;
   overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  cursor: grab;
+}
+
+.calendarWrapper:active {
+  cursor: grabbing;
 }
 
 .calendarContainer {
   display: flex;
   flex-direction: column;
-  width: fit-content;
+  width: max-content;
   min-width: 100%;
   margin: 0 auto;
   border: 1px solid #ddd;

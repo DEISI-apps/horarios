@@ -86,7 +86,7 @@ export default function Page() {
                     if (!session) {
                       signIn("google", { callbackUrl: "/" });
                     } else {
-                      window.location.href = "/cursos?curso=LEI&ano=2&sem=2";
+                      window.location.href = "/cursos";
                     }
                   }}
                   style={isZoomed && imageContainerRef.current ? {
