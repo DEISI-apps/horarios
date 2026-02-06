@@ -62,7 +62,7 @@ export default function HorarioSala() {
         <select
           value={selectedAnoLectivo ?? ""}
           onChange={handleAnoLectivoSelection}
-          className="border rounded p-3 text-xl cursor-pointer"
+          className="hidden border rounded p-3 text-xl cursor-pointer"
         >
           <option value="35">25-26</option>
           {/* {anosLectivos
@@ -79,21 +79,20 @@ export default function HorarioSala() {
         <select
           value={selectedSemestre ?? ""}
           onChange={handleSemestreSelection}
-          className="border rounded p-3 text-xl cursor-pointer"
+          className="hidden border rounded p-3 text-xl cursor-pointer"
         >
           {/* <option key={1} value="1">1º Semestre</option> */}
           <option key={2} value="2">2º Semestre</option>
         </select>
 
-        {/* Seletor de Docente */}
+        {/* Seletor de Sala */}
         {selectedAnoLectivo && selectedSemestre && salas && (
           <select
             value={selectedSala ?? ""}
             onChange={handleSalaSelection}
-            className="border rounded p-3 text-xl font-bold cursor-pointer mb-2 flex row gap-3 items-center"
-            style={{ border: '1px solid lightgray' }}
+            className="border rounded p-4 text-2xl text-black font-bold cursor-pointer w-full"
           >
-            <option value="">Selecione uma sala...</option>
+            <option value="" className="text-gray-400">Nome da sala...</option>
             {salas.sort((a, b) => a.nome.localeCompare(b.nome)).map((salaOpcao) => (
               <option key={salaOpcao.id} value={salaOpcao.id}>
                 Sala {salaOpcao.nome}

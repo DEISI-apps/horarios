@@ -71,7 +71,7 @@ export default function HorarioDisciplina() {
         <select
           value={selectedAnoLectivo ?? ""}
           onChange={handleAnoLectivoSelection}
-          className="border rounded p-3 text-xl cursor-pointer"
+          className="hidden border rounded p-3 text-xl cursor-pointer"
         >
           <option value="35">25-26</option>
           {/* {anosLectivos
@@ -88,7 +88,7 @@ export default function HorarioDisciplina() {
         <select
           value={selectedSemestre ?? ""}
           onChange={handleSemestreSelection}
-          className="border rounded p-3 text-xl cursor-pointer"
+          className="hidden border rounded p-3 text-xl cursor-pointer"
         >
           {/* <option key={1} value="1">1º Semestre</option> */}
           <option key={2} value="2">2º Semestre</option>
@@ -96,7 +96,7 @@ export default function HorarioDisciplina() {
 
         {/* Seletor de Disciplina */}
         {selectedAnoLectivo && selectedSemestre && disciplinas && (
-          <div className="flex flex-col w-[65ch]">
+          <div className="flex flex-col w-full">
             <input
               type="text"
               value={searchTerm}
@@ -106,8 +106,8 @@ export default function HorarioDisciplina() {
                 setSelectOpened(true);
               }}
               onClick={() => setSelectOpened(true)}
-              placeholder="Escreva o nome da disciplina..."
-              className="border rounded-lg p-3 font-bold text-xl mb-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              placeholder="Nome da disciplina..."
+              className="border rounded-lg p-4 font-bold text-2xl text-black mb-1 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400"
               autoFocus
             />
 
@@ -116,7 +116,7 @@ export default function HorarioDisciplina() {
                 value={selectedDisciplina ? String(selectedDisciplina.id) : ""}
                 onChange={handleDisciplinaSelection}
                 size={Math.min(5, disciplinas.length)} // mostra várias opções
-                className="border rounded p-3 font-bold text-xl cursor-pointer"
+                className="border rounded p-3 font-bold text-2xl cursor-pointer"
               >
                 <option
                   value="-1"
