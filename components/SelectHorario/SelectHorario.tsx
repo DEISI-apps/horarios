@@ -8,6 +8,13 @@ interface SelectHorarioProps {
   onSelect: (value: number | null) => void;
 }
 
+// Função para abreviar nome do curso
+function abreviarNomeCurso(nome: string): string {
+  return nome
+    .replace("Mestrado em", "MSc")
+    .replace("Licenciatura em", "Lic.");
+}
+
 export default function SelectHorario({ onSelect }: SelectHorarioProps) {
   const searchParams = useSearchParams();
 
@@ -28,16 +35,24 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
       id: horario.id,
       ano: horario.ano,
       semestre: horario.semestre,
-      curso: horario.curso.sigla,
+      cursoSigla: horario.curso.sigla,
+      cursoNome: horario.curso.nome,
+      cursoDisplay: `${horario.curso.sigla} - ${abreviarNomeCurso(horario.curso.nome)}`,
       anoLectivo: horario.ano_lectivo.ano_lectivo,
-      label: `${horario.curso.sigla}, ${horario.ano}ºano, ${horario.semestre}ºsem (${horario.ano_lectivo.ano_lectivo})`,
     })) || [], [horarios]);
 
   // Opções únicas para ano+semestre e curso
   const anoSemestreOptions = Array.from(
     new Set(horarioOptions.filter(h => h.semestre==2).map((h) => `${h.ano}ºano, ${h.semestre}ºsem (${h.anoLectivo})`))
   );
-  const cursoOptions = Array.from(new Set(horarioOptions.map((h) => h.curso)));
+  
+  const cursoOptions = useMemo(() => {
+    const uniqueCursos = new Map<string, string>();
+    horarioOptions.forEach(h => {
+      uniqueCursos.set(h.cursoSigla, h.cursoDisplay);
+    });
+    return Array.from(uniqueCursos.entries()).map(([sigla, display]) => ({ sigla, display }));
+  }, [horarioOptions]);
 
   useEffect(() => {
     if (hasPrefilled || horarioOptions.length === 0) return;
@@ -51,7 +66,7 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
     const matching = horarioOptions
       .filter(
         (h) =>
-          h.curso.toLowerCase() === cursoParam.toLowerCase() &&
+          h.cursoSigla.toLowerCase() === cursoParam.toLowerCase() &&
           h.ano === anoParam &&
           h.semestre === semParam
       )
@@ -62,7 +77,7 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
     const selected = matching[0];
     const anoSemestre = `${selected.ano}ºano, ${selected.semestre}ºsem (${selected.anoLectivo})`;
 
-    setSelectedCurso(selected.curso);
+    setSelectedCurso(selected.cursoSigla);
     setSelectedAnoSemestre(anoSemestre);
     onSelect(selected.id);
     setHasPrefilled(true);
@@ -81,11 +96,11 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
   };
 
   // Combina ano+semestre com curso e procura o horário correspondente
-  const updateSelection = (anoSem: string, curso: string) => {
+  const updateSelection = (anoSem: string, cursoSigla: string) => {
     const selectedHorario = horarioOptions.find(
       (h) =>
         `${h.ano}ºano, ${h.semestre}ºsem (${h.anoLectivo})` === anoSem &&
-        h.curso === curso
+        h.cursoSigla === cursoSigla
     );
     onSelect(selectedHorario ? selectedHorario.id : null);
   };
@@ -97,16 +112,30 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
   return (
     <div className="flex flex-wrap gap-4 items-start bg-white p-4 rounded-xl shadow-md">
       
-      {/* Seletor de Curso */}
+      {/* Seletor de Curso - Mobile (apenas sigla) */}
       <select
         value={selectedCurso}
         onChange={handleCursoSelection}
-        className="border rounded p-2 font-bold text-lg cursor-pointer"
+        className="md:hidden border rounded p-3 font-bold text-xl cursor-pointer"
       >
         <option value="">Curso...</option>
-        {cursoOptions.sort((a, b) => a.localeCompare(b)).map((curso, idx) => (
-          <option key={idx} value={curso}>
-            {curso}
+        {cursoOptions.sort((a, b) => a.sigla.localeCompare(b.sigla)).map((curso, idx) => (
+          <option key={idx} value={curso.sigla}>
+            {curso.sigla}
+          </option>
+        ))}
+      </select>
+
+      {/* Seletor de Curso - Desktop (sigla + nome) */}
+      <select
+        value={selectedCurso}
+        onChange={handleCursoSelection}
+        className="hidden md:block border rounded p-3 font-bold text-xl cursor-pointer"
+      >
+        <option value="">Curso...</option>
+        {cursoOptions.sort((a, b) => a.sigla.localeCompare(b.sigla)).map((curso, idx) => (
+          <option key={idx} value={curso.sigla}>
+            {curso.display}
           </option>
         ))}
       </select>
@@ -115,14 +144,21 @@ export default function SelectHorario({ onSelect }: SelectHorarioProps) {
       <select
         value={selectedAnoSemestre}
         onChange={handleAnoSemestreSelection}
-        className="border rounded p-2 font-bold text-lg cursor-pointer"
+        className="border rounded p-3 font-bold text-xl cursor-pointer"
       >
-        <option value="">Ano & Sem...</option>
-        {anoSemestreOptions.map((option, idx) => (
-          <option key={idx} value={option}>
-            {option}
-          </option>
-        ))}
+        <option value="">Ano...</option>
+        {anoSemestreOptions.map((option, idx) => {
+          // Extrai apenas a primeira parte (ex: "2ºano" de "2ºano, 2ºsem (25-26)")
+          const firstPart = option.split(',')[0].trim();
+          // Adiciona espaço após º e capitaliza a próxima letra (ex: "2ºano" -> "2º Ano")
+          const formatted = firstPart.replace(/º(\w)/, (match, letter) => `º ${letter.toUpperCase()}`);
+          
+          return (
+            <option key={idx} value={option}>
+              {formatted}
+            </option>
+          );
+        })}
       </select>
 
       

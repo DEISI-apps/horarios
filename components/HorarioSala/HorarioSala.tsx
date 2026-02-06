@@ -62,7 +62,7 @@ export default function HorarioSala() {
         <select
           value={selectedAnoLectivo ?? ""}
           onChange={handleAnoLectivoSelection}
-          className="border rounded p-2 text-lg cursor-pointer"
+          className="border rounded p-3 text-xl cursor-pointer"
         >
           <option value="35">25-26</option>
           {/* {anosLectivos
@@ -79,7 +79,7 @@ export default function HorarioSala() {
         <select
           value={selectedSemestre ?? ""}
           onChange={handleSemestreSelection}
-          className="border rounded p-2 text-lg cursor-pointer"
+          className="border rounded p-3 text-xl cursor-pointer"
         >
           {/* <option key={1} value="1">1º Semestre</option> */}
           <option key={2} value="2">2º Semestre</option>
@@ -90,7 +90,7 @@ export default function HorarioSala() {
           <select
             value={selectedSala ?? ""}
             onChange={handleSalaSelection}
-            className="border rounded p-2 font-bold cursor-pointer mb-2 flex row gap-3 items-center"
+            className="border rounded p-3 text-xl font-bold cursor-pointer mb-2 flex row gap-3 items-center"
             style={{ border: '1px solid lightgray' }}
           >
             <option value="">Selecione uma sala...</option>

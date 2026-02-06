@@ -88,7 +88,7 @@ export default function HorarioDocente() {
         <select
           value={selectedAnoLectivo ?? ""}
           onChange={handleAnoLectivoSelection}
-          className="border rounded-lg p-2 font-medium text-lg cursor-pointer hover:bg-gray-50"
+          className="border rounded-lg p-3 font-medium text-xl cursor-pointer hover:bg-gray-50"
         >
           <option value={35}>25-26</option>
           {/* {anosLectivos
@@ -104,7 +104,7 @@ export default function HorarioDocente() {
         <select
           value={selectedSemestre ?? ""}
           onChange={handleSemestreSelection}
-          className="border rounded-lg p-2 font-medium text-lg cursor-pointer hover:bg-gray-50"
+          className="border rounded-lg p-3 font-medium text-xl cursor-pointer hover:bg-gray-50"
         >
           {/* <option value="1">1º Semestre</option> */}
           <option value="2">2º Semestre</option>
@@ -123,8 +123,7 @@ export default function HorarioDocente() {
               }}
               onClick={() => setSelectOpened(true)}
               placeholder="Escreva o nome do docente..."
-              className="border rounded-lg p-2 font-bold text-lg mb-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              style={{ padding: "5px" }}
+              className="border rounded-lg p-3 font-bold text-xl mb-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
               autoFocus
             />
             {selectOpened && (
@@ -132,7 +131,7 @@ export default function HorarioDocente() {
                 value={selectedDocente ? String(selectedDocente.id) : ""}
                 onChange={handleDocenteSelection}
                 size={Math.min(5, docentes.length)}
-                className="border rounded-lg p-2 font-medium text-lg cursor-pointer hover:bg-gray-50"
+                className="border rounded-lg p-3 font-medium text-xl cursor-pointer hover:bg-gray-50"
               >
                 <option value="-1">Listar todos...</option>
                 {docentes

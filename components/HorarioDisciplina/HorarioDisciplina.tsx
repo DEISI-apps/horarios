@@ -71,7 +71,7 @@ export default function HorarioDisciplina() {
         <select
           value={selectedAnoLectivo ?? ""}
           onChange={handleAnoLectivoSelection}
-          className="border rounded p-2 text-lg cursor-pointer"
+          className="border rounded p-3 text-xl cursor-pointer"
         >
           <option value="35">25-26</option>
           {/* {anosLectivos
@@ -88,7 +88,7 @@ export default function HorarioDisciplina() {
         <select
           value={selectedSemestre ?? ""}
           onChange={handleSemestreSelection}
-          className="border rounded p-2 text-lg cursor-pointer"
+          className="border rounded p-3 text-xl cursor-pointer"
         >
           {/* <option key={1} value="1">1º Semestre</option> */}
           <option key={2} value="2">2º Semestre</option>
@@ -107,8 +107,7 @@ export default function HorarioDisciplina() {
               }}
               onClick={() => setSelectOpened(true)}
               placeholder="Escreva o nome da disciplina..."
-              className="border rounded-lg p-2 font-bold text-lg mb-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              style={{ padding: "5px" }}
+              className="border rounded-lg p-3 font-bold text-xl mb-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
               autoFocus
             />
 
@@ -117,7 +116,7 @@ export default function HorarioDisciplina() {
                 value={selectedDisciplina ? String(selectedDisciplina.id) : ""}
                 onChange={handleDisciplinaSelection}
                 size={Math.min(5, disciplinas.length)} // mostra várias opções
-                className="border rounded p-2 font-bold text-lg cursor-pointer"
+                className="border rounded p-3 font-bold text-xl cursor-pointer"
               >
                 <option
                   value="-1"

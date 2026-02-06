@@ -71,13 +71,13 @@ const handleAnoSemestreSelection = (
   return (
     <div className="flex flex-wrap gap-4 items-start bg-white p-4 rounded-xl shadow-md">
       
-      <h2 className="text-lg font-bold p-2">LEI</h2>
+      <h2 className="text-2xl font-bold p-2">LEI - Lic. Engenharia Informática</h2>
       
       {/* Seletor de Ano & Semestre */}
       <select
         value={selectedAnoSemestre}
         onChange={handleAnoSemestreSelection}
-        className="border rounded p-2 font-bold text-lg cursor-pointer"
+        className="border rounded p-3 font-bold text-xl cursor-pointer"
       >
         <option value="">Ano & Sem...</option>
         {anoSemestreOptions.map((option, idx) => (
