@@ -3,7 +3,7 @@
 import React, { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { BookOpen, Users, Building2, GraduationCap, User, Search } from "lucide-react";
+import { BookOpen, Users, Building2, GraduationCap, Presentation, Search } from "lucide-react";
 import { useSession, signIn } from "next-auth/react";
 
 export default function Page() {
@@ -121,32 +121,34 @@ export default function Page() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <Link
-              href="/cursos"
-              onClick={handleUnauthenticatedClick}
+              href="/turmas-alunos"
               className="group bg-white p-4 rounded-2xl shadow-sm hover:shadow-md transition-shadow"
             >
               <GraduationCap className="w-6 h-6 text-blue-600" />
-              <div className="mt-2 font-semibold text-gray-900">Horário do Curso</div>
-              <p className="text-sm text-gray-600">Visão global das turmas de um ano ou de uma turma.</p>
+              <div className="mt-2 font-semibold text-gray-900">Horário do aluno</div>
+              <p className="text-sm text-gray-600">Consulta do horário e sala de cada aula, ou exportação para Google Calendar.</p>
             </Link>
+
+            <Link
+              href="/docentes"
+              onClick={handleUnauthenticatedClick}
+              className="group bg-white p-4 rounded-2xl shadow-sm hover:shadow-md transition-shadow"
+            >
+              <Presentation className="w-6 h-6 text-blue-600" />
+              <div className="mt-2 font-semibold text-gray-900">Horário do Docente</div>
+              <p className="text-sm text-gray-600">Consulta do horário e sala das aulas da semana, ou exportação para Google Calendar.</p>
+            </Link>
+
             <Link
               href="/disciplinas"
               onClick={handleUnauthenticatedClick}
               className="group bg-white p-4 rounded-2xl shadow-sm hover:shadow-md transition-shadow"
             >
               <BookOpen className="w-6 h-6 text-blue-600" />
-              <div className="mt-2 font-semibold text-gray-900">Horário da Disciplina</div>
-              <p className="text-sm text-gray-600">Distribuição das aulas pela semana.</p>
+              <div className="mt-2 font-semibold text-gray-900">Horário da disciplina</div>
+              <p className="text-sm text-gray-600">Distribuição semanal das aulas e e seus docentes.</p>
             </Link>
-            <Link
-              href="/docentes"
-              onClick={handleUnauthenticatedClick}
-              className="group bg-white p-4 rounded-2xl shadow-sm hover:shadow-md transition-shadow"
-            >
-              <User className="w-6 h-6 text-blue-600" />
-              <div className="mt-2 font-semibold text-gray-900">Horário do Docente</div>
-              <p className="text-sm text-gray-600">Aulas da semana com listagem de alunos por aula.</p>
-            </Link>
+            
             <Link
               href="/docentes"
               onClick={handleUnauthenticatedClick}
@@ -159,7 +161,7 @@ export default function Page() {
                 <line x1="3" y1="10" x2="21" y2="10"></line>
               </svg>
               <div className="text-lg font-semibold text-gray-900">Google Calendar</div>
-              <p className="text-sm text-gray-600">Importação das 14 semanas de aula no calendário Google ou Outlook.</p>
+              <p className="text-sm text-gray-600">Importação das aulas do semestre inteiro no calendário Google ou Outlook.</p>
             </Link>
             <Link
               href="/disciplinas"
@@ -167,8 +169,8 @@ export default function Page() {
               className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
             >
               <Users className="w-5 h-5 text-blue-600 mb-2" />
-              <div className="text-lg font-semibold text-gray-900">Listar alunos</div>
-              <p className="text-sm text-gray-600">Cada aula tem número e listagem de alunos.</p>
+              <div className="text-lg font-semibold text-gray-900">Lista de alunos</div>
+              <p className="text-sm text-gray-600">Possibilidade de o docente ver os alunos inscritos em cada aula.</p>
             </Link>
             <Link
               href="/salas"
@@ -177,7 +179,7 @@ export default function Page() {
             >
               <Building2 className="w-6 h-6 text-blue-600" />
               <div className="mt-2 font-semibold text-gray-900">Horário das Salas</div>
-              <p className="text-sm text-gray-600">Disponibilidade e uso das salas por disciplina.</p>
+              <p className="text-sm text-gray-600">Informação da ocupação e disponibilidade das salas do DEISI Hub.</p>
             </Link>
             
           </div>
