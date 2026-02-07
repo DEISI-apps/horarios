@@ -82,15 +82,15 @@ export function UserNav() {
               className="bg-white rounded-2xl p-6 max-w-md mx-4 shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <h2 className="text-xl font-bold text-gray-900 mb-3">Não registado como aluno</h2>
+              <h2 className="text-xl font-bold text-gray-900 mb-3">Acesso restrito</h2>
               <p className="text-gray-700 mb-4">
-                Não encontrámos o seu registo como aluno na nossa base de dados.
-              </p>
-              <p className="text-gray-700 mb-4">
-                <strong>Nota:</strong> Atualmente, o sistema apenas funciona para alunos de <strong>Licenciatura em Engenharia Informática (LEI)</strong>.
+                Não consegue aceder à <strong>Área do Aluno</strong>.
               </p>
               <p className="text-gray-700 mb-6">
-                Se é aluno LEI e acredita que deveria ter acesso, por favor contacte os serviços académicos. Caso contrário, pode consultar os horários públicos sem necessidade de autenticação.
+                <strong>A área de alunos é reservada exclusivamente a alunos de Licenciatura em Engenharia Informática (LEI).</strong>
+              </p>
+              <p className="text-gray-700 mb-6">
+                Se é aluno LEI e deveria ter acesso, contacte os serviços académicos. Pode consultar o horário da sua turma na área pública.
               </p>
               <div className="flex gap-3">
                 <button
@@ -100,7 +100,7 @@ export function UserNav() {
                   }}
                   className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition"
                 >
-                  Ver Horários Públicos
+                  Consultar Horários
                 </button>
                 <button
                   onClick={() => setShowAlunoModal(false)}
@@ -122,25 +122,25 @@ export function UserNav() {
               className="bg-white rounded-2xl p-6 max-w-md mx-4 shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <h2 className="text-xl font-bold text-gray-900 mb-3">Acesso restrito</h2>
+              <h2 className="text-xl font-bold text-gray-900 mb-3">Não registado</h2>
               <p className="text-gray-700 mb-4">
-                Não possui acesso à área de docentes.
-              </p>
-              <p className="text-gray-700 mb-4">
-                <strong>Neste semestre, apenas é permitido o acesso a alunos de Licenciatura em Engenharia Informática (LEI).</strong>
+                Não está registado como docente.
               </p>
               <p className="text-gray-700 mb-6">
-                Se é aluno, pode consultar o horário da sua turma através da área pública. Se é docente e deveria ter acesso, contacte os administradores do sistema.
+                <strong>A área de docentes é reservada exclusivamente a docentes DEISI.</strong>
+              </p>
+              <p className="text-gray-700 mb-6">
+                Se é docente DEISI e deveria ter acesso, contacte o administrador do sistema.
               </p>
               <div className="flex gap-3">
                 <button
                   onClick={() => {
                     setShowDocenteModal(false);
-                    window.location.href = "/turmas-alunos";
+                    window.location.href = "mailto:lucio.studer@ulusofona.pt?subject=Pedido de Acesso - Sistema de Horários";
                   }}
                   className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition"
                 >
-                  Consultar Horários
+                  Enviar Email
                 </button>
                 <button
                   onClick={() => setShowDocenteModal(false)}
