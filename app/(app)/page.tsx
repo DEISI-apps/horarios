@@ -222,13 +222,13 @@ export default function Page() {
           >
             <h2 className="text-xl font-bold text-gray-900 mb-3">Acesso restrito</h2>
             <p className="text-gray-700 mb-4">
-              Não consegue aceder à <strong>Área do Aluno</strong>.
+              Não é possivel aceder à área reservada da aplicação.
             </p>
             <p className="text-gray-700 mb-6">
-              <strong>A área de alunos é reservada exclusivamente a alunos de Licenciatura em Engenharia Informática (LEI).</strong>
+              <strong>Pode consultar o horário da sua turma na área pública.</strong>
             </p>
             <p className="text-gray-700 mb-6">
-              Se é aluno LEI e deveria ter acesso, contacte os serviços académicos. Pode consultar o horário da sua turma na área pública.
+              Se é aluno LEI ou docente, contacte lucio.studer@ulusofona.pt. 
             </p>
             <div className="flex gap-3">
               <button

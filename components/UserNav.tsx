@@ -90,7 +90,7 @@ export function UserNav() {
                 <strong>A área de alunos é reservada exclusivamente a alunos de Licenciatura em Engenharia Informática (LEI).</strong>
               </p>
               <p className="text-gray-700 mb-6">
-                Se é aluno LEI e deveria ter acesso, contacte os serviços académicos. Pode consultar o horário da sua turma na área pública.
+                Se é aluno LEI e deveria ter acesso, contacte  lucio.studer@ulusofona.pt. Pode consultar o horário da sua turma na área pública.
               </p>
               <div className="flex gap-3">
                 <button
