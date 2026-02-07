@@ -4,6 +4,7 @@ import { MINUTE_HEIGHT } from '@/lib/constants';
 import { gerarCorDisciplina, abreviarNomeDisciplina } from '@/lib/utils';
 import styles from './CalendarioSemanal.module.css';
 import { useEffect, useRef, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { createPortal } from 'react-dom';
 import DocenteModal from '../CalendarioSemanalDocente/DocenteModal';
 import SalaModal from '../CalendarioSemanalSala/SalaModal';
@@ -17,6 +18,9 @@ interface TimeSlotProps {
 
 export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotProps) {
 
+  const { data: session } = useSession();
+  const isDocente = (session?.user as { role?: string })?.role === "docente";
+
   const [width, setWidth] = useState<number>(0);
   const slotRef = useRef<HTMLDivElement | null>(null);
   const [alunos, setAlunos] = useState<Aluno[]>([]);
@@ -26,6 +30,28 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotPro
   const [isModalDisciplinaOpen, setModalDisciplinaOpen] = useState(false);
 
   const fetcher = (url: string) => fetch(url).then(res => res.json());
+
+  const downloadCSV = () => {
+    const headers = ['Nome', 'Número', 'Email'];
+    const csvContent = [
+      headers.join(','),
+      ...alunos.map(aluno => 
+        [aluno.nome, aluno.numero, aluno.email]
+          .map(field => `"${field}"`)
+          .join(',')
+      ),
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `alunos_${slot.disciplina_nome}_${slot.turma_nome}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   // observar largura do slot dinamicamente
   useEffect(() => {
@@ -90,15 +116,21 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotPro
         }}
       >
         <div className={styles.slotTitle}>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setModalDisciplinaOpen(true);
-            }}
-            className="underline focus:outline-none text-left"
-          >
-            {abreviarNomeDisciplina(slot.disciplina_nome, slot.disciplina_nome_abreviado, width, slot.duracao)}
-          </button>
+          {isDocente ? (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setModalDisciplinaOpen(true);
+              }}
+              className="underline focus:outline-none text-left"
+            >
+              {abreviarNomeDisciplina(slot.disciplina_nome, slot.disciplina_nome_abreviado, width, slot.duracao)}
+            </button>
+          ) : (
+            <span>
+              {abreviarNomeDisciplina(slot.disciplina_nome, slot.disciplina_nome_abreviado, width, slot.duracao)}
+            </span>
+          )}
         </div>
         <div className={styles.slotDetails}  >
           {slot.tipo === 'T' ? 'Teórica ' : 'Prática '}
@@ -106,30 +138,38 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotPro
           {slot.sala_nome !== 'sala?' && (
             <>
               <span>· </span>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setModalSalaOpen(true);
-                }}
-                className="underline focus:outline-none cursor-help"
-              >
-                {slot.sala_nome}
-              </button>
+              {isDocente ? (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setModalSalaOpen(true);
+                  }}
+                  className="underline focus:outline-none cursor-help"
+                >
+                  {slot.sala_nome}
+                </button>
+              ) : (
+                <span>{slot.sala_nome}</span>
+              )}
             </>
           )}
         </div>
 
         <div className={styles.slotDetails} >
           {(!slot.juncao || slot.juncao_visivel) && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setModalOpen(true);
-              }}
-              className="underline focus:outline-none cursor-help text-left"
-            >
-              {slot.docente_nome}
-            </button>
+            isDocente ? (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setModalOpen(true);
+                }}
+                className="underline focus:outline-none cursor-help text-left"
+              >
+                {slot.docente_nome}
+              </button>
+            ) : (
+              <span className="text-left">{slot.docente_nome}</span>
+            )
           )}
         </div>
 
@@ -137,65 +177,71 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotPro
           <div className={styles.slotDetails} style={{ fontSize: '8px', marginLeft: 'auto', marginRight: '5px', marginTop: 'auto' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
               <span>{alunos.length} alunos</span>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setModalAlunosOpen(true);
-                }}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  fontSize: '10px',
-                  fontWeight: 'bold',
-                  color: 'inherit',
-                  padding: '0',
-                  width: '14px',
-                  height: '14px',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: 'rgba(255,255,255,0.3)',
-                }}
-                title="Ver lista de alunos"
-              >
-                i
-              </button>
+              {isDocente && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setModalAlunosOpen(true);
+                  }}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontSize: '10px',
+                    fontWeight: 'bold',
+                    color: 'inherit',
+                    padding: '0',
+                    width: '14px',
+                    height: '14px',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: 'rgba(255,255,255,0.3)',
+                  }}
+                  title="Ver lista de alunos"
+                >
+                  i
+                </button>
+              )}
             </div>
           </div>
         )}
       </div>
 
-      <DocenteModal
-        isOpen={isModalOpen}
-        setModalOpen={setModalOpen}
-        docente_id={slot.docente_id}
-        docente_nome={slot.docente_nome}
-        ano_lectivo_id={ano_lectivo_id}
-        semestre={semestre}
-      />
+      {isDocente && (
+        <>
+          <DocenteModal
+            isOpen={isModalOpen}
+            setModalOpen={setModalOpen}
+            docente_id={slot.docente_id}
+            docente_nome={slot.docente_nome}
+            ano_lectivo_id={ano_lectivo_id}
+            semestre={semestre}
+          />
 
-      <SalaModal
-        isOpen={isModalSalaOpen}
-        setModalOpen={setModalSalaOpen}
-        sala_id={slot.sala_id}
-        sala_nome={slot.sala_nome}
-        ano_lectivo_id={ano_lectivo_id}
-        semestre={semestre}
-      />
+          <SalaModal
+            isOpen={isModalSalaOpen}
+            setModalOpen={setModalSalaOpen}
+            sala_id={slot.sala_id}
+            sala_nome={slot.sala_nome}
+            ano_lectivo_id={ano_lectivo_id}
+            semestre={semestre}
+          />
 
-      <DisciplinaModal
-        isOpen={isModalDisciplinaOpen}
-        setModalOpen={setModalDisciplinaOpen}
-        disciplina_id={slot.disciplina_id}
-        disciplina_nome={slot.disciplina_nome}
-        disciplina_cursos={slot.curso_sigla}
-        ano_lectivo_id={ano_lectivo_id}
-        semestre={semestre}
-      />
+          <DisciplinaModal
+            isOpen={isModalDisciplinaOpen}
+            setModalOpen={setModalDisciplinaOpen}
+            disciplina_id={slot.disciplina_id}
+            disciplina_nome={slot.disciplina_nome}
+            disciplina_cursos={slot.curso_sigla}
+            ano_lectivo_id={ano_lectivo_id}
+            semestre={semestre}
+          />
+        </>
+      )}
 
-      {isModalAlunosOpen && typeof document !== 'undefined' && createPortal(
+      {isDocente && isModalAlunosOpen && typeof document !== 'undefined' && createPortal(
         <div
           style={{
             position: 'fixed',
@@ -225,18 +271,35 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotPro
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
               <h2 style={{ margin: 0 }}>Alunos ({alunos.length})</h2>
-              <button
-                onClick={() => setModalAlunosOpen(false)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  fontSize: '24px',
-                  cursor: 'pointer',
-                  color: '#666',
-                }}
-              >
-                ×
-              </button>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <button
+                  onClick={downloadCSV}
+                  style={{
+                    padding: '6px 12px',
+                    backgroundColor: '#4CAF50',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '12px',
+                    fontWeight: '500',
+                  }}
+                >
+                  ⬇ CSV
+                </button>
+                <button
+                  onClick={() => setModalAlunosOpen(false)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    fontSize: '24px',
+                    cursor: 'pointer',
+                    color: '#666',
+                  }}
+                >
+                  ×
+                </button>
+              </div>
             </div>
 
             <div style={{ backgroundColor: '#f8f9fa', padding: '12px', borderRadius: '6px', marginBottom: '16px', fontSize: '13px' }}>
@@ -245,14 +308,24 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotPro
               <div>Docente: {slot.docente_nome}</div>
             </div>
 
-            <div style={{ display: 'grid', gap: '8px' }}>
-              {alunos.map((aluno) => (
-                <div key={aluno.numero} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 12px', backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
-                  <span>{aluno.nome}</span>
-                  <span style={{ color: '#666', fontSize: '12px' }}>{aluno.numero}</span>
-                </div>
-              ))}
-            </div>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+              <thead>
+                <tr style={{ backgroundColor: '#f0f0f0', borderBottom: '1px solid #ddd' }}>
+                  <th style={{ padding: '8px 12px', textAlign: 'left', fontWeight: '600' }}>Nome</th>
+                  <th style={{ padding: '8px 12px', textAlign: 'left', fontWeight: '600' }}>Número</th>
+                  <th style={{ padding: '8px 12px', textAlign: 'left', fontWeight: '600' }}>Email</th>
+                </tr>
+              </thead>
+              <tbody>
+                {alunos.map((aluno) => (
+                  <tr key={aluno.numero} style={{ borderBottom: '1px solid #eee', backgroundColor: '#fff' }}>
+                    <td style={{ padding: '8px 12px' }}>{aluno.nome}</td>
+                    <td style={{ padding: '8px 12px', color: '#666' }}>{aluno.numero}</td>
+                    <td style={{ padding: '8px 12px', color: '#666', fontSize: '12px', wordBreak: 'break-all' }}>{aluno.email}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>,
         document.body
