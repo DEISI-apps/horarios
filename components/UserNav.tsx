@@ -30,6 +30,20 @@ export function UserNav() {
           setShowDocenteModal(true);
         }
       }
+    } else if (status === "unauthenticated") {
+      // Verificar se tentou fazer login mas falhou
+      const attemptingAluno = sessionStorage.getItem("attempting_aluno_login");
+      const attemptingDocente = sessionStorage.getItem("attempting_docente_login");
+
+      if (attemptingAluno === "true") {
+        sessionStorage.removeItem("attempting_aluno_login");
+        setShowAlunoModal(true);
+      }
+
+      if (attemptingDocente === "true") {
+        sessionStorage.removeItem("attempting_docente_login");
+        setShowDocenteModal(true);
+      }
     }
   }, [session, status]);
 
