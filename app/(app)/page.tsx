@@ -24,6 +24,16 @@ export default function Page() {
     }
   }, [session, router]);
 
+  // Remove parametros de erro do NextAuth para nao mostrar o estado na URL
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const url = new URL(window.location.href);
+    if (url.searchParams.has("error")) {
+      url.searchParams.delete("error");
+      window.history.replaceState({}, "", url.toString());
+    }
+  }, []);
+
   // Se não está logado, redireciona para login
   const handleUnauthenticatedClick = (e: React.MouseEvent) => {
     if (!session) {
@@ -155,6 +165,16 @@ export default function Page() {
             <Link
               href="/disciplinas"
               onClick={handleUnauthenticatedClick}
+              className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
+            >
+              <Users className="w-5 h-5 text-blue-600 mb-2" />
+              <div className="text-lg font-semibold text-gray-900">Listagem de alunos</div>
+              <p className="text-sm text-gray-600">O docente pode ver ou descarregar a lista de alunos de cada aula, e o seu horário (atualmente restrito a LEI).</p>
+            </Link>
+
+            <Link
+              href="/disciplinas"
+              onClick={handleUnauthenticatedClick}
               className="group bg-white p-4 rounded-2xl shadow-sm hover:shadow-md transition-shadow"
             >
               <BookOpen className="w-6 h-6 text-blue-600" />
@@ -176,15 +196,7 @@ export default function Page() {
               <div className="text-lg font-semibold text-gray-900">Google Calendar</div>
               <p className="text-sm text-gray-600">Importação das aulas do semestre inteiro no calendário Google ou Outlook.</p>
             </Link>
-            <Link
-              href="/disciplinas"
-              onClick={handleUnauthenticatedClick}
-              className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
-            >
-              <Users className="w-5 h-5 text-blue-600 mb-2" />
-              <div className="text-lg font-semibold text-gray-900">Informação de alunos</div>
-              <p className="text-sm text-gray-600">O docente pode ver os alunos inscritos em cada aula, e seu horário.</p>
-            </Link>
+            
             <Link
               href="/salas"
               onClick={handleUnauthenticatedClick}
@@ -192,7 +204,7 @@ export default function Page() {
             >
               <Building2 className="w-6 h-6 text-blue-600" />
               <div className="mt-2 font-semibold text-gray-900">Edição de Horários</div>
-              <p className="text-sm text-gray-600">Edição ágil e integrada dos horários, atualizada em tempo real.</p>
+              <p className="text-sm text-gray-600">Edição ágil e integrada dos horários, atualizada em tempo real (utilizadores com permissão de gestão).</p>
             </Link>
             
           </div>

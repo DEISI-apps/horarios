@@ -61,6 +61,7 @@ export const authConfig = {
   ],
   pages: {
     signIn: "/",
+    error: "/",
   },
   callbacks: {
     signIn: async ({ profile }: Any) => {
