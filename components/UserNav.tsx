@@ -171,14 +171,12 @@ export function UserNav() {
   }
 
   return (
-    <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10 border border-white/10">
-      <button
-        onClick={handleLogout}
-        className="text-white/70 hover:text-red-400 transition p-1"
-        title="Sair"
-      >
-        <LogOut className="w-4 h-4" />
-      </button>
-    </div>
+    <button
+      onClick={handleLogout}
+      className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10 border border-white/10 text-white/70 hover:text-red-400 transition"
+      title="Sair"
+    >
+      <LogOut className="w-4 h-4" />
+    </button>
   );
 }

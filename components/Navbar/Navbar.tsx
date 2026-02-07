@@ -102,11 +102,14 @@ export default function Navbar() {
           )}
           {menuOpen && session && !isAluno && (
             <div className="md:hidden text-white border-t border-white/10 rounded-b-2xl">
+              {canEdit && (
+                <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/editarHorarios" onClick={() => setMenuOpen(false)}>Editar</Link>
+              )}
               <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/cursos" onClick={() => setMenuOpen(false)}>Curso</Link>
               <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/docentes" onClick={() => setMenuOpen(false)}>Docente</Link>
               <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/disciplinas" onClick={() => setMenuOpen(false)}>Disciplina</Link>
+              <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/alunos" onClick={() => setMenuOpen(false)}>Alunos</Link>
               <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/salas" onClick={() => setMenuOpen(false)}>Sala</Link>
-              {/* <Link className="block px-4 py-2 bg-gray-800 text-white hover:bg-gray-700" href="/editarHorarios" onClick={() => setMenuOpen(false)}>Editar</Link> */}
               <div className="border-t border-white/10 px-4 py-3">
                 <UserNav />
               </div>
