@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession, signOut, signIn } from "next-auth/react";
-import { LogOut, LogIn, GraduationCap } from "lucide-react";
+import { LogOut, LogIn } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export function UserNav() {
