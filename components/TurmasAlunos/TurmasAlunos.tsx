@@ -6,7 +6,7 @@ import SelectHorario from "@/components/SelectHorario/SelectHorario";
 import ListaTurmas from "../ListaTurmas";
 import { useHorarios } from "@/hooks/useHorarios";
 import { useAulas } from "@/hooks/useAulas";
-import { Loader2, Download, Info } from "lucide-react";
+import { Loader2, Download, Info, School } from "lucide-react";
 import ICAL from 'ical.js';
 import {
   SEMESTER_START_YEAR,
@@ -264,14 +264,14 @@ export default function TurmasAlunos() {
     };
   }, []);
 
-  // Reset turma quando muda o horário (apenas se não há turma na URL)
+  // Reset turma quando muda o horário (sempre primeira turma)
   useEffect(() => {
-    if (horario && horario.turmas.length > 0 && !urlTurma) {
+    if (horario && horario.turmas.length > 0) {
       setSelectedTurmaId(horario.turmas[0].id);
     } else if (!horario) {
       setSelectedTurmaId(null);
     }
-  }, [horario, urlTurma]);
+  }, [horario]);
 
   //
   // B. Renderização
@@ -282,42 +282,76 @@ export default function TurmasAlunos() {
     </div>;
 
   return (
-    <div className="p-4">
-      <SelectHorario 
-        onSelect={setSelectedHorarioId}
-        onSelectionChange={handleSelectionChange}
-        initialCurso={urlCurso}
-        initialAnoSemestre={initialAnoSemestre}
-      >
-        {selectedHorarioId && horario && selectedTurmaId && (
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleDownload}
-              className="py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 font-bold"
-            >
-              <Download className="w-4 h-4" />
-              Descarregar Horário
-            </button>
-            <div className="relative group">
-              <Info className="w-5 h-5 text-gray-400 hover:text-gray-600 cursor-help" />
-              <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-64 p-3 bg-gray-800 text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                <p className="mb-2">O ficheiro ICS contém o horário completo das semanas lectivas.</p>
-                <p>Pode importar no <strong>Google Calendar</strong> ou <strong>Outlook</strong>: clique no ficheiro descarregado ou importe-o nas definições do calendário.</p>
-                <div className="absolute left-1/2 -translate-x-1/2 -top-2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-gray-800"></div>
+    <div className="p-4 flex flex-col gap-6 max-w-6xl mx-auto">
+      <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+        <div className="flex items-center gap-3 mb-5">
+          <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+            <School className="w-6 h-6 text-blue-600" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Horário</h1>
+            <p className="text-sm text-gray-500">Selecione o curso, ano e turma</p>
+          </div>
+        </div>
+
+        <SelectHorario 
+          onSelect={setSelectedHorarioId}
+          onSelectionChange={handleSelectionChange}
+          initialCurso={urlCurso}
+          initialAnoSemestre={initialAnoSemestre}
+        >
+          {selectedHorarioId && horario && selectedTurmaId && (
+            <div className="flex flex-wrap items-center gap-2 mt-3">
+              <button
+                onClick={handleDownload}
+                className="py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 font-bold"
+              >
+                <Download className="w-4 h-4" />
+                Descarregar Horário
+              </button>
+              <div className="relative group">
+                <Info className="w-5 h-5 text-gray-400 hover:text-gray-600 cursor-help" />
+                <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-64 p-3 bg-gray-800 text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                  <p className="mb-2">O ficheiro ICS contém o horário completo das semanas lectivas.</p>
+                  <p>Pode importar no <strong>Google Calendar</strong> ou <strong>Outlook</strong>: clique no ficheiro descarregado ou importe-o nas definições do calendário.</p>
+                  <div className="absolute left-1/2 -translate-x-1/2 -top-2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-gray-800"></div>
+                </div>
               </div>
+            </div>
+          )}
+        </SelectHorario>
+
+        {selectedHorarioId && horario && (
+          <div className="mt-4">
+            <h2 className="text-sm font-semibold text-gray-700 mb-2">Turmas</h2>
+            <div className="flex flex-wrap gap-2">
+              {horario.turmas.map((turma) => (
+                <button
+                  key={turma.id}
+                  type="button"
+                  onClick={() => handleTurmaChange(turma.id, turma.nome)}
+                  className={`focus:outline-none hover:underlined px-3 py-2 rounded ${
+                    selectedTurmaId === turma.id ? "bg-blue-500 text-white font-bold" : "bg-gray-200"
+                  }`}
+                >
+                  {turma.nome}
+                </button>
+              ))}
             </div>
           </div>
         )}
-      </SelectHorario>
+      </div>
 
       {selectedHorarioId && horario && (
-        <>
+        <div className="p-4 bg-white rounded-2xl shadow-lg border border-gray-100">
           <ListaTurmas 
             horario={horario} 
             initialTurma={urlTurma}
             onTurmaChange={handleTurmaChange} 
+            selectedTurmaId={selectedTurmaId}
+            showButtons={false}
           />
-        </>
+        </div>
       )}
     </div>
   );

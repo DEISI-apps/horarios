@@ -14,6 +14,8 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const canEdit = session?.user?.email && ALLOWED_EMAILS.includes(session.user.email);
+  const role = (session?.user as { role?: string })?.role;
+  const isAluno = role === "aluno";
 
   return (
     <header className="sticky top-0 z-50 w-full">
@@ -46,7 +48,18 @@ export default function Navbar() {
 
             {/* Navegação normal - desktop */}
             <div className="hidden md:flex items-center gap-6">
-              {session && (
+              {session && isAluno && (
+                <>
+                  <nav className="flex items-center gap-1 text-white text-base font-semibold tracking-wide">
+                    <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/turmas-alunos">Horários</Link>
+                    <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/meu-horario">O meu Horário</Link>
+                  </nav>
+                  <div className="pl-6 border-l border-white/10">
+                    <UserNav />
+                  </div>
+                </>
+              )}
+              {session && !isAluno && (
                 <>
                   <nav className="flex items-center gap-1 text-white text-base font-semibold tracking-wide">
                     {canEdit && (
@@ -78,7 +91,16 @@ export default function Navbar() {
           </div>
 
           {/* Dropdown - mobile */}
-          {menuOpen && session && (
+          {menuOpen && session && isAluno && (
+            <div className="md:hidden text-white border-t border-white/10 rounded-b-2xl">
+              <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/turmas-alunos" onClick={() => setMenuOpen(false)}>Horários</Link>
+              <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/meu-horario" onClick={() => setMenuOpen(false)}>O meu Horário</Link>
+              <div className="border-t border-white/10 px-4 py-3">
+                <UserNav />
+              </div>
+            </div>
+          )}
+          {menuOpen && session && !isAluno && (
             <div className="md:hidden text-white border-t border-white/10 rounded-b-2xl">
               <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/cursos" onClick={() => setMenuOpen(false)}>Curso</Link>
               <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/docentes" onClick={() => setMenuOpen(false)}>Docente</Link>

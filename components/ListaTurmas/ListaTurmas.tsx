@@ -10,9 +10,17 @@ interface ListaTurmasProps {
   editar?: boolean;
   initialTurma?: string;
   onTurmaChange?: (turmaId: number, turmaNome: string) => void;
+  selectedTurmaId?: number | null;
+  showButtons?: boolean;
 }
 
-export default function ListaTurmas({ horario, initialTurma, onTurmaChange }: ListaTurmasProps) {
+export default function ListaTurmas({
+  horario,
+  initialTurma,
+  onTurmaChange,
+  selectedTurmaId,
+  showButtons = true,
+}: ListaTurmasProps) {
 
   const [selectedTurma, setSelectedTurma] = useState<Turma | null>(null);
   const [turmas, setTurmas] = useState<Turma[]>([])
@@ -21,9 +29,15 @@ export default function ListaTurmas({ horario, initialTurma, onTurmaChange }: Li
   const { aulas } = useAulas(horario.id);
   
 
-  useEffect (() => {
-    setTurmas(horario.turmas)
-    
+  useEffect(() => {
+    setTurmas(horario.turmas);
+
+    if (selectedTurmaId !== undefined && selectedTurmaId !== null) {
+      const turmaFromId = horario.turmas.find(t => t.id === selectedTurmaId) || null;
+      setSelectedTurma(turmaFromId);
+      return;
+    }
+
     // Só define a turma inicial na primeira vez
     if (!initialized) {
       let turmaToSelect = horario.turmas[0];
@@ -33,14 +47,14 @@ export default function ListaTurmas({ horario, initialTurma, onTurmaChange }: Li
           turmaToSelect = foundTurma;
         }
       }
-      
-      setSelectedTurma(turmaToSelect)
+
+      setSelectedTurma(turmaToSelect);
       if (turmaToSelect && onTurmaChange) {
         onTurmaChange(turmaToSelect.id, turmaToSelect.nome);
       }
       setInitialized(true);
     }
-  }, [horario, initialTurma, initialized, onTurmaChange])
+  }, [horario, initialTurma, initialized, onTurmaChange, selectedTurmaId]);
 
   const handleTurmaClick = (turma: Turma) => {
     setSelectedTurma(turma);
@@ -58,25 +72,25 @@ export default function ListaTurmas({ horario, initialTurma, onTurmaChange }: Li
     <div className={styles.calendarWrapper}>
       
       
-      <h2 className="text-lg font-bold mt-6">Horário da turma:</h2>
-      <div className = "flex flex-wrap">
-                {horario.turmas.map((turma: Turma, i) => (
-                 
-                    
-                  
-                    <button
-                      key={i}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleTurmaClick(turma);
-                      }}
-                      className= {  `focus:outline-none hover:underlined m-2 p-2 rounded ${ turma === selectedTurma ? "bg-blue-500 text-white font-bold" : "bg-gray-200" }`}
-                    >
-                     {turma.nome}
-                    </button>
-                  
-                ))}
-              </div >
+      {showButtons && (
+        <>
+          <h2 className="text-lg font-bold mt-6">Horário da turma:</h2>
+          <div className="flex flex-wrap">
+            {horario.turmas.map((turma: Turma, i) => (
+              <button
+                key={i}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleTurmaClick(turma);
+                }}
+                className={`focus:outline-none hover:underlined m-2 p-2 rounded ${turma === selectedTurma ? "bg-blue-500 text-white font-bold" : "bg-gray-200"}`}
+              >
+                {turma.nome}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
         <CalendarioSemanalTurma
             aulas={aulas}
             turma_id={selectedTurma.id}

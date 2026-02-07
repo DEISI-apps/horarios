@@ -32,6 +32,26 @@ function requireEnv(name: string): string {
   return value;
 }
 
+async function fetchAlunoByEmail(email: string): Promise<{ aluno: string; numero: string } | null> {
+  try {
+    const response = await fetch(
+      `https://horariosdeisi.pythonanywhere.com/aluno-numero/${encodeURIComponent(email)}`
+    );
+
+    if (!response.ok) return null;
+
+    const data = await response.json();
+    if (data?.aluno && data?.numero) {
+      return { aluno: data.aluno, numero: data.numero };
+    }
+
+    return null;
+  } catch (error) {
+    console.error("Erro ao validar aluno:", error);
+    return null;
+  }
+}
+
 export const authConfig = {
   providers: [
     GoogleProvider({
@@ -51,24 +71,53 @@ export const authConfig = {
       }
 
       const email = profile.email.toLowerCase().trim();
-      const isAuthorized = authorizedEmails.includes(email);
-      
-      if (!isAuthorized) {
-        console.warn(`⚠️ Unauthorized email: ${email}`);
+      const isDocente = authorizedEmails.includes(email);
+
+      if (isDocente) {
+        return true;
       }
-      
-      return isAuthorized;
+
+      const aluno = await fetchAlunoByEmail(email);
+      if (!aluno) {
+        console.warn(`⚠️ Unauthorized email: ${email}`);
+        return false;
+      }
+
+      return true;
     },
     jwt: async ({ token, user }: Any) => {
       if (user) {
         token.email = user.email;
         token.id = user.id;
       }
+
+      if (token.email && !token.role) {
+        const email = String(token.email).toLowerCase().trim();
+        const isDocente = authorizedEmails.includes(email);
+
+        if (isDocente) {
+          token.role = "docente";
+        } else {
+          const aluno = await fetchAlunoByEmail(email);
+          if (aluno) {
+            token.role = "aluno";
+            token.numero = aluno.numero;
+            token.name = aluno.aluno;
+          }
+        }
+      }
+
       return token;
     },
     session: async ({ session, token }: Any) => {
       if (session.user) {
-        session.user.email = token.email as string;
+        const user = session.user as Any;
+        user.email = token.email as string;
+        user.role = token.role as string;
+        user.numero = token.numero as string;
+        if (token.name) {
+          user.name = token.name as string;
+        }
       }
       return session;
     },

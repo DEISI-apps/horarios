@@ -1,16 +1,28 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { BookOpen, Users, Building2, GraduationCap, Presentation, Search } from "lucide-react";
 import { useSession, signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
   const [isZoomed, setIsZoomed] = useState(false);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const { data: session } = useSession();
+  const router = useRouter();
+
+  // Redireciona alunos para o seu horário
+  useEffect(() => {
+    if (session) {
+      const role = (session.user as { role?: string })?.role;
+      if (role === "aluno") {
+        router.push("/meu-horario");
+      }
+    }
+  }, [session, router]);
 
   // Se não está logado, redireciona para login
   const handleUnauthenticatedClick = (e: React.MouseEvent) => {
@@ -34,16 +46,17 @@ export default function Page() {
             <div className="mt-6 flex flex-wrap gap-3 justify-center lg:justify-start">
               <Link
                 href="/turmas-alunos"
-                className="bg-blue-600 text-white px-6 py-3 rounded-xl shadow-md hover:bg-blue-700 transition-colors font-semibold"
+                className="bg-blue-600 text-white px-8 py-6 rounded-2xl shadow-lg hover:bg-blue-700 transition-colors font-semibold text-base md:text-lg min-w-[260px] text-center"
               >
-                Horários para Alunos
-              </Link><Link
+                Consulte os Horários do DEISI
+              </Link>
+              {/* <Link
                 href="/cursos"
                 onClick={handleUnauthenticatedClick}
                 className="bg-blue-600 text-white px-6 py-3 rounded-xl shadow-md hover:bg-blue-700 transition-colors font-semibold"
               >
                 Horários para Docentes
-              </Link>
+              </Link> */}
               {/* <Link
                 href="/docentes"
                 className="bg-white text-blue-700 px-6 py-3 rounded-xl border border-blue-200 hover:border-blue-300 hover:bg-blue-50 transition-colors font-semibold"
@@ -126,7 +139,7 @@ export default function Page() {
             >
               <GraduationCap className="w-6 h-6 text-blue-600" />
               <div className="mt-2 font-semibold text-gray-900">Horário do aluno</div>
-              <p className="text-sm text-gray-600">Consulta do horário e sala de cada aula, ou exportação para Google Calendar.</p>
+              <p className="text-sm text-gray-600">Consulta do calendario semanal de aulas, podendo exportar para Google Calendar.</p>
             </Link>
 
             <Link
@@ -136,7 +149,7 @@ export default function Page() {
             >
               <Presentation className="w-6 h-6 text-blue-600" />
               <div className="mt-2 font-semibold text-gray-900">Horário do Docente</div>
-              <p className="text-sm text-gray-600">Consulta do horário e sala das aulas da semana, ou exportação para Google Calendar.</p>
+              <p className="text-sm text-gray-600">Consulta do calendario semanal de aulas, podendo exportar para Google Calendar.</p>
             </Link>
 
             <Link
@@ -169,8 +182,8 @@ export default function Page() {
               className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
             >
               <Users className="w-5 h-5 text-blue-600 mb-2" />
-              <div className="text-lg font-semibold text-gray-900">Lista de alunos</div>
-              <p className="text-sm text-gray-600">Possibilidade de o docente ver os alunos inscritos em cada aula.</p>
+              <div className="text-lg font-semibold text-gray-900">Informação de alunos</div>
+              <p className="text-sm text-gray-600">O docente pode ver os alunos inscritos em cada aula, e seu horário.</p>
             </Link>
             <Link
               href="/salas"
