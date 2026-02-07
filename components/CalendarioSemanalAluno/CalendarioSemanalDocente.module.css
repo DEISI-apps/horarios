@@ -1,0 +1,284 @@
+.container {
+  margin: 0;
+  background: white;
+}
+
+.calendarWrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.calendarContainer {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  min-width: 100%;
+  margin: 0 auto;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.calendarHeader {
+  display: flex;
+}
+
+.timeColumn {
+  width: 40px;
+  min-width: 40px;
+  background-color: #f5f5f5;
+}
+
+.dayHeader {
+  flex: 1;
+  text-align: center;
+  padding: 10px 10px 0 10px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+}
+
+.dayName {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.classColumns {
+  display: flex;
+  flex: 1;
+}
+
+.classColumn {
+  flex: 1;
+  min-width: 120px;
+  padding: 5px;
+  font-size: 12px;
+  text-align: center;
+
+}
+
+.classColumn:last-child {
+  border-right: none;
+}
+
+.calendarBody {
+  display: flex;
+  position: relative;
+}
+
+.timeSlots {
+  width: 40px;
+  min-width: 40px;
+  position: relative;
+  /* height: 720px;  */
+  /* Altura total baseada em 12 horas (8h-20h) */
+}
+
+.timeMarker {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding-right: 5px;
+  font-size: 12px;
+  color: #666;
+  height: 40px;
+}
+
+.timeMarker.halfHour {
+  font-size: 10px;
+  color: white; /* #999; */
+}
+
+.daysContainer {
+  display: flex;
+  flex: 1;
+  position: relative;
+  margin-left: -1px;
+  /* height: 720px;  */
+  /* Mesma altura que timeSlots */
+}
+
+.dayColumn {
+  flex: 1;
+  position: relative;
+  border-right: 1px solid #dddada;
+  display: flex;
+  height: 100%;
+}
+
+.classSlotColumn {
+  flex: 1;
+  min-width: 120px;
+  position: relative;
+  border-right: 1px solid #dddada;
+  height: 100%;
+}
+
+.classSlotColumn:last-child {
+  border-right: none;
+  border-bottom: 1px solid #dddada;
+}
+
+.slot {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  margin: 0 1px;
+  padding: 3px;
+  overflow: hidden;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.theoretical {
+  border: 1px solid black;
+}
+
+.practical {
+  border: 1px dashed black;
+}
+
+.slot:hover {
+  opacity: 0.9;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.slotTitle {
+  font-size: 14px;
+  font-weight: bold;
+  white-space: wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.slotDetails {
+  font-size: 12px;
+  white-space: wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalHeader {
+  font-size: 3ch;
+  margin-bottom: 1ch;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modalContent {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 500px;
+}
+
+
+.formGroup {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.formGroup label {
+  min-width: 120px;
+  text-align: right;
+  font-weight: bold;
+}
+
+.formGroup input,
+.formGroup select {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+
+.formGroup.checkboxGroup input {
+  flex: 0;
+  width: auto;
+}
+
+.colorPreview {
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  margin-left: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.btn {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btnPrimary {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.btnSecondary {
+  background-color: #ddd;
+}
+
+.btnDuplicate {
+  background-color: dodgerblue;
+  color: white;
+}
+
+.btnDanger {
+  background-color: #f44336;
+  color: white;
+}
+
+.errorMessage {
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  background-color: #fee2e2;
+  border: 1px solid #fca5a5;
+  color: #dc2626;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.errorMessage::before {
+  content: '⚠️';
+  font-size: 1rem;
+}
+
+.timeMarkersFixed{
+  background:white;
+}

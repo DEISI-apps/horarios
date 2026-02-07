@@ -7,7 +7,17 @@ import styles from './CalendarioSemanal.module.css';
 import TimeMarkers from './TimeMarkers';
 import { CALENDAR_HEIGHT } from '@/lib/constants';
 
-export default function CalendarioSemanalTurma({ turma_id, aulas }: { turma_id: number, aulas: Aula[] }) {
+export default function CalendarioSemanalTurma({
+  turma_id,
+  aulas,
+  ano_lectivo_id,
+  semestre,
+}: {
+  turma_id: number;
+  aulas: Aula[];
+  ano_lectivo_id: number;
+  semestre: number;
+}) {
 
   //
   // C. Computação de dados
@@ -43,6 +53,8 @@ return (
         <CalendarGridTurma
           aulas={aulasTurma}
           turma_id={turma_id}
+          ano_lectivo_id={ano_lectivo_id}
+          semestre={semestre}
         />
       </div>
     </div>

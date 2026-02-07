@@ -1,41 +1,33 @@
-import { Aula } from '@/types/interfaces';
+import { AulaDocente } from '@/types/interfaces';
 import { DAYS, CALENDAR_HEIGHT } from '@/lib/constants';
-import TimeSlotTurma from './TimeSlotTurma';
 import TimeMarkers from './TimeMarkers';
-import { TimeLinesTurma } from './TimeLinesTurma';
-import styles from './CalendarioSemanal.module.css';
+import styles from './CalendarioSemanalDocente.module.css';
+import TimeSlotDocente from './TimeSlotDocente';
+import { TimeLines } from '../CalendarioSemanal/TimeLines';
 
 interface CalendarGridProps {
-  aulas: Aula[];
-  turma_id: number;
-  ano_lectivo_id: number;
-  semestre: number;
+  aulas: AulaDocente[];
+  isLoadingAulas: boolean;
 }
 
-export default function CalendarGrid({ 
+export default function CalendarioGridDocente({ 
   aulas, 
-  turma_id,
-  ano_lectivo_id,
-  semestre,
+  isLoadingAulas, 
 }: CalendarGridProps) {
-
-  const renderizaSlotsDoDia = (dayId: number) => {
+  
+  const renderSlotsForDayAndClass = ( dayId: number ) => {
+    if (isLoadingAulas) return <div>A carregar aulas...</div>;
+    
     return aulas
-      .filter((slot: Aula) => slot.dia_semana === dayId)
-      .map((slot: Aula) => (
-        <TimeSlotTurma
-          key={`slot-${slot.id}`} 
-          slot={slot}
-          ano_lectivo_id={ano_lectivo_id}
-          semestre={semestre}
-        />
+      .filter((slot: AulaDocente) => slot.dia_semana === dayId )
+      .map((slot: AulaDocente) => (
+        <TimeSlotDocente key={`slot-${slot.id}`} slot={slot} />
       ));
   };
 
-
   //
   // C. renderiza
-
+  
   return (
     <div className={styles.calendarContainer}>
       <div className={styles.calendarHeader}>
@@ -43,8 +35,7 @@ export default function CalendarGrid({
         {DAYS.map(day => (
           <div key={`day-${day.id}`} className={styles.dayHeader}>
             <div className={styles.dayName}>{day.name}</div>
-            <div className={styles.classColumns}>
-            </div>
+            <div className={styles.classColumns}> </div>
           </div>
         ))}
       </div>
@@ -61,19 +52,19 @@ export default function CalendarGrid({
           className={styles.daysContainer} 
           style={{ height: `${CALENDAR_HEIGHT}px` }}
         >
+
           {/* linhas horizontais das horas */}
-          <TimeLinesTurma />
+          <TimeLines />
 
           {DAYS.map(day => (
             <div key={`day-${day.id}`} className={styles.dayColumn}>
-              
                 <div
-                  key={`slot-${day.id}-${turma_id}`}
+                  key={`slot-${day.id}`}
                   className={styles.classSlotColumn}
                 >
-                  {renderizaSlotsDoDia( day.id )}
+                  {renderSlotsForDayAndClass(day.id)}
                 </div>
-
+              
             </div>
           ))}
         </div>

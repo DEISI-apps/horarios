@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, useEffect, useCallback } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import SelectHorario from "@/components/SelectHorario/SelectHorario";
 import ListaTurmas from "../ListaTurmas";
 import { useHorarios } from "@/hooks/useHorarios";
@@ -106,11 +107,50 @@ export default function TurmasAlunos() {
 
   //
   // A. Definição do estado
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  // Obter parâmetros de URL
+  const urlCurso = searchParams.get('curso') || "";
+  const urlAno = searchParams.get('ano') || "";
+  const urlSemestre = searchParams.get('semestre') || "";
+  const urlAnoLectivo = searchParams.get('anoLectivo') || "";
+  const urlTurma = searchParams.get('turma') || "";
+  
+  // Construir o formato do anoSemestre esperado pelo SelectHorario
+  const initialAnoSemestre = urlAno && urlSemestre && urlAnoLectivo 
+    ? `${urlAno}ºano, ${urlSemestre}ºsem (${urlAnoLectivo})`
+    : "";
 
   const [selectedHorarioId, setSelectedHorarioId] = useState<number | null>(null);
   const [selectedTurmaId, setSelectedTurmaId] = useState<number | null>(null);
   const { horarios, isLoading } = useHorarios();
   const { aulas } = useAulas(selectedHorarioId || 0);
+
+  // Função para atualizar URL
+  const updateUrl = useCallback((curso: string, anoSemestre: string, turma?: string) => {
+    const params = new URLSearchParams();
+    
+    if (curso) params.set('curso', curso);
+    
+    // Extrair ano, semestre e anoLectivo do formato "1ºano, 2ºsem (2024/2025)"
+    const match = anoSemestre.match(/(\d+)ºano, (\d+)ºsem \((.+)\)/);
+    if (match) {
+      params.set('ano', match[1]);
+      params.set('semestre', match[2]);
+      params.set('anoLectivo', match[3]);
+    }
+    
+    if (turma) params.set('turma', turma);
+    
+    const newUrl = params.toString() ? `?${params.toString()}` : '';
+    router.replace(newUrl, { scroll: false });
+  }, [router]);
+
+  // Callback para mudança de seleção no SelectHorario
+  const handleSelectionChange = useCallback((curso: string, anoSemestre: string) => {
+    updateUrl(curso, anoSemestre, urlTurma);
+  }, [updateUrl, urlTurma]);
 
   const horario = useMemo(() => {
     if (!selectedHorarioId || !horarios) return null;
@@ -190,9 +230,13 @@ export default function TurmasAlunos() {
   }, [events, horario, selectedTurmaId]);
 
   // Callback para receber a turma selecionada do ListaTurmas
-  const handleTurmaChange = useCallback((turmaId: number) => {
+  const handleTurmaChange = useCallback((turmaId: number, turmaNome: string) => {
     setSelectedTurmaId(turmaId);
-  }, []);
+    // Atualizar URL com a turma
+    const currentParams = new URLSearchParams(searchParams.toString());
+    currentParams.set('turma', turmaNome);
+    router.replace(`?${currentParams.toString()}`, { scroll: false });
+  }, [router, searchParams]);
 
   useEffect(() => {
     function sendHeight() {
@@ -220,14 +264,14 @@ export default function TurmasAlunos() {
     };
   }, []);
 
-  // Reset turma quando muda o horário
+  // Reset turma quando muda o horário (apenas se não há turma na URL)
   useEffect(() => {
-    if (horario && horario.turmas.length > 0) {
+    if (horario && horario.turmas.length > 0 && !urlTurma) {
       setSelectedTurmaId(horario.turmas[0].id);
-    } else {
+    } else if (!horario) {
       setSelectedTurmaId(null);
     }
-  }, [horario]);
+  }, [horario, urlTurma]);
 
   //
   // B. Renderização
@@ -239,7 +283,12 @@ export default function TurmasAlunos() {
 
   return (
     <div className="p-4">
-      <SelectHorario onSelect={setSelectedHorarioId}>
+      <SelectHorario 
+        onSelect={setSelectedHorarioId}
+        onSelectionChange={handleSelectionChange}
+        initialCurso={urlCurso}
+        initialAnoSemestre={initialAnoSemestre}
+      >
         {selectedHorarioId && horario && selectedTurmaId && (
           <div className="flex items-center gap-2">
             <button
@@ -263,7 +312,11 @@ export default function TurmasAlunos() {
 
       {selectedHorarioId && horario && (
         <>
-          <ListaTurmas horario={horario} onTurmaChange={handleTurmaChange} />
+          <ListaTurmas 
+            horario={horario} 
+            initialTurma={urlTurma}
+            onTurmaChange={handleTurmaChange} 
+          />
         </>
       )}
     </div>

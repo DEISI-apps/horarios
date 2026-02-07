@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Disciplina } from "@/types/interfaces";
 import { useDisciplinasAnoSemestre } from "@/hooks/useDisciplinasAnoSemestre";
 import CalendarioSemanalDisciplina from "../CalendarioSemanalDisciplina";
-import { Loader2 } from "lucide-react";
+import { Loader2, Search, BookOpen } from "lucide-react";
 
 
 export default function HorarioDisciplina() {
@@ -81,78 +81,77 @@ export default function HorarioDisciplina() {
 
   //
   // E. Renderização
-  if (isLoadingAnosLectivos || isLoadingDisciplinas || !disciplinas) return <div className="flex justify-center items-center h-32">
+  if (isLoadingAnosLectivos || isLoadingDisciplinas || !disciplinas) return (
+    <div className="flex justify-center items-center h-32 gap-3">
       <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
-      <p className="text-gray-500">A carregar disciplinas...</p>
-    </div>;
+      <p className="text-gray-500 font-medium">A carregar disciplinas...</p>
+    </div>
+  );
     
-  if (!anosLectivos) return <div>Nenhum ano lectivo disponível.</div>;
+  if (!anosLectivos) return <div className="p-4 text-lg font-medium">Nenhum ano lectivo disponível.</div>;
 
   return (
-    <div className="p-4 flex flex-col gap-6">
-      {/* Barra de Filtros */}
-      <div className="flex flex-wrap gap-4 items-start bg-white p-4 rounded-xl shadow-md">
+    <div className="p-4 flex flex-col gap-6 max-w-6xl mx-auto">
+      
+      {/* Secção de Pesquisa */}
+      <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+        <div className="flex items-center gap-3 mb-5">
+          <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+            <BookOpen className="w-6 h-6 text-blue-600" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Horário de Disciplina</h1>
+            <p className="text-sm text-gray-500">Pesquise pelo nome da disciplina</p>
+          </div>
+        </div>
 
-        {/* Seletor de Ano Lectivo */}
+        {/* Seletor de Ano Lectivo - Hidden */}
         <select
           value={selectedAnoLectivo ?? ""}
           onChange={handleAnoLectivoSelection}
-          className="hidden border rounded p-3 text-xl cursor-pointer"
+          className="hidden"
         >
           <option value="35">25-26</option>
-          {/* {anosLectivos
-          .sort((a, b) => b.ano_lectivo.localeCompare(a.ano_lectivo))
-          .map((ano, idx) => (
-            <option key={idx} value={ano.id}>
-              {ano.ano_lectivo}
-            </option>
-          ))
-        } */}
         </select>
 
-        {/* Seletor de Semestre */}
+        {/* Seletor de Semestre - Hidden */}
         <select
           value={selectedSemestre ?? ""}
           onChange={handleSemestreSelection}
-          className="hidden border rounded p-3 text-xl cursor-pointer"
+          className="hidden"
         >
-          {/* <option key={1} value="1">1º Semestre</option> */}
           <option key={2} value="2">2º Semestre</option>
         </select>
 
         {/* Seletor de Disciplina */}
         {selectedAnoLectivo && selectedSemestre && disciplinas && (
-          <div className="flex flex-col w-full">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => {
-                setSelectedDisciplina(null)
-                setSearchTerm(e.target.value);
-                setSelectOpened(true);
-              }}
-              onClick={() => setSelectOpened(true)}
-              placeholder="Nome da disciplina..."
-              className="border rounded-lg p-4 font-bold text-2xl mb-1 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400"
-              style={{ color: 'black' }}
-              autoFocus
-            />
+          <div className="flex flex-col">
+            <div className="relative">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => {
+                  setSelectedDisciplina(null)
+                  setSearchTerm(e.target.value);
+                  setSelectOpened(true);
+                }}
+                onClick={() => setSelectOpened(true)}
+                placeholder="Pesquisar disciplina pelo nome..."
+                className="w-full border-2 rounded-xl p-4 pl-12 font-medium text-lg focus:outline-none focus:border-blue-500 transition-colors placeholder:text-gray-400 placeholder:font-normal border-gray-200"
+                style={{ color: 'black' }}
+                autoFocus
+              />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            </div>
 
             {selectOpened && (
               <select
                 value={selectedDisciplina ? String(selectedDisciplina.id) : ""}
                 onChange={handleDisciplinaSelection}
-                size={Math.min(5, disciplinas.length)} // mostra várias opções
-                className="border rounded p-3 font-bold text-2xl cursor-pointer"
+                size={Math.min(6, disciplinas.filter((d) => d.nome.toLowerCase().includes(searchTerm.toLowerCase())).length + 1)}
+                className="border-2 border-gray-200 rounded-xl p-3 font-medium text-lg cursor-pointer hover:border-blue-300 mt-2 focus:outline-none focus:border-blue-500 transition-colors"
               >
-                <option
-                  value="-1"
-                  onClick={() => {
-                    setSelectedDisciplina(null);
-                    setSearchTerm("");
-                    setSelectOpened(true);
-                  }}
-                >[ver todas...]</option>
+                <option value="-1" className="text-gray-500">Listar todas as disciplinas...</option>
                 {disciplinas
                   .filter((disciplina) =>
                     disciplina.nome.toLowerCase().includes(searchTerm.toLowerCase())
@@ -162,21 +161,22 @@ export default function HorarioDisciplina() {
                       {disciplina.nome}
                     </option>
                   ))}
-              </select>)}
+              </select>
+            )}
           </div>
         )}
-
       </div>
+
       {/* Calendário */}
-      {
-        selectedAnoLectivo && selectedSemestre && selectedDisciplina && (
-          <div className="p-4 bg-white rounded-xl shadow-md">
-            <CalendarioSemanalDisciplina
-              disciplina_id={selectedDisciplina.id}
-              ano_lectivo_id={selectedAnoLectivo}
-              semestre={selectedSemestre} />
-          </div>)
-      }
+      {selectedAnoLectivo && selectedSemestre && selectedDisciplina && (
+        <div className="p-4 bg-white rounded-2xl shadow-lg border border-gray-100">
+          <CalendarioSemanalDisciplina
+            disciplina_id={selectedDisciplina.id}
+            ano_lectivo_id={selectedAnoLectivo}
+            semestre={selectedSemestre}
+          />
+        </div>
+      )}
     </div>
   );
 }

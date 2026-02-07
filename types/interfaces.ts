@@ -187,3 +187,15 @@ export interface TurmaComAlunos {
   alunos_avulso: Aluno[];
 }
 
+export interface TurmaAluno {
+  disciplina: string;
+  id_dsdeisi: string;
+  turma: string;
+}
+
+export interface AlunoInfo {
+  numeroAluno: string;
+  aluno: string;
+  numero: string;
+  turmas: TurmaAluno[];
+}

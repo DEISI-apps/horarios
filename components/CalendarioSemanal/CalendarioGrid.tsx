@@ -86,6 +86,8 @@ export default function CalendarGrid({
           <TimeSlotTurma
             key={`slot-${slot.id}`}
             slot={slot}
+            ano_lectivo_id={ano_lectivo_id}
+            semestre={semestre}
           />
         )
       );
@@ -199,6 +201,8 @@ export default function CalendarGrid({
           curso_nome={curso_nome}
           curso_sigla={curso_sigla}
           ano={ano}
+          ano_lectivo_id={ano_lectivo_id}
+          semestre={semestre}
           aulas={aulas}
         />
       )}

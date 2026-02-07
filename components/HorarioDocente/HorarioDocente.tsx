@@ -5,7 +5,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import CalendarioSemanalDocente from "../CalendarioSemanalDocente";
 import { DocenteBase } from "@/types/interfaces";
-import { Loader2, Download, Info } from "lucide-react";
+import { Loader2, Download, Info, Search, GraduationCap } from "lucide-react";
 
 export default function HorarioDocente() {
   const searchParams = useSearchParams();
@@ -87,91 +87,104 @@ export default function HorarioDocente() {
 
   // Loading
   if (isLoadingAnosLectivos || isLoadingDocentes)
-    return <div className="flex justify-center items-center h-32">
-      <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
-      <p className="text-gray-500">A carregar docentes...</p>
-    </div>;
+    return (
+      <div className="flex justify-center items-center h-32 gap-3">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+        <p className="text-gray-500 font-medium">A carregar docentes...</p>
+      </div>
+    );
   if (!anosLectivos) return <div className="p-4 text-lg font-medium">Nenhum ano lectivo disponível.</div>;
 
   // Render
   return (
-    <div className="p-4 flex flex-col gap-6">
+    <div className="p-4 flex flex-col gap-6 max-w-6xl mx-auto">
       
-      {/* Barra de Filtros */}
-      <div className="flex flex-wrap gap-4 items-start bg-white p-4 rounded-xl shadow-md">
-        {/* Ano Lectivo */}
+      {/* Secção de Pesquisa + Info Docente */}
+      <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+        <div className="flex items-center gap-3 mb-5">
+          <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+            <GraduationCap className="w-6 h-6 text-blue-600" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Horário de Docente</h1>
+            <p className="text-sm text-gray-500">Pesquise pelo nome do docente</p>
+          </div>
+        </div>
+        
+        {/* Ano Lectivo - Hidden */}
         <select
           value={selectedAnoLectivo ?? ""}
           onChange={handleAnoLectivoSelection}
-          className="hidden border rounded-lg p-3 font-medium text-xl cursor-pointer hover:bg-gray-50"
+          className="hidden"
         >
           <option value={35}>25-26</option>
-          {/* {anosLectivos
-            .sort((a, b) => b.ano_lectivo.localeCompare(a.ano_lectivo))
-            .map((ano) => (
-              <option key={ano.id} value={ano.id}>
-                {ano.ano_lectivo}
-              </option>
-            ))} */}
         </select>
 
-        {/* Semestre */}
+        {/* Semestre - Hidden */}
         <select
           value={selectedSemestre ?? ""}
           onChange={handleSemestreSelection}
-          className="hidden border rounded-lg p-3 font-medium text-xl cursor-pointer hover:bg-gray-50"
+          className="hidden"
         >
-          {/* <option value="1">1º Semestre</option> */}
           <option value="2">2º Semestre</option>
         </select>
 
         {/* Docente */}
         {selectedAnoLectivo && selectedSemestre && docentes && (
-          <div className="flex flex-col w-full">
-            <div className="flex gap-2 items-center">
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => {
-                  setSelectedDocente(null);
-                  setSearchTerm(e.target.value);
-                  setSelectOpened(true);
-                  setDownloadFn(null);
-                }}
-                onClick={() => setSelectOpened(true)}
-                placeholder="Nome do docente..."
-                className="flex-1 border rounded-lg p-4 font-bold text-2xl focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400"
-                style={{ color: 'black' }}
-                autoFocus
-              />
+          <div className="flex flex-col">
+            <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+              {/* Input de pesquisa */}
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSelectedDocente(null);
+                    setSearchTerm(e.target.value);
+                    setSelectOpened(true);
+                    setDownloadFn(null);
+                  }}
+                  onClick={() => setSelectOpened(true)}
+                  placeholder="Pesquisar docente pelo nome..."
+                  className="w-full border-2 rounded-xl p-4 pl-12 font-medium text-lg focus:outline-none focus:border-blue-500 transition-colors placeholder:text-gray-400 placeholder:font-normal border-gray-200"
+                  style={{ color: 'black' }}
+                  autoFocus
+                />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              </div>
+              
+              {/* Info do docente + botões (quando selecionado) */}
               {selectedDocente && downloadFn && (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <button
                     onClick={downloadFn}
-                    className="p-4 bg-blue-500 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 font-bold whitespace-nowrap"
+                    className="px-5 py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl flex items-center gap-2 font-bold transition-all shadow-md hover:shadow-lg whitespace-nowrap"
                   >
                     <Download className="w-5 h-5" />
-                    Descarregar Horário
+                    <span className="hidden sm:inline">Descarregar</span>
                   </button>
                   <div className="relative group">
-                    <Info className="w-5 h-5 text-gray-400 hover:text-gray-600 cursor-help" />
-                    <div className="absolute right-0 top-full mt-2 w-64 p-3 bg-gray-800 text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                      <p className="mb-2">O ficheiro ICS contém o horário completo das semanas lectivas.</p>
-                      <p>Pode importar no <strong>Google Calendar</strong> ou <strong>Outlook</strong>: clique no ficheiro descarregado ou importe-o nas definições do calendário.</p>
-                      <div className="absolute right-4 -top-2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-gray-800"></div>
+                    <div className="w-12 h-12 bg-gray-100 hover:bg-gray-200 rounded-xl flex items-center justify-center cursor-help transition-colors">
+                      <Info className="w-5 h-5 text-gray-500" />
+                    </div>
+                    <div className="absolute right-0 top-full mt-2 w-72 p-4 bg-gray-900 text-white text-sm rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                      <p className="mb-2 font-medium">Exportar para Calendário</p>
+                      <p className="text-gray-300">O ficheiro ICS contém o horário completo das semanas lectivas. Pode importar no <strong className="text-white">Google Calendar</strong> ou <strong className="text-white">Outlook</strong>.</p>
+                      <div className="absolute right-6 -top-2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-gray-900"></div>
                     </div>
                   </div>
                 </div>
               )}
             </div>
+            
             {selectOpened && (
               <select
                 value={selectedDocente ? String(selectedDocente.id) : ""}
                 onChange={handleDocenteSelection}
-                size={Math.min(5, docentes.length)}
-                className="border rounded-lg p-3 font-bold text-2xl cursor-pointer hover:bg-gray-50 mt-1"
+                size={Math.min(6, docentes.filter((doc) => doc.nome.toLowerCase().includes(searchTerm.toLowerCase())).length + 1)}
+                className="border-2 border-gray-200 rounded-xl p-3 font-medium text-lg cursor-pointer hover:border-blue-300 mt-2 focus:outline-none focus:border-blue-500 transition-colors"
               >
-                <option value="-1">Listar todos...</option>
+                <option value="-1" className="text-gray-500">Listar todos os docentes...</option>
                 {docentes
                   .filter((doc) => doc.nome.toLowerCase().includes(searchTerm.toLowerCase()))
                   .map((docente) => (
@@ -187,7 +200,7 @@ export default function HorarioDocente() {
 
       {/* Calendário */}
       {selectedAnoLectivo && selectedSemestre && selectedDocente && (
-        <div className="p-4 bg-white rounded-xl shadow-md">
+        <div className="p-4 bg-white rounded-2xl shadow-lg border border-gray-100">
           <CalendarioSemanalDocente
             docente_id={selectedDocente.id}
             ano_lectivo_id={selectedAnoLectivo}

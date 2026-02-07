@@ -1,34 +1,25 @@
 'use client';
 
-import { Aula } from '@/types/interfaces';
 import styles from '../CalendarioSemanalDocente/CalendarioSemanalDocente.module.css';
-import CalendarioSemanalTurma from './CalendarioSemanalTurma';
+import CalendarioSemanalDocente from './CalendarioSemanalAluno';
 
-interface TurmaModalProps {
+interface DocenteModalProps {
   isOpen: boolean;
   setModalOpen: (open: boolean) => void;
-  turma_id: number;
-  turma_nome: string;
-  curso_nome: string;
-  curso_sigla: string;
-  ano: number;
+  docente_id: number;
+  docente_nome: string,
   ano_lectivo_id: number;
   semestre: number;
-  aulas: Aula[];
 }
 
-export default function TurmaModal({
+export default function DocenteModal({
   isOpen,
   setModalOpen,
-  turma_id,
-  turma_nome,
-  curso_nome,
-  curso_sigla,
-  ano,
+  docente_id,
+  docente_nome,
   ano_lectivo_id,
-  semestre,
-  aulas,
-}: TurmaModalProps) {
+  semestre
+}: DocenteModalProps) {
   if (!isOpen) return null;
 
   return (
@@ -39,7 +30,7 @@ export default function TurmaModal({
         style={{ maxWidth: '90vw', width: '1200px' }}
       >
         <div className={styles.modalHeader}>
-          <h2>{curso_sigla} - {curso_nome} - {ano}º Ano - Turma {turma_nome}</h2>
+          <h2>Horário de {docente_nome}</h2>
           <button 
             onClick={() => setModalOpen(false)}
             className={styles.closeButton}
@@ -49,9 +40,8 @@ export default function TurmaModal({
         </div>
 
         <div className={styles.modalBody}>
-          <CalendarioSemanalTurma
-            aulas={aulas}
-            turma_id={turma_id}
+          <CalendarioSemanalDocente
+            docente_id={docente_id}
             ano_lectivo_id={ano_lectivo_id}
             semestre={semestre}
           />

@@ -7,6 +7,7 @@ import { gerarCorDisciplina, abreviarNomeDisciplina } from '@/lib/utils';
 import styles from './CalendarioSemanal.module.css';
 import DocenteModal from '../CalendarioSemanalDocente/DocenteModal';
 import SalaModal from '../CalendarioSemanalSala/SalaModal';
+import DisciplinaModal from '../CalendarioSemanalDisciplina/DisciplinaModal';
 
 interface TimeSlotProps {
   slot: Aula;
@@ -42,6 +43,7 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
   const [isModalSalaOpen, setModalSalaOpen] = useState(false);
   const [alunos, setAlunos] = useState<Aluno[]>([]);
   const [isModalAlunosOpen, setModalAlunosOpen] = useState(false);
+  const [isModalDisciplinaOpen, setModalDisciplinaOpen] = useState(false);
 
   const top = calculateSlotPosition(slot.hora_inicio) + 2.5;
   const height = slot.duracao * MINUTE_HEIGHT - 4;
@@ -118,7 +120,15 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
           }}
         >
           <div className={`${styles.slotTitle}`}>
-            {abreviarNomeDisciplina(slot.disciplina_nome, slot.disciplina_nome_abreviado, width, slot.duracao)}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setModalDisciplinaOpen(true);
+              }}
+              className="underline focus:outline-none text-left"
+            >
+              {abreviarNomeDisciplina(slot.disciplina_nome, slot.disciplina_nome_abreviado, width, slot.duracao)}
+            </button>
           </div>
 
           {slot.duracao > 60 && (<div
@@ -208,6 +218,16 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
           setModalOpen={setModalSalaOpen}
           sala_id={slot.sala_id}
           sala_nome={slot.sala_nome}
+          ano_lectivo_id={ano_lectivo_id}
+          semestre={semestre}
+        />
+
+        <DisciplinaModal
+          isOpen={isModalDisciplinaOpen}
+          setModalOpen={setModalDisciplinaOpen}
+          disciplina_id={slot.disciplina_id}
+          disciplina_nome={slot.disciplina_nome}
+          disciplina_cursos={slot.curso_sigla}
           ano_lectivo_id={ano_lectivo_id}
           semestre={semestre}
         />

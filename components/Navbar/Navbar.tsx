@@ -55,6 +55,7 @@ export default function Navbar() {
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/cursos">Curso</Link>
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/docentes">Docente</Link>
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/disciplinas">Disciplina</Link>
+                    <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/alunos">Alunos</Link>
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/salas">Sala</Link>
                     {/* <Link className="ml-6 px-3 py-2 rounded-md bg-gray-800 text-white hover:bg-gray-700 transition" href="/editarHorarios">Editar</Link> */}
                   </nav>

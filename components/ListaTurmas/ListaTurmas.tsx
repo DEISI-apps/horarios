@@ -8,29 +8,44 @@ import styles from './CalendarioSemanal.module.css';
 interface ListaTurmasProps {
   horario: Horario;
   editar?: boolean;
-  onTurmaChange?: (turmaId: number) => void;
+  initialTurma?: string;
+  onTurmaChange?: (turmaId: number, turmaNome: string) => void;
 }
 
-export default function ListaTurmas({ horario, onTurmaChange }: ListaTurmasProps) {
+export default function ListaTurmas({ horario, initialTurma, onTurmaChange }: ListaTurmasProps) {
 
   const [selectedTurma, setSelectedTurma] = useState<Turma | null>(null);
   const [turmas, setTurmas] = useState<Turma[]>([])
+  const [initialized, setInitialized] = useState(false);
 
   const { aulas } = useAulas(horario.id);
   
 
   useEffect (() => {
     setTurmas(horario.turmas)
-    setSelectedTurma(horario.turmas[0])
-    if (horario.turmas[0] && onTurmaChange) {
-      onTurmaChange(horario.turmas[0].id);
+    
+    // Só define a turma inicial na primeira vez
+    if (!initialized) {
+      let turmaToSelect = horario.turmas[0];
+      if (initialTurma) {
+        const foundTurma = horario.turmas.find(t => t.nome === initialTurma);
+        if (foundTurma) {
+          turmaToSelect = foundTurma;
+        }
+      }
+      
+      setSelectedTurma(turmaToSelect)
+      if (turmaToSelect && onTurmaChange) {
+        onTurmaChange(turmaToSelect.id, turmaToSelect.nome);
+      }
+      setInitialized(true);
     }
-  }, [horario, onTurmaChange])
+  }, [horario, initialTurma, initialized, onTurmaChange])
 
   const handleTurmaClick = (turma: Turma) => {
     setSelectedTurma(turma);
     if (onTurmaChange) {
-      onTurmaChange(turma.id);
+      onTurmaChange(turma.id, turma.nome);
     }
   };
 
@@ -65,6 +80,8 @@ export default function ListaTurmas({ horario, onTurmaChange }: ListaTurmasProps
         <CalendarioSemanalTurma
             aulas={aulas}
             turma_id={selectedTurma.id}
+            ano_lectivo_id={horario.ano_lectivo_id}
+            semestre={horario.semestre}
           />
 
     </div>
