@@ -1,7 +1,7 @@
 "use client";
 import { useHorarios } from "@/hooks/useHorarios";
 import { Horario } from "@/types/interfaces";
-import { useState, useEffect, ReactNode } from "react";
+import { useState, useEffect, useCallback, useMemo, ReactNode } from "react";
 
 interface SelectHorarioProps {
   onSelect: (value: number | null) => void;
@@ -30,16 +30,19 @@ export default function SelectHorario({
 
   //
   // C. Transformação/processamento dos dados recebidos
-  const horarioOptions =
-    horarios?.map((horario: Horario) => ({
-      id: horario.id,
-      ano: horario.ano,
-      semestre: horario.semestre,
-      curso: horario.curso.sigla,
-      cursoNome: horario.curso.nome,
-      anoLectivo: horario.ano_lectivo.ano_lectivo,
-      label: `${horario.curso.sigla}, ${horario.ano}ºano, ${horario.semestre}ºsem (${horario.ano_lectivo.ano_lectivo})`,
-    })) || [];
+  const horarioOptions = useMemo(
+    () =>
+      horarios?.map((horario: Horario) => ({
+        id: horario.id,
+        ano: horario.ano,
+        semestre: horario.semestre,
+        curso: horario.curso.sigla,
+        cursoNome: horario.curso.nome,
+        anoLectivo: horario.ano_lectivo.ano_lectivo,
+        label: `${horario.curso.sigla}, ${horario.ano}ºano, ${horario.semestre}ºsem (${horario.ano_lectivo.ano_lectivo})`,
+      })) || [],
+    [horarios]
+  );
 
   // Opções únicas para ano+semestre e curso
   const anoSemestreOptions = Array.from(
@@ -57,6 +60,16 @@ export default function SelectHorario({
 
   //
   // D. Handlers
+  // Combina ano+semestre com curso e procura o horário correspondente
+  const updateSelection = useCallback((anoSem: string, curso: string) => {
+    const selectedHorario = horarioOptions.find(
+      (h) =>
+        `${h.ano}ºano, ${h.semestre}ºsem (${h.anoLectivo})` === anoSem &&
+        h.curso === curso
+    );
+    onSelect(selectedHorario ? selectedHorario.id : null);
+  }, [horarioOptions, onSelect]);
+
   const handleAnoSemestreSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedAnoSemestre(e.target.value);
     updateSelection(e.target.value, selectedCurso);
@@ -69,16 +82,6 @@ export default function SelectHorario({
     onSelectionChange?.(e.target.value, selectedAnoSemestre);
   };
 
-  // Combina ano+semestre com curso e procura o horário correspondente
-  const updateSelection = (anoSem: string, curso: string) => {
-    const selectedHorario = horarioOptions.find(
-      (h) =>
-        `${h.ano}ºano, ${h.semestre}ºsem (${h.anoLectivo})` === anoSem &&
-        h.curso === curso
-    );
-    onSelect(selectedHorario ? selectedHorario.id : null);
-  };
-
   // Inicialização com valores de URL
   useEffect(() => {
     if (!initialized && horarios && horarios.length > 0 && initialCurso && initialAnoSemestre) {
@@ -87,7 +90,7 @@ export default function SelectHorario({
       updateSelection(initialAnoSemestre, initialCurso);
       setInitialized(true);
     }
-  }, [initialized, horarios, initialCurso, initialAnoSemestre]);
+  }, [initialized, horarios, initialCurso, initialAnoSemestre, updateSelection]);
 
   //
   // E. Renderização

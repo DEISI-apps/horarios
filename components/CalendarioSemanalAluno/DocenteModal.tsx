@@ -1,7 +1,7 @@
 'use client';
 
-import styles from '../CalendarioSemanalDocente/CalendarioSemanalDocente.module.css';
-import CalendarioSemanalDocente from './CalendarioSemanalAluno';
+import styles from '@/components/CalendarioSemanalDocente/CalendarioSemanalDocente.module.css';
+import CalendarioSemanalDocente from '@/components/CalendarioSemanalDocente/CalendarioSemanalDocente';
 
 interface DocenteModalProps {
   isOpen: boolean;

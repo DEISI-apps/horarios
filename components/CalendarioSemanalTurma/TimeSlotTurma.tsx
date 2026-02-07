@@ -195,7 +195,7 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotPro
         semestre={semestre}
       />
 
-      {isModalAlunosOpen && createPortal(
+      {isModalAlunosOpen && typeof document !== 'undefined' && createPortal(
         <div
           style={{
             position: 'fixed',
@@ -254,7 +254,8 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotPro
               ))}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </>
