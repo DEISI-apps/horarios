@@ -70,20 +70,20 @@ export function UserNav() {
       <>
         <div className="flex items-center gap-1">
           <button
-            onClick={handleLogin}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 text-white font-semibold tracking-wide transition"
-            title="Area Docente"
-          >
-            <LogIn className="w-4 h-4" />
-            <span>Area Docente</span>
-          </button>
-          <button
             onClick={handleAlunoLogin}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 text-white font-semibold tracking-wide transition"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold tracking-wide transition"
             title="Área do Aluno"
           >
             <LogIn className="w-4 h-4" />
             <span>Área Aluno</span>
+          </button>
+          <button
+            onClick={handleLogin}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold tracking-wide transition"
+            title="Area Docente"
+          >
+            <LogIn className="w-4 h-4" />
+            <span>Area Docente</span>
           </button>
         </div>
 
