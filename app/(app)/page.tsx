@@ -4,12 +4,13 @@ import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { BookOpen, Users, Building2, GraduationCap, Presentation, Search } from "lucide-react";
-import { useSession, signIn } from "next-auth/react";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function Page() {
   const [isZoomed, setIsZoomed] = useState(false);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+  const [showAuthErrorModal, setShowAuthErrorModal] = useState(false);
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const { data: session } = useSession();
   const router = useRouter();
@@ -17,7 +18,18 @@ export default function Page() {
   // Redireciona alunos para o seu horário
   useEffect(() => {
     if (session) {
-      const role = (session.user as { role?: string })?.role;
+      const user = session.user as { role?: string; authError?: string };
+      const authError = user?.authError;
+      const role = user?.role;
+
+      // Mostrar modal se há erro de autenticação
+      if (authError === "aluno_not_found") {
+        setShowAuthErrorModal(true);
+        // Logout silencioso
+        signOut({ redirect: false });
+        return;
+      }
+
       if (role === "aluno") {
         router.push("/meu-horario");
       }
@@ -198,6 +210,46 @@ export default function Page() {
           </div>
         </div>
       </div>
+
+      {showAuthErrorModal && (
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]"
+          onClick={() => setShowAuthErrorModal(false)}
+        >
+          <div
+            className="bg-white rounded-2xl p-6 max-w-md mx-4 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-xl font-bold text-gray-900 mb-3">Acesso restrito</h2>
+            <p className="text-gray-700 mb-4">
+              Não consegue aceder à <strong>Área do Aluno</strong>.
+            </p>
+            <p className="text-gray-700 mb-6">
+              <strong>A área de alunos é reservada exclusivamente a alunos de Licenciatura em Engenharia Informática (LEI).</strong>
+            </p>
+            <p className="text-gray-700 mb-6">
+              Se é aluno LEI e deveria ter acesso, contacte os serviços académicos. Pode consultar o horário da sua turma na área pública.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setShowAuthErrorModal(false);
+                  router.push("/turmas-alunos");
+                }}
+                className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition"
+              >
+                Consultar Horários
+              </button>
+              <button
+                onClick={() => setShowAuthErrorModal(false)}
+                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-medium transition"
+              >
+                Fechar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

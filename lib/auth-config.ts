@@ -68,20 +68,6 @@ export const authConfig = {
         console.error("❌ No email in profile");
         return false;
       }
-
-      const email = profile.email.toLowerCase().trim();
-      const isDocente = authorizedEmails.includes(email);
-
-      if (isDocente) {
-        return true;
-      }
-
-      const aluno = await fetchAlunoByEmail(email);
-      if (!aluno) {
-        console.warn(`⚠️ Aluno não encontrado: ${email}`);
-        return false;
-      }
-
       return true;
     },
     jwt: async ({ token, user }: Any) => {
@@ -102,6 +88,10 @@ export const authConfig = {
             token.role = "aluno";
             token.numero = aluno.numero;
             token.name = aluno.aluno;
+          } else {
+            // Marcar como não encontrado mas ainda assim autenticar
+            token.role = "unauthorized";
+            token.authError = "aluno_not_found";
           }
         }
       }
@@ -116,6 +106,9 @@ export const authConfig = {
         user.numero = token.numero as string;
         if (token.name) {
           user.name = token.name as string;
+        }
+        if (token.authError) {
+          user.authError = token.authError as string;
         }
       }
       return session;
