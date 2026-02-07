@@ -61,7 +61,6 @@ export const authConfig = {
   ],
   pages: {
     signIn: "/",
-    error: "/",
   },
   callbacks: {
     signIn: async ({ profile }: Any) => {
@@ -79,7 +78,7 @@ export const authConfig = {
 
       const aluno = await fetchAlunoByEmail(email);
       if (!aluno) {
-        console.warn(`⚠️ Unauthorized email: ${email}`);
+        console.warn(`⚠️ Aluno não encontrado: ${email}`);
         return false;
       }
 
