@@ -6,18 +6,28 @@ import { useState, useEffect } from "react";
 
 export function UserNav() {
   const { data: session, status } = useSession();
-  const [showModal, setShowModal] = useState(false);
+  const [showAlunoModal, setShowAlunoModal] = useState(false);
+  const [showDocenteModal, setShowDocenteModal] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     
     if (status === "authenticated") {
       const attemptingAluno = sessionStorage.getItem("attempting_aluno_login");
+      const attemptingDocente = sessionStorage.getItem("attempting_docente_login");
+      const role = (session?.user as { role?: string })?.role;
+
       if (attemptingAluno === "true") {
         sessionStorage.removeItem("attempting_aluno_login");
-        const role = (session?.user as { role?: string })?.role;
         if (role !== "aluno") {
-          setShowModal(true);
+          setShowAlunoModal(true);
+        }
+      }
+
+      if (attemptingDocente === "true") {
+        sessionStorage.removeItem("attempting_docente_login");
+        if (role !== "docente") {
+          setShowDocenteModal(true);
         }
       }
     }
@@ -28,6 +38,9 @@ export function UserNav() {
   }
 
   async function handleLogin() {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("attempting_docente_login", "true");
+    }
     await signIn("google", { callbackUrl: "/" });
   }
 
@@ -60,10 +73,10 @@ export function UserNav() {
           </button>
         </div>
 
-        {showModal && (
+        {showAlunoModal && (
           <div
             className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]"
-            onClick={() => setShowModal(false)}
+            onClick={() => setShowAlunoModal(false)}
           >
             <div
               className="bg-white rounded-2xl p-6 max-w-md mx-4 shadow-2xl"
@@ -82,7 +95,7 @@ export function UserNav() {
               <div className="flex gap-3">
                 <button
                   onClick={() => {
-                    setShowModal(false);
+                    setShowAlunoModal(false);
                     window.location.href = "/turmas-alunos";
                   }}
                   className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition"
@@ -90,7 +103,47 @@ export function UserNav() {
                   Ver Horários Públicos
                 </button>
                 <button
-                  onClick={() => setShowModal(false)}
+                  onClick={() => setShowAlunoModal(false)}
+                  className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-medium transition"
+                >
+                  Fechar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showDocenteModal && (
+          <div
+            className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]"
+            onClick={() => setShowDocenteModal(false)}
+          >
+            <div
+              className="bg-white rounded-2xl p-6 max-w-md mx-4 shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h2 className="text-xl font-bold text-gray-900 mb-3">Acesso restrito</h2>
+              <p className="text-gray-700 mb-4">
+                Não possui acesso à área de docentes.
+              </p>
+              <p className="text-gray-700 mb-4">
+                <strong>Neste semestre, apenas é permitido o acesso a alunos de Licenciatura em Engenharia Informática (LEI).</strong>
+              </p>
+              <p className="text-gray-700 mb-6">
+                Se é aluno, pode consultar o horário da sua turma através da área pública. Se é docente e deveria ter acesso, contacte os administradores do sistema.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    setShowDocenteModal(false);
+                    window.location.href = "/turmas-alunos";
+                  }}
+                  className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition"
+                >
+                  Consultar Horários
+                </button>
+                <button
+                  onClick={() => setShowDocenteModal(false)}
                   className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-medium transition"
                 >
                   Fechar
