@@ -89,7 +89,7 @@ export function UserNav() {
 
         {showAlunoModal && (
           <div
-            className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]"
+            className="fixed inset-0 bg-black/50 grid place-items-center z-[100] p-4"
             onClick={() => setShowAlunoModal(false)}
           >
             <div
@@ -129,7 +129,7 @@ export function UserNav() {
 
         {showDocenteModal && (
           <div
-            className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]"
+            className="fixed inset-0 bg-black/50 grid place-items-center z-[100] p-4"
             onClick={() => setShowDocenteModal(false)}
           >
             <div
