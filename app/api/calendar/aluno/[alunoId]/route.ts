@@ -24,6 +24,17 @@ export async function GET(
   const ANO_LECTIVO = anoParam ? Number(anoParam) : SEMESTER_START_YEAR;
   const SEMESTRE = semParam ? Number(semParam) : 1;
 
+  // Validações
+  if (anoParam && Number.isNaN(ANO_LECTIVO)) {
+    return new NextResponse('Parâmetro "ano" inválido', { status: 400 });
+  }
+  if (semParam && Number.isNaN(SEMESTRE)) {
+    return new NextResponse('Parâmetro "sem" inválido', { status: 400 });
+  }
+
+  // Debug logging
+  console.log(`[Calendar API] Requested: aluno=${alunoIdParam}, ano=${anoParam} (resolved=${ANO_LECTIVO}), sem=${semParam} (resolved=${SEMESTRE})`);
+
   // --- validar token (opcional) ---
   const VALID_TOKEN = process.env.CALENDAR_TOKEN;
   // Se existir um token configurado E o token fornecido não corresponder, rejeitar
@@ -61,6 +72,7 @@ export async function GET(
 
   // Verificar se encontrou aulas
   if (aulasAluno.length === 0) {
+    console.log(`[Calendar API] Nenhuma aula encontrada - aluno=${alunoIdParam}, ano=${ANO_LECTIVO}, sem=${SEMESTRE}, turmas=${alunoInfo.turmas.length}`);
     return new NextResponse('Nenhuma aula encontrada para este aluno', { status: 404 });
   }
 

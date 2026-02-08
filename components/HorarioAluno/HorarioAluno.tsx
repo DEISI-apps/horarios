@@ -169,15 +169,12 @@ export default function HorarioAluno({ numeroAlunoInicial, esconderPesquisa }: H
                   <button
                     onClick={() => {
                       if (googleCalendarLink) {
-                        console.log('=== Subscrição Calendário ===');
-                        console.log('Link webcal:', googleCalendarLink);
+                        console.log('=== Google Calendar Subscription ===');
+                        console.log('Calendar URL:', googleCalendarLink);
                         
-                        // Converter webcal:// para https:// para o Google Calendar
-                        const httpsUrl = googleCalendarLink.replace('webcal://', 'https://');
-                        
-                        // Abrir Google Calendar com o URL de subscrição
-                        const googleCalendarUrl = `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(httpsUrl)}`;
-                        console.log('Abrindo Google Calendar:', googleCalendarUrl);
+                        // Google Calendar render endpoint com HTTPS URL encoded como parâmetro cid
+                        const googleCalendarUrl = `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(googleCalendarLink)}`;
+                        console.log('Opening:', googleCalendarUrl);
                         
                         window.open(googleCalendarUrl, '_blank');
                       } else {

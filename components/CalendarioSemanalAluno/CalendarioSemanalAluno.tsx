@@ -30,15 +30,15 @@ interface Props {
 
 /**
  * Gera o link de subscrição para o Google Calendar
+ * Retorna um URL HTTPS limpo que será encodificado quando necessário
  */
 function generateGoogleCalendarLink(alunoId: string, anoLectivo: number, semestre: number): string {
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://horarios-phi.vercel.app';
   
-  // Usar webcal:// que é o protocolo padrão para subscrição de calendários
-  // Converte https:// para webcal://
-  const webcalUrl = `${baseUrl}/api/calendar/aluno/${alunoId}?ano=${anoLectivo}&sem=${semestre}`.replace('https://', 'webcal://').replace('http://', 'webcal://');
+  // Retornar URL HTTPS simples - Google Calendar suporta HTTPS diretamente
+  const calendarUrl = `${baseUrl}/api/calendar/aluno/${alunoId}?ano=${anoLectivo}&sem=${semestre}`;
   
-  return webcalUrl;
+  return calendarUrl;
 }
 
 
