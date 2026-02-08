@@ -169,15 +169,19 @@ export default function HorarioAluno({ numeroAlunoInicial, esconderPesquisa }: H
                   <button
                     onClick={() => {
                       if (googleCalendarLink) {
-                        window.open(googleCalendarLink, '_blank');
+                        console.log('=== Subscrição Calendário ===');
+                        console.log('Link webcal:', googleCalendarLink);
+                        
+                        // Webcal abre diretamente o calendário do sistema
+                        window.location.href = googleCalendarLink;
                       }
                     }}
                     disabled={!googleCalendarLink}
                     className="flex-1 sm:flex-none px-5 py-2.5 bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white rounded-lg flex items-center justify-center gap-2 font-semibold transition-all shadow-sm hover:shadow-md text-sm"
                   >
                     <Calendar className="w-4 h-4" />
-                    <span className="hidden sm:inline">Google Calendar</span>
-                    <span className="sm:hidden">Calendar</span>
+                    <span className="hidden sm:inline">Subscrever</span>
+                    <span className="sm:hidden">Subscrever</span>
                   </button>
                   <div className="relative group">
                     <div className="w-9 h-9 bg-blue-100 rounded-full flex items-center justify-center cursor-help hover:bg-blue-200 transition-colors">
@@ -185,8 +189,8 @@ export default function HorarioAluno({ numeroAlunoInicial, esconderPesquisa }: H
                     </div>
                     <div className="absolute right-0 top-full mt-2 w-72 p-4 bg-gray-900 text-white text-sm rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
                       <p className="mb-2 font-medium">Exportar para Calendário</p>
-                      <p className="text-gray-300"><strong>Descarregar:</strong> O ficheiro ICS contém o horário completo. Pode importar no Google Calendar ou Outlook.</p>
-                      <p className="text-gray-300 mt-2"><strong>Google Calendar:</strong> Subscreve-se automaticamente com atualizações em tempo real.</p>
+                      <p className="text-gray-300"><strong>Descarregar:</strong> Ficheiro ICS para importar manualmente.</p>
+                      <p className="text-gray-300 mt-2"><strong>Subscrever:</strong> Adiciona automaticamente ao seu calendário com atualizações em tempo real.</p>
                       <div className="absolute right-6 -top-2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-gray-900"></div>
                     </div>
                   </div>

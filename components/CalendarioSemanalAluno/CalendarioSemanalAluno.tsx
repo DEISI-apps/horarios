@@ -33,15 +33,12 @@ interface Props {
  */
 function generateGoogleCalendarLink(alunoId: string, anoLectivo: number, semestre: number): string {
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://horarios-phi.vercel.app';
-  const calendarUrl = `${baseUrl}/api/calendar/aluno/${alunoId}?ano=${anoLectivo}&sem=${semestre}`;
   
-  // Google Calendar aceita melhor o formato "add by URL"
-  // Usar webcal:// ou o formato de adicionar calendário remoto
-  const httpsUrl = calendarUrl.replace('http://', 'https://');
-  const encodedUrl = encodeURIComponent(httpsUrl);
+  // Usar webcal:// que é o protocolo padrão para subscrição de calendários
+  // Converte https:// para webcal://
+  const webcalUrl = `${baseUrl}/api/calendar/aluno/${alunoId}?ano=${anoLectivo}&sem=${semestre}`.replace('https://', 'webcal://').replace('http://', 'webcal://');
   
-  // Formato correto para adicionar calendário por URL no Google Calendar
-  return `https://calendar.google.com/calendar/u/0/r/settings/addbyurl?url=${encodedUrl}`;
+  return webcalUrl;
 }
 
 
@@ -242,8 +239,14 @@ export default function CalendarioSemanalAluno({
 
   const handleAddToGoogleCalendar = useCallback(() => {
     if (googleCalendarLink) {
-      console.log('Google Calendar Link:', googleCalendarLink);
-      window.open(googleCalendarLink, '_blank');
+      console.log('=== Subscrição via webcal:// ===');
+      console.log('Link:', googleCalendarLink);
+      
+      // webcal:// abre diretamente a aplicação de calendário do sistema
+      // Funciona com Google Calendar (web), Apple Calendar, Outlook, etc.
+      window.location.href = googleCalendarLink;
+    } else {
+      console.error('Link do calendário não gerado');
     }
   }, [googleCalendarLink]);
 
@@ -286,13 +289,13 @@ export default function CalendarioSemanalAluno({
             className="py-2 px-4 bg-red-500 hover:bg-red-700 disabled:bg-gray-400 text-white rounded-lg flex items-center gap-2 font-bold"
           >
             <Calendar className="w-4 h-4" />
-            Adicionar ao Google Calendar
+            Subscrever Calendário
           </button>
           <div className="relative group">
             <Info className="w-5 h-5 text-gray-400 hover:text-gray-600 cursor-help" />
             <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-80 p-3 bg-gray-800 text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-              <p className="mb-2"><strong>Descarregar Horário:</strong> O ficheiro ICS contém o horário completo das semanas lectivas. Pode importar no Google Calendar ou Outlook.</p>
-              <p><strong>Adicionar ao Google Calendar:</strong> Subscreve-se automaticamente ao seu calendário, com atualizações em tempo real.</p>
+              <p className="mb-2"><strong>Descarregar Horário:</strong> Ficheiro ICS para importar manualmente no Google Calendar, Outlook, etc.</p>
+              <p><strong>Subscrever Calendário:</strong> Adiciona ao seu calendário com atualizações automáticas. Funciona com todos os calendários (Google, Apple, Outlook).</p>
               <div className="absolute left-1/2 -translate-x-1/2 -top-2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-gray-800"></div>
             </div>
           </div>

@@ -68,15 +68,25 @@ export async function GET(
   const vcalendar = new ICAL.Component(['vcalendar', [], []]);
   vcalendar.addPropertyWithValue('version', '2.0');
   vcalendar.addPropertyWithValue('prodid', '-//Horario Aluno DEISI//PT');
+  vcalendar.addPropertyWithValue('calscale', 'GREGORIAN');
+  vcalendar.addPropertyWithValue('method', 'PUBLISH');
+  vcalendar.addPropertyWithValue('x-wr-calname', `Horário ${alunoInfo.aluno}`);
+  vcalendar.addPropertyWithValue('x-wr-timezone', 'Europe/Lisbon');
 
   // --- adicionar aulas ---
   aulasAluno.forEach(aula => addAulaToCalendar(vcalendar, aula));
 
+  // Validar que o calendário tem eventos
+  const icalString = vcalendar.toString();
+  
+  // Debug log (remover em produção)
+  console.log(`[Calendar API] Aluno: ${alunoIdParam}, Aulas: ${aulasAluno.length}, iCal tamanho: ${icalString.length} bytes`);
+
   // --- retornar iCal ---
-  return new NextResponse(vcalendar.toString(), {
+  return new NextResponse(icalString, {
     headers: {
       'Content-Type': 'text/calendar; charset=utf-8',
-      'Content-Disposition': `attachment; filename="horario-aluno-${alunoIdParam}.ics"`,
+      'Content-Disposition': `inline; filename="horario-aluno-${alunoIdParam}.ics"`,
       'Cache-Control': 'public, max-age=3600', // Cache por 1 hora
       'Access-Control-Allow-Origin': '*', // Permite acesso do Google Calendar
     },
