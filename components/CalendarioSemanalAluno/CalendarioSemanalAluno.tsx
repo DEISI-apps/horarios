@@ -239,15 +239,12 @@ export default function CalendarioSemanalAluno({
 
   const handleAddToGoogleCalendar = useCallback(() => {
     if (googleCalendarLink) {
-      console.log('=== Subscrição via Google Calendar ===');
-      console.log('Link webcal:', googleCalendarLink);
+      console.log('=== Google Calendar Subscription ===');
+      console.log('Calendar URL:', googleCalendarLink);
       
-      // Converter webcal:// para https://
-      const httpsUrl = googleCalendarLink.replace('webcal://', 'https://');
-      
-      // Criar URL do Google Calendar
-      const googleCalendarUrl = `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(httpsUrl)}`;
-      console.log('Abrindo:', googleCalendarUrl);
+      // Google Calendar render endpoint com URL completamente encoded no parâmetro cid
+      const googleCalendarUrl = `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(googleCalendarLink)}`;
+      console.log('Opening Google Calendar:', googleCalendarUrl);
       
       // Abrir em nova aba
       window.open(googleCalendarUrl, '_blank');
