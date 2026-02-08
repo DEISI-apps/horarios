@@ -32,11 +32,13 @@ interface Props {
  * Gera o link de subscrição para o Google Calendar
  */
 function generateGoogleCalendarLink(alunoId: string, anoLectivo: number, semestre: number): string {
-  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://horarios-phi.vercel.app';
   const calendarUrl = `${baseUrl}/api/calendar/aluno/${alunoId}?ano=${anoLectivo}&sem=${semestre}`;
-  // Encode apenas uma vez
+  
+  // Para Google Calendar, usar o formato correto de subscrição
+  // Opção 1: Link direto para adicionar via URL (não funciona com localhost)
   const encodedUrl = encodeURIComponent(calendarUrl);
-  return `https://calendar.google.com/calendar/u/0/r?cid=${encodedUrl}`;
+  return `https://calendar.google.com/calendar/render?cid=${encodedUrl}`;
 }
 
 

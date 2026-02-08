@@ -24,9 +24,10 @@ export async function GET(
   const ANO_LECTIVO = anoParam ? Number(anoParam) : SEMESTER_START_YEAR;
   const SEMESTRE = semParam ? Number(semParam) : 1;
 
-  // --- validar token (opcional, substituir pela tua lógica) ---
-  const VALID_TOKEN = process.env.CALENDAR_TOKEN; // definir em .env
-  if (VALID_TOKEN && tokenParam !== VALID_TOKEN) {
+  // --- validar token (opcional) ---
+  const VALID_TOKEN = process.env.CALENDAR_TOKEN;
+  // Se existir um token configurado E o token fornecido não corresponder, rejeitar
+  if (VALID_TOKEN && tokenParam && tokenParam !== VALID_TOKEN) {
     return new NextResponse('Token inválido', { status: 401 });
   }
 

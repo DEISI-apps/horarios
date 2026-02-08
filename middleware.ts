@@ -15,6 +15,7 @@ export function middleware(request: NextRequest) {
     pathname === "/turmas-lei" ||
     pathname === "/turmas-alunos" ||
     pathname.startsWith("/api/auth") ||
+    pathname.startsWith("/api/calendar") || // Permite acesso público aos calendários
     pathname.startsWith("/_next") ||
     pathname.includes(".") // arquivos estáticos como favicon.ico
   ) {
