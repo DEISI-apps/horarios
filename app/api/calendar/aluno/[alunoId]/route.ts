@@ -3,19 +3,14 @@ import ICAL from 'ical.js';
 import { fetchAulasAnoSemestre } from '@/lib/api/aulas';
 import { addAulaToCalendar } from '@/lib/aulasCalendar';
 import { Aula } from '@/types/interfaces';
-
-// Constantes do semestre
-import {
-  SEMESTER_START_YEAR,
-  SEMESTER_START_MONTH,
-  SEMESTER_START_MONTH_NUMBER_OF_DAYS,
-} from '@/lib/constants';
+import { SEMESTER_START_YEAR } from '@/lib/constants';
 
 export async function GET(
   req: Request,
-  { params }: { params: { alunoId: string } }
+  { params }: { params: Promise<{ alunoId: string }> }
 ) {
-  const alunoId = Number(params.alunoId);
+  const { alunoId: alunoIdParam } = await params;
+  const alunoId = Number(alunoIdParam);
   if (Number.isNaN(alunoId)) {
     return new NextResponse('Aluno inválido', { status: 400 });
   }

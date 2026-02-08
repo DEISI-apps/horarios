@@ -25,6 +25,7 @@ interface Props {
   semestre: number;
   showDownloadButton?: boolean;
   onDownloadReady?: (downloadFn: () => void) => void;
+  onGoogleCalendarLinkReady?: (link: string) => void;
 }
 
 /**
@@ -129,6 +130,7 @@ export default function CalendarioSemanalAluno({
   semestre,
   showDownloadButton = true,
   onDownloadReady,
+  onGoogleCalendarLinkReady,
 }: Props) {
   
   const { aulas, isLoadingAulas } = useAulasAnoSemestre(ano_lectivo_id, semestre);
@@ -141,8 +143,12 @@ export default function CalendarioSemanalAluno({
     if (alunoId) {
       const link = generateGoogleCalendarLink(alunoId, ano_lectivo_id, semestre);
       setGoogleCalendarLink(link);
+      // Notificar o componente pai do link
+      if (onGoogleCalendarLinkReady) {
+        onGoogleCalendarLinkReady(link);
+      }
     }
-  }, [aluno_info.numero, aluno_info.numeroAluno, ano_lectivo_id, semestre]);
+  }, [aluno_info.numero, aluno_info.numeroAluno, ano_lectivo_id, semestre, onGoogleCalendarLinkReady]);
 
   const aulasAluno = useMemo(() => {
     if (!aulas?.length) return [];
@@ -263,22 +269,8 @@ export default function CalendarioSemanalAluno({
 
   return (
     <section>
-      <div className={styles.container} style={{ position: 'relative' }}>
-        <div className={`${styles.timeSlots} ${styles.timeMarkersFixed}`} style={{ height: `80px`, position: 'absolute', top: 0, left: -1, zIndex: 1 }} />
-        <div className={`${styles.timeSlots} ${styles.timeMarkersFixed}`} style={{ height: `${CALENDAR_HEIGHT}px`, position: 'absolute', top: '40px', left: -1, zIndex: 1 }}>
-          <TimeMarkers />
-        </div>
-        <div className={styles.calendarWrapper}>
-          <CalendarioGridTurma
-            aulas={aulasAluno}
-            turma_id={0}
-            ano_lectivo_id={ano_lectivo_id}
-            semestre={semestre}
-          />
-        </div>
-      </div>
       {showDownloadButton && (
-        <div className="mt-4 flex justify-center items-center gap-2">
+        <div className="mb-4 flex justify-center items-center gap-2">
           <button className="py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 font-bold" onClick={handleDownload}>
             <Download className="w-4 h-4" />
             Descarregar Horário
@@ -301,6 +293,20 @@ export default function CalendarioSemanalAluno({
           </div>
         </div>
       )}
+      <div className={styles.container} style={{ position: 'relative' }}>
+        <div className={`${styles.timeSlots} ${styles.timeMarkersFixed}`} style={{ height: `80px`, position: 'absolute', top: 0, left: -1, zIndex: 1 }} />
+        <div className={`${styles.timeSlots} ${styles.timeMarkersFixed}`} style={{ height: `${CALENDAR_HEIGHT}px`, position: 'absolute', top: '40px', left: -1, zIndex: 1 }}>
+          <TimeMarkers />
+        </div>
+        <div className={styles.calendarWrapper}>
+          <CalendarioGridTurma
+            aulas={aulasAluno}
+            turma_id={0}
+            ano_lectivo_id={ano_lectivo_id}
+            semestre={semestre}
+          />
+        </div>
+      </div>
     </section>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 import { useState, useCallback, useEffect, useRef } from "react";
 import CalendarioSemanalAluno from "../CalendarioSemanalAluno";
-import { Download, Info, Search, User, Loader2 } from "lucide-react";
+import { Download, Info, Search, User, Loader2, Calendar } from "lucide-react";
 
 
 import { AlunoInfo } from "@/types/interfaces";
@@ -16,6 +16,7 @@ export default function HorarioAluno({ numeroAlunoInicial, esconderPesquisa }: H
   const [numeroAluno, setnumeroAluno] = useState(numeroAlunoInicial ?? "");
   const [alunoInfo, setAlunoInfo] = useState<AlunoInfo | null>(null);
   const [downloadFn, setDownloadFn] = useState<(() => void) | null>(null);
+  const [googleCalendarLink, setGoogleCalendarLink] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const selectedAnoLectivo = 35;
@@ -27,6 +28,11 @@ export default function HorarioAluno({ numeroAlunoInicial, esconderPesquisa }: H
   // Callback para receber a função de download do CalendarioSemanalAluno
   const handleDownloadReady = useCallback((fn: () => void) => {
     setDownloadFn(() => fn);
+  }, []);
+
+  // Callback para receber o link do Google Calendar
+  const handleGoogleCalendarLinkReady = useCallback((link: string) => {
+    setGoogleCalendarLink(link);
   }, []);
 
   const fetchTurmas = useCallback((numero: string) => {
@@ -160,13 +166,27 @@ export default function HorarioAluno({ numeroAlunoInicial, esconderPesquisa }: H
                     <span className="hidden sm:inline">Descarregar Horário</span>
                     <span className="sm:hidden">Descarregar</span>
                   </button>
+                  <button
+                    onClick={() => {
+                      if (googleCalendarLink) {
+                        window.open(googleCalendarLink, '_blank');
+                      }
+                    }}
+                    disabled={!googleCalendarLink}
+                    className="flex-1 sm:flex-none px-5 py-2.5 bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white rounded-lg flex items-center justify-center gap-2 font-semibold transition-all shadow-sm hover:shadow-md text-sm"
+                  >
+                    <Calendar className="w-4 h-4" />
+                    <span className="hidden sm:inline">Google Calendar</span>
+                    <span className="sm:hidden">Calendar</span>
+                  </button>
                   <div className="relative group">
                     <div className="w-9 h-9 bg-blue-100 rounded-full flex items-center justify-center cursor-help hover:bg-blue-200 transition-colors">
                       <Info className="w-4 h-4 text-blue-600" />
                     </div>
                     <div className="absolute right-0 top-full mt-2 w-72 p-4 bg-gray-900 text-white text-sm rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
                       <p className="mb-2 font-medium">Exportar para Calendário</p>
-                      <p className="text-gray-300">O ficheiro ICS contém o horário completo das semanas lectivas. Pode importar no <strong className="text-white">Google Calendar</strong> ou <strong className="text-white">Outlook</strong>.</p>
+                      <p className="text-gray-300"><strong>Descarregar:</strong> O ficheiro ICS contém o horário completo. Pode importar no Google Calendar ou Outlook.</p>
+                      <p className="text-gray-300 mt-2"><strong>Google Calendar:</strong> Subscreve-se automaticamente com atualizações em tempo real.</p>
                       <div className="absolute right-6 -top-2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-gray-900"></div>
                     </div>
                   </div>
@@ -184,8 +204,9 @@ export default function HorarioAluno({ numeroAlunoInicial, esconderPesquisa }: H
             aluno_info={alunoInfo}
             ano_lectivo_id={selectedAnoLectivo}
             semestre={selectedSemestre}
-            showDownloadButton={true}
+            showDownloadButton={false}
             onDownloadReady={handleDownloadReady}
+            onGoogleCalendarLinkReady={handleGoogleCalendarLinkReady}
           />
         </div>
       )}

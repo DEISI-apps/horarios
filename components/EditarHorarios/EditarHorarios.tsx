@@ -7,7 +7,7 @@ import TurmasSection from "../TurmasSection/TurmasSection";
 import CalendarioSemanal from "../CalendarioSemanal";
 import { useHorarios } from "@/hooks/useHorarios";
 import SalasSection from "../SalasSection/SalasSection";
-import { Calendar, Building2, BookOpen, Users, Clock } from "lucide-react";
+import { Calendar, Building2, BookOpen, Users } from "lucide-react";
 
 
 export default function EditarHorarios() {
