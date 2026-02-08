@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import ICAL from 'ical.js';
 import { fetchAulasAnoSemestre } from '@/lib/api/aulas';
 import { addAulaToCalendar } from '@/lib/aulasCalendar';
-import { Aula } from '@/types/interfaces';
+import { Aula, AlunoInfo, TurmaAluno } from '@/types/interfaces';
 import { SEMESTER_START_YEAR } from '@/lib/constants';
 
 export async function GET(
@@ -40,10 +40,10 @@ export async function GET(
     return new NextResponse('Aluno não encontrado', { status: 404 });
   }
   
-  const alunoInfo = await alunoResponse.json();
+  const alunoInfo: AlunoInfo = await alunoResponse.json();
   
-  if (alunoInfo?.erro) {
-    return new NextResponse(alunoInfo.erro, { status: 404 });
+  if ('erro' in alunoInfo) {
+    return new NextResponse('Aluno não encontrado', { status: 404 });
   }
 
   // --- buscar aulas ---
@@ -52,7 +52,7 @@ export async function GET(
   // --- filtrar aulas do aluno usando turma + disciplina_id ---
   const aulasAluno: Aula[] = [];
   
-  alunoInfo.turmas.forEach((turma: any) => {
+  alunoInfo.turmas.forEach((turma: TurmaAluno) => {
     const matchingAulas = aulas.filter(
       a => a.turma_nome === turma.turma && a.disciplina_id === Number(turma.id_dsdeisi)
     );
