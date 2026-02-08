@@ -239,14 +239,20 @@ export default function CalendarioSemanalAluno({
 
   const handleAddToGoogleCalendar = useCallback(() => {
     if (googleCalendarLink) {
-      console.log('=== Subscrição via webcal:// ===');
-      console.log('Link:', googleCalendarLink);
+      console.log('=== Subscrição via Google Calendar ===');
+      console.log('Link webcal:', googleCalendarLink);
       
-      // webcal:// abre diretamente a aplicação de calendário do sistema
-      // Funciona com Google Calendar (web), Apple Calendar, Outlook, etc.
-      window.location.href = googleCalendarLink;
+      // Converter webcal:// para https://
+      const httpsUrl = googleCalendarLink.replace('webcal://', 'https://');
+      
+      // Criar URL do Google Calendar
+      const googleCalendarUrl = `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(httpsUrl)}`;
+      console.log('Abrindo:', googleCalendarUrl);
+      
+      // Abrir em nova aba
+      window.open(googleCalendarUrl, '_blank');
     } else {
-      console.error('Link do calendário não gerado');
+      alert('Link do calendário não disponível. Tente novamente.');
     }
   }, [googleCalendarLink]);
 
@@ -289,13 +295,13 @@ export default function CalendarioSemanalAluno({
             className="py-2 px-4 bg-red-500 hover:bg-red-700 disabled:bg-gray-400 text-white rounded-lg flex items-center gap-2 font-bold"
           >
             <Calendar className="w-4 h-4" />
-            Subscrever Calendário
+            Google Calendar
           </button>
           <div className="relative group">
             <Info className="w-5 h-5 text-gray-400 hover:text-gray-600 cursor-help" />
             <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-80 p-3 bg-gray-800 text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
               <p className="mb-2"><strong>Descarregar Horário:</strong> Ficheiro ICS para importar manualmente no Google Calendar, Outlook, etc.</p>
-              <p><strong>Subscrever Calendário:</strong> Adiciona ao seu calendário com atualizações automáticas. Funciona com todos os calendários (Google, Apple, Outlook).</p>
+              <p><strong>Google Calendar:</strong> Abre o Google Calendar para adicionar subscrição automática com atualizações em tempo real.</p>
               <div className="absolute left-1/2 -translate-x-1/2 -top-2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-gray-800"></div>
             </div>
           </div>
