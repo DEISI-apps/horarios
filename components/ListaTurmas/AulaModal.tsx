@@ -21,6 +21,7 @@ interface AulaModalProps {
   horario: Horario;
   setAulaSelecionada: (aula: SlotForm | ((prev: SlotForm) => SlotForm)) => void;
   mutateAulas: KeyedMutator<AulaAPI[]>; // KeyedMutator é o tipo do SWR para a função mutate
+  mutateAulasAnoSemestre?: KeyedMutator<AulaAPI[]>; // Revalidar aulas do ano/semestre
   handleDuplicate: () => void;
 }
 
@@ -48,6 +49,7 @@ export default function AulaModal({
   horario,
   setAulaSelecionada,
   mutateAulas,
+  mutateAulasAnoSemestre,
   handleDuplicate,
 }: AulaModalProps) {
 
@@ -60,7 +62,7 @@ export default function AulaModal({
 
 
   // B. Hook de obtenção de dados
-  const { aulas, isLoadingAulas } = useAulasAnoSemestre(horario.ano_lectivo_id, horario.semestre);
+  const { aulas, isLoadingAulas, mutate: mutateHookAulasAnoSemestre } = useAulasAnoSemestre(horario.ano_lectivo_id, horario.semestre);
 
 
   //
@@ -135,8 +137,6 @@ export default function AulaModal({
     e.preventDefault();
     setLoadingSaving(true);
     setError(null);
-
-    await mutateAulas();
 
     try {
       const aulaData: AulaIn = {
@@ -276,7 +276,12 @@ console.log("conflito ja existe essa aula")
         await saveAula(aulaData, null);
       }
 
-      await mutateAulas(); // Importante atualizar os dados após gravar
+      // Revalidar dados imediatamente (não em background)
+      await mutateAulas(undefined, { revalidate: true });
+      // Se houver prop de revalidação do ano/semestre, também revalidar
+      if (mutateAulasAnoSemestre || mutateHookAulasAnoSemestre) {
+        await (mutateAulasAnoSemestre || mutateHookAulasAnoSemestre)(undefined, { revalidate: true });
+      }
       handleClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao gravar aula');
@@ -295,7 +300,12 @@ console.log("conflito ja existe essa aula")
 
     try {
       await deleteAula(aulaSelecionada.id);
-      await mutateAulas(); // Importante atualizar os dados após deletar
+      // Revalidar dados imediatamente (não em background)
+      await mutateAulas(undefined, { revalidate: true });
+      // Se houver prop de revalidação do ano/semestre, também revalidar
+      if (mutateAulasAnoSemestre || mutateHookAulasAnoSemestre) {
+        await (mutateAulasAnoSemestre || mutateHookAulasAnoSemestre)(undefined, { revalidate: true });
+      }
       handleClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao excluir aula');

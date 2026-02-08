@@ -51,7 +51,7 @@ export default function CalendarioSemanal({ horario, editar }: { horario: Horari
   const { turmas, isLoadingTurmas } = useTurmas(horario.id);
   const { salas, isLoadingSalas } = useSalas();
   const { aulas, isLoadingAulas, mutateAulas } = useAulas(horario.id);
-  const { aulas: aulasAnoSemestre } = useAulasAnoSemestre(horario.ano_lectivo_id, horario.semestre);
+  const { aulas: aulasAnoSemestre, mutate: mutateAulasAnoSemestre } = useAulasAnoSemestre(horario.ano_lectivo_id, horario.semestre);
 
   //
   // C. Computação de dados
@@ -187,6 +187,7 @@ export default function CalendarioSemanal({ horario, editar }: { horario: Horari
           horario={horario}
           setAulaSelecionada={setAulaSelecionada}
           mutateAulas={mutateAulas}
+          mutateAulasAnoSemestre={mutateAulasAnoSemestre}
           handleDuplicate={handleDuplicate}
         />)}
       </div>

@@ -14,20 +14,24 @@ export const saveAula = async (aulaData: AulaIn, aulaId?: number | null): Promis
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(aulaData)
+    body: JSON.stringify(aulaData),
+    credentials: 'include'
   });
 
   if (!response.ok) {
-    throw new Error('Erro ao gravar aula');
+    const errorData = await response.json().catch(() => ({ message: 'Erro desconhecido' }));
+    throw new Error(errorData.message || `Erro ao gravar aula: ${response.status}`);
   }
 };
 
 export const deleteAula = async (aulaId: number): Promise<void> => {
   const response = await fetch(`https://dsdeisi.pythonanywhere.com/api/horarios/aulas/${aulaId}`, {
-    method: 'DELETE'
+    method: 'DELETE',
+    credentials: 'include'
   });
 
   if (!response.ok) {
-    throw new Error('Erro ao excluir aula');
+    const errorData = await response.json().catch(() => ({ message: 'Erro desconhecido' }));
+    throw new Error(errorData.message || `Erro ao excluir aula: ${response.status}`);
   }
 };

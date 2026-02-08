@@ -7,6 +7,7 @@ import TurmasSection from "../TurmasSection/TurmasSection";
 import CalendarioSemanal from "../CalendarioSemanal";
 import { useHorarios } from "@/hooks/useHorarios";
 import SalasSection from "../SalasSection/SalasSection";
+import { Calendar } from "lucide-react";
 
 
 export default function EditarHorarios() {
@@ -28,6 +29,18 @@ export default function EditarHorarios() {
 
   return (
     <div className="p-4">
+      <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 mb-6">
+        <div className="flex items-center gap-3 mb-5">
+          <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+            <Calendar className="w-6 h-6 text-blue-600" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Editar Horário</h1>
+            <p className="text-sm text-gray-500">Gestão do calendário de aulas</p>
+          </div>
+        </div>
+      </div>
+
       <SelectHorario onSelect={setSelectedHorarioId} />
 
       {selectedHorarioId && horario && (

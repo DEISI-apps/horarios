@@ -42,5 +42,6 @@ export function useAulasAnoSemestre( ano_lectivo_id: number, semestre: number ) 
     aulas,
     isLoadingAulas: isLoading,
     errorAulas: error,
+    mutate,
   };
 }
