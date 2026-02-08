@@ -59,6 +59,11 @@ export async function GET(
     aulasAluno.push(...matchingAulas);
   });
 
+  // Verificar se encontrou aulas
+  if (aulasAluno.length === 0) {
+    return new NextResponse('Nenhuma aula encontrada para este aluno', { status: 404 });
+  }
+
   // --- criar vcalendar ---
   const vcalendar = new ICAL.Component(['vcalendar', [], []]);
   vcalendar.addPropertyWithValue('version', '2.0');
@@ -71,7 +76,9 @@ export async function GET(
   return new NextResponse(vcalendar.toString(), {
     headers: {
       'Content-Type': 'text/calendar; charset=utf-8',
-      'Cache-Control': 'no-cache', // força atualização automática
+      'Content-Disposition': `attachment; filename="horario-aluno-${alunoIdParam}.ics"`,
+      'Cache-Control': 'public, max-age=3600', // Cache por 1 hora
+      'Access-Control-Allow-Origin': '*', // Permite acesso do Google Calendar
     },
   });
 }

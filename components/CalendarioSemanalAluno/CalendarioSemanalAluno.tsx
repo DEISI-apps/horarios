@@ -35,10 +35,13 @@ function generateGoogleCalendarLink(alunoId: string, anoLectivo: number, semestr
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://horarios-phi.vercel.app';
   const calendarUrl = `${baseUrl}/api/calendar/aluno/${alunoId}?ano=${anoLectivo}&sem=${semestre}`;
   
-  // Para Google Calendar, usar o formato correto de subscrição
-  // Opção 1: Link direto para adicionar via URL (não funciona com localhost)
-  const encodedUrl = encodeURIComponent(calendarUrl);
-  return `https://calendar.google.com/calendar/render?cid=${encodedUrl}`;
+  // Google Calendar aceita melhor o formato "add by URL"
+  // Usar webcal:// ou o formato de adicionar calendário remoto
+  const httpsUrl = calendarUrl.replace('http://', 'https://');
+  const encodedUrl = encodeURIComponent(httpsUrl);
+  
+  // Formato correto para adicionar calendário por URL no Google Calendar
+  return `https://calendar.google.com/calendar/u/0/r/settings/addbyurl?url=${encodedUrl}`;
 }
 
 
