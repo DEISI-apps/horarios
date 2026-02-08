@@ -6,6 +6,7 @@ import { useMemo } from "react";
 import { useDisciplinas } from "@/hooks/useDisciplinas";
 import { useAulasAnoSemestre } from "@/hooks/useAulasAnoSemestre";
 import { Horario } from "@/types/interfaces";
+import { AlertCircle, Loader2 } from "lucide-react";
 
 
 export default function DisciplinasSection({ horario }: { horario: Horario }) {
@@ -38,19 +39,55 @@ export default function DisciplinasSection({ horario }: { horario: Horario }) {
   //
   // C. renderiza
 
-
   // C.1. fallbacks
 
-  if (isLoadingDisciplinas) return <p className="text-gray-500"></p>;
-  if (errorDisciplinas) return <p className="text-red-500">Erro ao carregar disciplinas.</p>;
-  if (disciplinas?.length === 0) return <p className="text-gray-500">Nenhuma disciplina encontrada.</p>;
-  if (isLoadingAulasAnoSemestre) return <p className="text-gray-500">A carregar aulas...</p>;
+  if (isLoadingDisciplinas) {
+    return (
+      <section className="flex items-center justify-center py-12">
+        <div className="flex items-center gap-3">
+          <Loader2 className="w-5 h-5 animate-spin text-emerald-600" />
+          <p className="text-gray-600">A carregar disciplinas...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (errorDisciplinas) {
+    return (
+      <section className="py-8">
+        <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+          <p className="text-red-700 font-medium">Erro ao carregar disciplinas.</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (disciplinas?.length === 0) {
+    return (
+      <section className="py-8">
+        <div className="text-center text-gray-500 py-6">
+          <p className="font-medium">Nenhuma disciplina encontrada.</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (isLoadingAulasAnoSemestre) {
+    return (
+      <section className="flex items-center justify-center py-12">
+        <div className="flex items-center gap-3">
+          <Loader2 className="w-5 h-5 animate-spin text-emerald-600" />
+          <p className="text-gray-600">A carregar aulas...</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
-    <section className="pt-8">
-      <h2 className="mt-4 mb-2 text-2xl font-semibold">Disciplinas e Horas Agregadas</h2>
-      <p className="text-gray-500 mb-4 text-sm">Horas lecionadas / horas disponíveis. Horas agregadas dos vários cursos em que a disciplina funcionam.</p>
-      <div className="space-y-4">
+    <section>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {disciplinasOrdenadas.map((disciplina) => (
           <DisciplinaCard
             key={disciplina.id}

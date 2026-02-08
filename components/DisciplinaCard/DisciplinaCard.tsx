@@ -52,8 +52,7 @@ export default function DisciplinaCard({
         </p>
       </div>
 
-      {/* <p className="text-sm ml-2 mt-2">Disponibilidade dos docentes (agregada, no caso de disciplina em funcionamento em vários cursos)</p> */}
-      {/* <ul className="list-disc pl-6 pb-4 mt-2 rounded-b-lg">
+      <ul className="list-disc pl-6 pb-4 mt-4 rounded-b-lg">
         {disciplina.docentes.map((docente, idx) => {
           const partes: string[] = [];
           if (docente.horas_teoricas > 0) partes.push(`teórica:  ${docente.horas_teoricas_lecionadas}/${docente.horas_teoricas}h`);
@@ -84,7 +83,7 @@ export default function DisciplinaCard({
             </li>
           );
         })}
-      </ul> */}
+      </ul>
     </div>
     {selectedDocente && (
       <DocenteModal

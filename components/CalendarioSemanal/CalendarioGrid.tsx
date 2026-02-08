@@ -154,9 +154,10 @@ export default function CalendarGrid({
                         setSelectedTurma(turma);
                         setModalTurmaOpen(true);
                       }}
-                      className="underline focus:outline-none"
+                      className="px-3 py-1 rounded border border-gray-300 bg-blue-100 text-gray-500 cursor-pointer hover:bg-gray-100 hover:border-gray-400 hover:underline transition-all duration-200 focus:outline-none"
+                      style={{ width: "95%", marginBottom:"3px", padding: "0" }}
                     >
-                      Turma {turma.nome}
+                      {turma.nome.length < 10 ? turma.nome : `${turma.nome.slice(0, 10)}...`}
                     </button>
                   </div>
                 ))}

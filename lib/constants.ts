@@ -15,9 +15,9 @@ export const SEMESTER_CICLE_1_HOLIDAYS_WEEKS = [8, 9]; // Semanas de ferias Pasc
 export const SEMESTER_CICLE_23_HOLIDAYS_WEEKS = [8, 9]; // Semanas de ferias Pascoa
 
 export const DAYS = [
-  { id: 1, name: 'Segunda' },
-  { id: 2, name: 'Terça' },
-  { id: 3, name: 'Quarta' },
-  { id: 4, name: 'Quinta' },
-  { id: 5, name: 'Sexta' }
+  { id: 1, name: '2ª Feira' },
+  { id: 2, name: '3ª Feira' },
+  { id: 3, name: '4ª Feira' },
+  { id: 4, name: '5ª Feira' },
+  { id: 5, name: '6ª Feira' }
 ];

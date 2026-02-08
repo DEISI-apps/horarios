@@ -153,13 +153,7 @@ export default function CalendarioSemanal({ horario, editar }: { horario: Horari
   // render principal
   return (
     <section className="pt-3">
-      {editar && (<>
-        <h3 className="mt-4 mb-2 text-2xl font-semibold">Marcação de Aulas</h3>
-        <p className="pb-2 text-sm text-gray-500">
-          Marque o horário semanal das aulas de cada turma, de acordo com as necessidades apresentadas nas tabelas em baixo.
-        </p>
-      </>)}
-
+      
       <div className={styles.container} style={{ position: 'relative' }}>
         <CalendarGrid
           turmas={turmas}
