@@ -1,7 +1,7 @@
 'use client';
 
 import { useAulasAnoSemestre } from '@/hooks/useAulasAnoSemestre';
-import React, { useMemo, useEffect, useCallback, useRef } from 'react';
+import React, { useMemo, useEffect, useCallback, useRef, useState } from 'react';
 import styles from './CalendarioSemanalDocente.module.css';
 import TimeMarkers from './TimeMarkers';
 import {
@@ -17,7 +17,7 @@ import {
 import CalendarioGridTurma from '@/components/CalendarioSemanalTurma/CalendarioGridTurma';
 import { Aula, AlunoInfo } from '@/types/interfaces';
 import ICAL from 'ical.js';
-import { Loader2, Download, Info } from 'lucide-react';
+import { Loader2, Download, Info, Calendar } from 'lucide-react';
 
 interface Props {
   aluno_info: AlunoInfo;
@@ -25,6 +25,17 @@ interface Props {
   semestre: number;
   showDownloadButton?: boolean;
   onDownloadReady?: (downloadFn: () => void) => void;
+}
+
+/**
+ * Gera o link de subscrição para o Google Calendar
+ */
+function generateGoogleCalendarLink(alunoId: string, anoLectivo: number, semestre: number): string {
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
+  const calendarUrl = `${baseUrl}/api/calendar/aluno/${alunoId}?ano=${anoLectivo}&sem=${semestre}`;
+  // Encode apenas uma vez
+  const encodedUrl = encodeURIComponent(calendarUrl);
+  return `https://calendar.google.com/calendar/u/0/r?cid=${encodedUrl}`;
 }
 
 
@@ -122,6 +133,17 @@ export default function CalendarioSemanalAluno({
   
   const { aulas, isLoadingAulas } = useAulasAnoSemestre(ano_lectivo_id, semestre);
 
+  const [googleCalendarLink, setGoogleCalendarLink] = useState<string>('');
+
+  // Gerar link do Google Calendar quando o componente for montado
+  useEffect(() => {
+    const alunoId = aluno_info.numero || aluno_info.numeroAluno;
+    if (alunoId) {
+      const link = generateGoogleCalendarLink(alunoId, ano_lectivo_id, semestre);
+      setGoogleCalendarLink(link);
+    }
+  }, [aluno_info.numero, aluno_info.numeroAluno, ano_lectivo_id, semestre]);
+
   const aulasAluno = useMemo(() => {
     if (!aulas?.length) return [];
 
@@ -207,6 +229,13 @@ export default function CalendarioSemanalAluno({
     URL.revokeObjectURL(url);
   }, []);
 
+  const handleAddToGoogleCalendar = useCallback(() => {
+    if (googleCalendarLink) {
+      console.log('Google Calendar Link:', googleCalendarLink);
+      window.open(googleCalendarLink, '_blank');
+    }
+  }, [googleCalendarLink]);
+
   // Notifica o componente pai quando a função de download está pronta
   const hasCalledOnDownloadReady = useRef(false);
   
@@ -254,11 +283,19 @@ export default function CalendarioSemanalAluno({
             <Download className="w-4 h-4" />
             Descarregar Horário
           </button>
+          <button
+            onClick={handleAddToGoogleCalendar}
+            disabled={!googleCalendarLink}
+            className="py-2 px-4 bg-red-500 hover:bg-red-700 disabled:bg-gray-400 text-white rounded-lg flex items-center gap-2 font-bold"
+          >
+            <Calendar className="w-4 h-4" />
+            Adicionar ao Google Calendar
+          </button>
           <div className="relative group">
             <Info className="w-5 h-5 text-gray-400 hover:text-gray-600 cursor-help" />
-            <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-64 p-3 bg-gray-800 text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-              <p className="mb-2">O ficheiro ICS contém o horário completo das semanas lectivas.</p>
-              <p>Pode importar no <strong>Google Calendar</strong> ou <strong>Outlook</strong>: clique no ficheiro descarregado ou importe-o nas definições do calendário.</p>
+            <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-80 p-3 bg-gray-800 text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+              <p className="mb-2"><strong>Descarregar Horário:</strong> O ficheiro ICS contém o horário completo das semanas lectivas. Pode importar no Google Calendar ou Outlook.</p>
+              <p><strong>Adicionar ao Google Calendar:</strong> Subscreve-se automaticamente ao seu calendário, com atualizações em tempo real.</p>
               <div className="absolute left-1/2 -translate-x-1/2 -top-2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-gray-800"></div>
             </div>
           </div>

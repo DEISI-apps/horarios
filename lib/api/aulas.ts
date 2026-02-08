@@ -35,3 +35,27 @@ export const deleteAula = async (aulaId: number): Promise<void> => {
     throw new Error(errorData.message || `Erro ao excluir aula: ${response.status}`);
   }
 };
+
+// lib/api/aulas.ts
+import { Aula, AulaAPI } from '@/types/interfaces';
+import { convertAulaToSlot } from '@/lib/aulas';
+
+const API_BASE =
+  'https://dsdeisi.pythonanywhere.com/api/horarios/aulas';
+
+export async function fetchAulasAnoSemestre(
+  ano_lectivo_id: number,
+  semestre: number
+): Promise<Aula[]> {
+  const res = await fetch(
+    `${API_BASE}/${ano_lectivo_id}/${semestre}`,
+    { cache: 'no-store' }
+  );
+
+  if (!res.ok) {
+    throw new Error('Erro ao obter aulas');
+  }
+
+  const data: AulaAPI[] = await res.json();
+  return data.map(convertAulaToSlot);
+}

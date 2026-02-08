@@ -184,7 +184,7 @@ export default function HorarioAluno({ numeroAlunoInicial, esconderPesquisa }: H
             aluno_info={alunoInfo}
             ano_lectivo_id={selectedAnoLectivo}
             semestre={selectedSemestre}
-            showDownloadButton={false}
+            showDownloadButton={true}
             onDownloadReady={handleDownloadReady}
           />
         </div>
