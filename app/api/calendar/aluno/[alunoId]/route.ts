@@ -31,14 +31,33 @@ export async function GET(
     return new NextResponse('Token inválido', { status: 401 });
   }
 
+  // --- buscar turmas do aluno ---
+  const alunoResponse = await fetch(
+    `https://horariosdeisi.pythonanywhere.com/aluno-turmas/${alunoIdParam}`
+  );
+  
+  if (!alunoResponse.ok) {
+    return new NextResponse('Aluno não encontrado', { status: 404 });
+  }
+  
+  const alunoInfo = await alunoResponse.json();
+  
+  if (alunoInfo?.erro) {
+    return new NextResponse(alunoInfo.erro, { status: 404 });
+  }
+
   // --- buscar aulas ---
   const aulas: Aula[] = await fetchAulasAnoSemestre(ANO_LECTIVO, SEMESTRE);
 
-  // --- filtrar aulas do aluno ---
-  // aqui deves adaptar para a lógica correta de turmas/aluno
-  const aulasAluno = aulas.filter(aula =>
-    aula.turma_nome?.includes(String(alunoId))
-  );
+  // --- filtrar aulas do aluno usando turma + disciplina_id ---
+  const aulasAluno: Aula[] = [];
+  
+  alunoInfo.turmas.forEach((turma: any) => {
+    const matchingAulas = aulas.filter(
+      a => a.turma_nome === turma.turma && a.disciplina_id === Number(turma.id_dsdeisi)
+    );
+    aulasAluno.push(...matchingAulas);
+  });
 
   // --- criar vcalendar ---
   const vcalendar = new ICAL.Component(['vcalendar', [], []]);
