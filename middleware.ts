@@ -11,6 +11,7 @@ export function middleware(request: NextRequest) {
   // Permite acesso à página inicial, rotas públicas e rotas de API de auth sem autenticação
   if (
     pathname === "/" ||
+    pathname === "/disciplinas" ||
     pathname === "/disciplinas-lei" ||
     pathname === "/turmas-lei" ||
     pathname === "/turmas-alunos" ||
