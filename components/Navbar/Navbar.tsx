@@ -69,8 +69,9 @@ export default function Navbar() {
               {session && isAluno && (
                 <>
                   <nav className="flex items-center gap-1 text-white text-base font-semibold tracking-wide">
-                    <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition font-semibold" href="/turmas-alunos">Horários</Link>
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition font-semibold" href="/meu-horario">O meu Horário</Link>
+                    <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition font-semibold" href="/turmas-alunos">Turmas</Link>
+                    <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/disciplinas">Disciplinas</Link>
                   </nav>
                   <div className="pl-6 border-l border-white/10">
                     <UserNav />
