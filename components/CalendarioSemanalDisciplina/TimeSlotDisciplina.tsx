@@ -5,6 +5,7 @@ import { calculateSlotPosition } from '@/lib/calendario';
 import { MINUTE_HEIGHT } from '@/lib/constants';
 import { gerarCorDisciplina } from '@/lib/utils';
 import styles from './CalendarioSemanalDisciplina.module.css';
+import { useSession } from 'next-auth/react';
 
 interface TimeSlotProps {
   slot: AulaDisciplina;
@@ -49,6 +50,12 @@ export default function TimeSlotDisciplina({ slot, showAlunos = true }: TimeSlot
 
   const [alunos, setAlunos] = useState<Aluno[]>([]);
   const [modalAberto, setModalAberto] = useState<boolean>(false);
+
+  const { data: session } = useSession();
+  const role = (session?.user as { role?: string })?.role;
+  if (role === "aluno") {
+    showAlunos = false;
+  }
 
   // Buscar lista de alunos do endpoint
   useEffect(() => {
