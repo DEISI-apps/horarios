@@ -71,7 +71,6 @@ export default function Navbar() {
                   <nav className="flex items-center gap-1 text-white text-base font-semibold tracking-wide">
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition font-semibold" href="/meu-horario">O meu Horário</Link>
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition font-semibold" href="/turmas-alunos">Turmas</Link>
-                    <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/disciplinas">Disciplinas</Link>
                   </nav>
                   <div className="pl-6 border-l border-white/10">
                     <UserNav />
@@ -100,6 +99,7 @@ export default function Navbar() {
                 <>
                   <nav className="flex items-center gap-1 text-white text-base font-semibold tracking-wide">
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition font-semibold" href="/turmas-alunos">Horários</Link>
+                    <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/disciplinas">Disciplinas</Link>
                   </nav>
                   <div className="pl-6 border-l border-white/10">
                     <UserNav />
@@ -137,6 +137,7 @@ export default function Navbar() {
           {menuOpen && !session && (
             <div className="md:hidden text-white border-t border-white/10 rounded-b-2xl">
               <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white font-semibold" href="/turmas-alunos" onClick={() => setMenuOpen(false)}>Horários</Link>
+              <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/disciplinas">Disciplinas</Link>
               <div className="border-t border-white/10 px-4 py-3 flex gap-2">
                 <button
                   onClick={() => {
