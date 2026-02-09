@@ -112,8 +112,9 @@ export default function Navbar() {
           {/* Dropdown - mobile */}
           {menuOpen && session && isAluno && (
             <div className="md:hidden text-white border-t border-white/10 rounded-b-2xl">
-              <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white font-semibold" href="/turmas-alunos" onClick={() => setMenuOpen(false)}>Horários</Link>
               <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white font-semibold" href="/meu-horario" onClick={() => setMenuOpen(false)}>O meu Horário</Link>
+              <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white font-semibold" href="/turmas-alunos" onClick={() => setMenuOpen(false)}>Turmas</Link>
+              <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/disciplinas">Disciplinas</Link>
               <div className="border-t border-white/10 px-4 py-3">
                 <UserNav />
               </div>
