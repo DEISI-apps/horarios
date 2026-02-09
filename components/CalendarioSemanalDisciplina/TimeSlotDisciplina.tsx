@@ -53,7 +53,10 @@ export default function TimeSlotDisciplina({ slot, showAlunos = true }: TimeSlot
 
   const { data: session } = useSession();
   const role = (session?.user as { role?: string })?.role;
-  if (role === "aluno") {
+  
+  if (role === "docente") {
+    showAlunos = true;
+  } else {
     showAlunos = false;
   }
 
