@@ -71,6 +71,7 @@ export default function Navbar() {
                   <nav className="flex items-center gap-1 text-white text-base font-semibold tracking-wide">
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition font-semibold" href="/meu-horario">O meu Horário</Link>
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition font-semibold" href="/turmas-alunos">Turmas</Link>
+                    <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition font-semibold" href="/disciplinas">Disciplinas</Link>
                   </nav>
                   <div className="pl-6 border-l border-white/10">
                     <UserNav />
@@ -81,14 +82,13 @@ export default function Navbar() {
                 <>
                   <nav className="flex items-center gap-1 text-white text-base font-semibold tracking-wide">
                     {canEdit && (
-                      <Link href="/editarHorarios">Editar</Link>
+                      <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition"  href="/editarHorarios">Editar</Link>
                     )}
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/cursos">Curso</Link>
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/docentes">Docente</Link>
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/disciplinas">Disciplina</Link>
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/alunos">Alunos</Link>
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/salas">Sala</Link>
-                    {/* <Link className="ml-6 px-3 py-2 rounded-md bg-gray-800 text-white hover:bg-gray-700 transition" href="/editarHorarios">Editar</Link> */}
                   </nav>
                   <div className="pl-6 border-l border-white/10">
                     <UserNav />
@@ -99,7 +99,7 @@ export default function Navbar() {
                 <>
                   <nav className="flex items-center gap-1 text-white text-base font-semibold tracking-wide">
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition font-semibold" href="/turmas-alunos">Horários</Link>
-                    <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/disciplinas">Disciplinas</Link>
+                    <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition font-semibold" href="/disciplinas">Disciplinas</Link>
                   </nav>
                   <div className="pl-6 border-l border-white/10">
                     <UserNav />
@@ -114,7 +114,7 @@ export default function Navbar() {
             <div className="md:hidden text-white border-t border-white/10 rounded-b-2xl">
               <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white font-semibold" href="/meu-horario" onClick={() => setMenuOpen(false)}>O meu Horário</Link>
               <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white font-semibold" href="/turmas-alunos" onClick={() => setMenuOpen(false)}>Turmas</Link>
-              <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/disciplinas">Disciplinas</Link>
+              <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white font-semibold" href="/disciplinas" onClick={() => setMenuOpen(false)}>Disciplinas</Link>
               <div className="border-t border-white/10 px-4 py-3">
                 <UserNav />
               </div>
@@ -138,7 +138,7 @@ export default function Navbar() {
           {menuOpen && !session && (
             <div className="md:hidden text-white border-t border-white/10 rounded-b-2xl">
               <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white font-semibold" href="/turmas-alunos" onClick={() => setMenuOpen(false)}>Horários</Link>
-              <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/disciplinas">Disciplinas</Link>
+              <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white font-semibold" href="/disciplinas" onClick={() => setMenuOpen(false)}>Disciplinas</Link>
               <div className="border-t border-white/10 px-4 py-3 flex gap-2">
                 <button
                   onClick={() => {
