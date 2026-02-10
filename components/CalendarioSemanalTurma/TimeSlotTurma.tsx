@@ -153,6 +153,8 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotPro
               )}
             </>
           )}
+
+          { !isDocente && <span className="ml-2">({slot.turma_nome})</span> }
         </div>
 
         <div className={styles.slotDetails} >
@@ -168,16 +170,15 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotPro
                 {slot.docente_nome}
               </button>
             ) : (
-              <span className="text-left">{slot.docente_nome}</span>
+              <span className="text-left ">{slot.docente_nome}</span>
             )
           )}
         </div>
 
-        {alunos.length > 0 && (
-          <div className={styles.slotDetails} style={{ fontSize: '8px', marginLeft: 'auto', marginRight: '5px', marginTop: 'auto' }}>
+        {isDocente && alunos.length > 0 && (
+          <div className={styles.slotDetails} style={{ fontSize: '8px', marginLeft: 'auto', marginRight: '5px', marginTop: '-12px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <span>{alunos.length} alunos</span>
-              {isDocente && (
+              <span>{alunos.length} alunos LEI</span>  
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -203,7 +204,7 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotPro
                 >
                   i
                 </button>
-              )}
+              
             </div>
           </div>
         )}

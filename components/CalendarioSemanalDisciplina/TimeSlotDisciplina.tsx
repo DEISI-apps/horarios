@@ -136,9 +136,11 @@ export default function TimeSlotDisciplina({ slot, showAlunos = true }: TimeSlot
             {docente.docente_nome}
           </div>
           <div className={`${styles.slotDetails} ${styles.slotDisciplinaDocenteDetails}`}>
-            <span style={{ fontWeight: 'normal' }}>
-              {docente.tipo === 'T' ? 'Teórica' : formataTurmas(docente.turmas)}
-            </span> {docente.sala_nome !== 'outra' ? '(' + docente.sala_nome + ')' : ''}
+            {docente.sala_nome !== 'outra' ?  docente.sala_nome  : ''}
+            
+            <span className="pl-2" style={{ fontWeight: 'normal' }}>
+              ({docente.tipo === 'T' ? 'Teórica' : formataTurmas(docente.turmas)})
+            </span> 
           </div>
         </div>
       ))}
