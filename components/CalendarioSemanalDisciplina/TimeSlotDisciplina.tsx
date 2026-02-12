@@ -140,7 +140,7 @@ export default function TimeSlotDisciplina({ slot, showAlunos = true }: TimeSlot
 
               {podeVerAlunos && alunos.length > 0 && (
                 <div className="flex justify-end w-full" style={{ fontSize: '8px', marginTop: '-2px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: '2px', alignItems: 'center', }}>
                     <span>{alunos.length}</span>
                     <button
                       onClick={() => {
