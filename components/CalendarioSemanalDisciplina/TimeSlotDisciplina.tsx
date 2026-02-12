@@ -140,13 +140,15 @@ export default function TimeSlotDisciplina({ slot, showAlunos = true }: TimeSlot
 
               {podeVerAlunos && alunos.length > 0 && (
                 <div className="flex justify-end w-full" style={{ fontSize: '8px', marginTop: '-2px' }}>
-                  <span>{alunos.length} LEI</span>
-                  <button
-                    onClick={() => {
-                      setDocenteSelecionado(docente.id);
-                      setModalAberto(true);
-                    }}
-                     style={{background: 'none rgba(255, 255, 255, 0.3)', border: 'none', cursor: 'pointer', fontSize: '10px', fontWeight: 'bold', color: 'inherit', padding: '0px', width: '14px', height: '14px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>i</button>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                    <span>{alunos.length}</span>
+                    <button
+                      onClick={() => {
+                        setDocenteSelecionado(docente.id);
+                        setModalAberto(true);
+                      }}
+                      style={{ background: 'none rgba(255, 255, 255, 0.3)', border: 'none', cursor: 'pointer', fontSize: '10px', fontWeight: 'bold', color: 'inherit', padding: '0px', width: '14px', height: '14px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>i</button>
+                  </div>
                 </div>
               )}
             </div>
