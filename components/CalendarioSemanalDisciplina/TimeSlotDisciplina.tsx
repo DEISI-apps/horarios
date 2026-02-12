@@ -139,8 +139,8 @@ export default function TimeSlotDisciplina({ slot, showAlunos = true }: TimeSlot
               </div>
 
               {podeVerAlunos && alunos.length > 0 && (
-                <div style={{ fontSize: '8px', marginTop: '4px' }}>
-                  <span>{alunos.length} alunos LEI</span>
+                <div style={{ fontSize: '8px', marginTop: '-2px', color: '#666' }}>
+                  <span>{alunos.length} LEI</span>
                   <button
                     onClick={() => {
                       setDocenteSelecionado(docente.id);
@@ -153,9 +153,10 @@ export default function TimeSlotDisciplina({ slot, showAlunos = true }: TimeSlot
                       cursor: 'pointer',
                       fontSize: '10px',
                       fontWeight: 'bold',
+                      color: '#666',
                     }}
                   >
-                    ver lista
+                    ×
                   </button>
                 </div>
               )}
@@ -214,7 +215,18 @@ export default function TimeSlotDisciplina({ slot, showAlunos = true }: TimeSlot
               </div>
 
               {[...alunosSelecionados]
-                .sort((a, b) => a.numero.localeCompare(b.numero))
+                .sort((a, b) => {
+                  const numA = parseInt(a.numero.substring(0, 3), 10);
+                  const numB = parseInt(b.numero.substring(0, 3), 10);
+
+                  // 1️⃣ Ordenação decrescente pelos 3 primeiros dígitos
+                  if (numA !== numB) {
+                    return numB - numA;
+                  }
+
+                  // 2️⃣ Se forem iguais, ordenar pelo nome crescente
+                  return a.nome.localeCompare(b.nome);
+                })
                 .map((aluno, idx) => (
                   <div
                     key={idx}
