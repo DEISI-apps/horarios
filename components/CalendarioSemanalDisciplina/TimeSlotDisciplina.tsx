@@ -125,7 +125,7 @@ export default function TimeSlotDisciplina({ slot, showAlunos = true }: TimeSlot
           const alunos = docente.id !== null && docente.id !== undefined ? alunosPorDocente[docente.id] ?? [] : [];
 
           return (
-            <div key={docente.id} className="leading-tight">
+            <div key={docente.id} className="leading-tight w-full">
               <div className={styles.slotDocente} style={{ fontWeight: 'bold' }}>
                 {docente.docente_nome}
               </div>
@@ -139,25 +139,14 @@ export default function TimeSlotDisciplina({ slot, showAlunos = true }: TimeSlot
               </div>
 
               {podeVerAlunos && alunos.length > 0 && (
-                <div style={{ fontSize: '8px', marginTop: '-2px', color: '#666' }}>
+                <div className="flex justify-end w-full" style={{ fontSize: '8px', marginTop: '-2px' }}>
                   <span>{alunos.length} LEI</span>
                   <button
                     onClick={() => {
                       setDocenteSelecionado(docente.id);
                       setModalAberto(true);
                     }}
-                    style={{
-                      marginLeft: '6px',
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      fontSize: '10px',
-                      fontWeight: 'bold',
-                      color: '#666',
-                    }}
-                  >
-                    ×
-                  </button>
+                     style={{background: 'none rgba(255, 255, 255, 0.3)', border: 'none', cursor: 'pointer', fontSize: '10px', fontWeight: 'bold', color: 'inherit', padding: '0px', width: '14px', height: '14px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>i</button>
                 </div>
               )}
             </div>
