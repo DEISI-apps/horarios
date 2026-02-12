@@ -213,14 +213,14 @@ export default function TimeSlotDocente({ slot }: TimeSlotProps) {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '2px', alignItems: 'center' }}>
               <h2 style={{ margin: 0 }}>Alunos LEI ({alunos.length})</h2>
               <button
                 onClick={() => setModalAberto(false)}
                 style={{
                   background: 'none',
                   border: 'none',
-                  fontSize: '24px',
+                  fontSize: '16px',
                   cursor: 'pointer',
                   color: '#666',
                 }}
