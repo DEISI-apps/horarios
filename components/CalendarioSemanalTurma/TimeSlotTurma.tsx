@@ -35,7 +35,7 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotPro
     const headers = ['Nome', 'Número', 'Email'];
     const csvContent = [
       headers.join(','),
-      ...alunos.map(aluno => 
+      ...alunos.map(aluno =>
         [aluno.nome, aluno.numero, aluno.email]
           .map(field => `"${field}"`)
           .join(',')
@@ -53,7 +53,7 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotPro
     document.body.removeChild(link);
   };
 
-  // observar largura do slot dinamicamente
+
   useEffect(() => {
     if (!slotRef.current || typeof ResizeObserver === 'undefined') return;
 
@@ -74,13 +74,17 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotPro
           `https://horariosdeisi.pythonanywhere.com/turma-alunos/${slot.disciplina_id}/${slot.turma_nome}`
         );
 
-        if (response && response.alunos) {
-          setAlunos(response.alunos);
-        } else if (response && Array.isArray(response)) {
-          setAlunos(response);
+        if (response) {
+          const todosAlunos = [
+            ...(response.alunos || []),
+            ...(response.alunos_avulso || [])
+          ];
+
+          setAlunos(todosAlunos);
         } else {
           setAlunos([]);
         }
+
       } catch (error) {
         console.error('Erro ao buscar alunos:', error);
         setAlunos([]);
@@ -91,7 +95,6 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotPro
       fetchAlunos();
     }
   }, [slot.disciplina_id, slot.turma_nome]);
-
 
   const top = calculateSlotPosition(slot.hora_inicio);
   const height = slot.duracao * MINUTE_HEIGHT - 5;
@@ -154,7 +157,7 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotPro
             </>
           )}
 
-          { !isDocente && <span className="ml-2">({slot.turma_nome})</span> }
+          {!isDocente && <span className="ml-2">({slot.turma_nome})</span>}
         </div>
 
         <div className={styles.slotDetails} >
@@ -178,33 +181,33 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotPro
         {isDocente && alunos.length > 0 && (
           <div className={styles.slotDetails} style={{ fontSize: '8px', marginLeft: 'auto', marginRight: '5px', marginTop: '-12px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <span>{alunos.length} alunos LEI</span>  
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setModalAlunosOpen(true);
-                  }}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    fontSize: '10px',
-                    fontWeight: 'bold',
-                    color: 'inherit',
-                    padding: '0',
-                    width: '14px',
-                    height: '14px',
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: 'rgba(255,255,255,0.3)',
-                  }}
-                  title="Ver lista de alunos"
-                >
-                  i
-                </button>
-              
+              <span>{alunos.length} alunos LEI</span>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setModalAlunosOpen(true);
+                }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '10px',
+                  fontWeight: 'bold',
+                  color: 'inherit',
+                  padding: '0',
+                  width: '14px',
+                  height: '14px',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: 'rgba(255,255,255,0.3)',
+                }}
+                title="Ver lista de alunos"
+              >
+                i
+              </button>
+
             </div>
           </div>
         )}

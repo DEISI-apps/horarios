@@ -153,7 +153,7 @@ export default function TimeSlotDocente({ slot }: TimeSlotProps) {
       <div className={styles.slotDetails} style={{ fontSize: '8px' }}>
         {slot.tipo === 'T' ? '' : formataTurmas(slot.turmas)}
       </div>
-      <div className={styles.slotDetails} style={{ fontSize: '8px', marginLeft:'auto', marginRight:"5px", marginTop:'-12px'}}>
+      <div className={styles.slotDetails} style={{ fontSize: '8px', marginLeft:'auto', marginRight:"5px", marginTop:'-4px'}}>
         {alunos.length > 0 ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
             <span>{alunos.length} alunos LEI</span>

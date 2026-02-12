@@ -52,7 +52,6 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
   const [width, setWidth] = useState<number>(0);
   const slotRef = useRef<HTMLDivElement | null>(null);
 
-  // Buscar lista de alunos do endpoint
   useEffect(() => {
     const fetchAlunos = async () => {
       try {
@@ -60,15 +59,17 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
           `https://horariosdeisi.pythonanywhere.com/turma-alunos/${slot.disciplina_id}/${slot.turma_nome}`
         );
 
-        // A resposta é uma TurmaComAlunos
-        if (response && response.alunos) {
-          setAlunos(response.alunos);
-        } else if (response && Array.isArray(response)) {
-          // Se a resposta for um array direto
-          setAlunos(response);
+        if (response) {
+          const todosAlunos = [
+            ...(response.alunos || []),
+            ...(response.alunos_avulso || [])
+          ];
+
+          setAlunos(todosAlunos);
         } else {
           setAlunos([]);
         }
+
       } catch (error) {
         console.error('Erro ao buscar alunos:', error);
         setAlunos([]);

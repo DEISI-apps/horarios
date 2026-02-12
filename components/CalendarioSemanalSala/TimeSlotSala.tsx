@@ -51,15 +51,17 @@ export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
           `https://horariosdeisi.pythonanywhere.com/turma-alunos/${slot.disciplina_id}/${slot.turma_nome}`
         );
 
-        // A resposta é uma TurmaComAlunos
-        if (response && response.alunos) {
-          setAlunos(response.alunos);
-        } else if (response && Array.isArray(response)) {
-          // Se a resposta for um array direto
-          setAlunos(response);
+        if (response) {
+          const todosAlunos = [
+            ...(response.alunos || []),
+            ...(response.alunos_avulso || [])
+          ];
+
+          setAlunos(todosAlunos);
         } else {
           setAlunos([]);
         }
+
       } catch (error) {
         console.error('Erro ao buscar alunos:', error);
         setAlunos([]);
@@ -70,7 +72,6 @@ export default function TimeSlotDisciplina({ slot }: TimeSlotProps) {
       fetchAlunos();
     }
   }, [slot.disciplina_id, slot.turma_nome]);
-
   // observar largura do slot dinamicamente
   useEffect(() => {
     if (!slotRef.current || typeof ResizeObserver === 'undefined') return;
