@@ -321,7 +321,19 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotPro
                 </tr>
               </thead>
               <tbody>
-                {alunos.map((aluno) => (
+                {[...alunos]
+                .sort((a, b) => {
+                  const numA = parseInt(a.numero.substring(0, 3), 10);
+                  const numB = parseInt(b.numero.substring(0, 3), 10);
+
+                  // 1️⃣ Ordenação decrescente pelos 3 primeiros dígitos
+                  if (numA !== numB) {
+                    return numB - numA;
+                  }
+
+                  // 2️⃣ Se forem iguais, ordenar pelo nome crescente
+                  return a.nome.localeCompare(b.nome);
+                }).map((aluno) => (
                   <tr key={aluno.numero} style={{ borderBottom: '1px solid #eee', backgroundColor: '#fff' }}>
                     <td style={{ padding: '8px 12px' }}>{aluno.nome}</td>
                     <td style={{ padding: '8px 12px', color: '#666' }}>{aluno.numero}</td>

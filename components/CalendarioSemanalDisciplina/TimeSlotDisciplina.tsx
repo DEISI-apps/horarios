@@ -239,7 +239,19 @@ export default function TimeSlotDisciplina({ slot, showAlunos = true }: TimeSlot
             </div>
 
             <div style={{ borderTop: '1px solid #eee', paddingTop: '8px' }}>
-              {alunos.map((aluno, idx) => (
+              {[...alunos]
+                .sort((a, b) => {
+                  const numA = parseInt(a.numero.substring(0, 3), 10);
+                  const numB = parseInt(b.numero.substring(0, 3), 10);
+
+                  // 1️⃣ Ordenação decrescente pelos 3 primeiros dígitos
+                  if (numA !== numB) {
+                    return numB - numA;
+                  }
+
+                  // 2️⃣ Se forem iguais, ordenar pelo nome crescente
+                  return a.nome.localeCompare(b.nome);
+                }).map((aluno, idx) => (
                 <div key={idx} style={{ display: 'grid', gridTemplateColumns: '50px 1fr 1fr 1.5fr', gap: '12px', paddingBottom: '8px', marginBottom: '8px', borderBottom: idx < alunos.length - 1 ? '1px solid #f0f0f0' : 'none', fontSize: '13px' }}>
                   <div style={{ fontWeight: 'bold', color: '#999' }}>{idx + 1}</div>
                   <div>{aluno.nome}</div>
