@@ -43,10 +43,10 @@ function formatarHorario(horaInicio: string, duracao: number): string {
   const totalMinutos = horas * 60 + minutos + duracao;
   const horaFim = Math.floor(totalMinutos / 60);
   const minutoFim = totalMinutos % 60;
-  
+
   const horaInicioFormatada = `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}`;
   const horaFimFormatada = `${String(horaFim).padStart(2, '0')}:${String(minutoFim).padStart(2, '0')}`;
-  
+
   return `${horaInicioFormatada}-${horaFimFormatada}`;
 }
 
@@ -55,7 +55,7 @@ export default function TimeSlotDocente({ slot }: TimeSlotProps) {
   const top = calculateSlotPosition(slot.hora_inicio) + 2;
   const height = slot.duracao * MINUTE_HEIGHT - 4;
   const baseColor = gerarCorDisciplina(slot.disciplina_id);
-  
+
   const [width, setWidth] = useState<number>(0);
   const slotRef = useRef<HTMLDivElement | null>(null);
 
@@ -105,7 +105,7 @@ export default function TimeSlotDocente({ slot }: TimeSlotProps) {
     };
 
     fetchAlunos();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [turmasLEIKey, disciplinaId]);
 
 
@@ -140,7 +140,7 @@ export default function TimeSlotDocente({ slot }: TimeSlotProps) {
         justifyContent: 'center',
         alignItems: 'flex-start',
         textAlign: 'left',
-        paddingLeft:'5px',
+        paddingLeft: '5px',
         lineHeight: '14px',
       }}
     >
@@ -153,7 +153,7 @@ export default function TimeSlotDocente({ slot }: TimeSlotProps) {
       <div className={styles.slotDetails} style={{ fontSize: '8px' }}>
         {slot.tipo === 'T' ? '' : formataTurmas(slot.turmas)}
       </div>
-      <div className={styles.slotDetails} style={{ fontSize: '8px', marginLeft:'auto', marginRight:"5px", marginTop:'-4px'}}>
+      <div className={styles.slotDetails} style={{ fontSize: '8px', marginLeft: 'auto', marginRight: "5px", marginTop: '-4px' }}>
         {alunos.length > 0 ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
             <span>{alunos.length} alunos LEI</span>
@@ -247,14 +247,38 @@ export default function TimeSlotDocente({ slot }: TimeSlotProps) {
             </div>
 
             <div style={{ borderTop: '1px solid #eee', paddingTop: '8px' }}>
-              {alunos.map((aluno, idx) => (
-                <div key={idx} style={{ display: 'grid', gridTemplateColumns: '50px 1fr 1fr 1.5fr', gap: '12px', paddingBottom: '8px', marginBottom: '8px', borderBottom: idx < alunos.length - 1 ? '1px solid #f0f0f0' : 'none', fontSize: '13px' }}>
-                  <div style={{ fontWeight: 'bold', color: '#999' }}>{idx + 1}</div>
-                  <div>{aluno.nome}</div>
-                  <div>{aluno.numero}</div>
-                  <div style={{ wordBreak: 'break-all' }}>{aluno.email}</div>
-                </div>
-              ))}
+              {[...alunos]
+                .sort((a, b) => {
+                  const numA = parseInt(a.numero.substring(0, 3), 10);
+                  const numB = parseInt(b.numero.substring(0, 3), 10);
+
+                  // 1️⃣ Ordenação decrescente pelos 3 primeiros dígitos
+                  if (numA !== numB) {
+                    return numB - numA;
+                  }
+
+                  // 2️⃣ Se forem iguais, ordenar pelo nome crescente
+                  return a.nome.localeCompare(b.nome);
+                })
+                .map((aluno, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: '50px 1fr 1fr 1.5fr',
+                      gap: '12px',
+                      paddingBottom: '8px',
+                      marginBottom: '8px',
+                      borderBottom: idx < alunos.length - 1 ? '1px solid #f0f0f0' : 'none',
+                      fontSize: '13px'
+                    }}
+                  >
+                    <div style={{ fontWeight: 'bold', color: '#999' }}>{idx + 1}</div>
+                    <div>{aluno.nome}</div>
+                    <div>{aluno.numero}</div>
+                    <div style={{ wordBreak: 'break-all' }}>{aluno.email}</div>
+                  </div>
+                ))}
             </div>
           </div>
         </div>
