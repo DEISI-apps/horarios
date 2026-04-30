@@ -11,7 +11,10 @@ Como trabalhar em modo de desenvolvimento:
 6. ver em produção
 
 # Dados
-* dados veem da API https://dsdeisi.pythonanywhere.com/api/horarios/docs
+* dados dos cursos, turmas, docentes e horarios de cada aula, veem da API https://dsdeisi.pythonanywhere.com/api/horarios/docs
+
+* dados dos alunos vêm de: https://horariosdeisi.pythonanywhere.com.
+    * Por exemplo https://horariosdeisi.pythonanywhere.com/aluno-turmas/${numero} retorna as turmas de cada disciplina inscrito.
 
 # Info extra
 em DisciplinasCard há info sobre docentes que podemos adicionar
