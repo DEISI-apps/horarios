@@ -11,7 +11,7 @@ Como trabalhar em modo de desenvolvimento:
 3. fazer alterações
 4. `npm run build` para verificar se está tudo ok
 5. git add, commit e push para sincronizar no repo
-6. ver em produção
+6. ver em produção, a correr em `https://horarios-phi.vercel.app/`
 
 # Dados
 * dados dos cursos, turmas, docentes e horarios de cada aula, veem da API https://dsdeisi.pythonanywhere.com/api/horarios/docs

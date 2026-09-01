@@ -1,6 +1,6 @@
 "use client";
 
-import { ANO_LECTIVO, ANO_LECTIVO_ID, SEMESTRE } from '@/lib/constants';
+import { ANO_LECTIVO, SEMESTRE } from '@/lib/constants';
 
 import { useHorarios } from "@/hooks/useHorarios";
 import { Horario } from "@/types/interfaces";
