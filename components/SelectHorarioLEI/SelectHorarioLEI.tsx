@@ -1,4 +1,7 @@
 "use client";
+
+import { ANO_LECTIVO, ANO_LECTIVO_ID, SEMESTRE } from '@/lib/constants';
+
 import { useHorarios } from "@/hooks/useHorarios";
 import { Horario } from "@/types/interfaces";
 import { useEffect, useMemo, useState } from "react";
@@ -34,7 +37,7 @@ export default function SelectHorarioLEI({ onSelect }: SelectHorarioProps) {
 
   // Opções únicas para ano+semestre e curso
   const anoSemestreOptions = Array.from(
-    new Set(horarioOptions.filter(h => h.semestre==2).map((h) => `${h.ano}ºano, ${h.semestre}ºsem (${h.anoLectivo})`))
+    new Set(horarioOptions.filter(h => h.semestre==SEMESTRE && h.anoLectivo==ANO_LECTIVO).map((h) => `${h.ano}ºano, ${h.semestre}ºsem (${h.anoLectivo})`))
   );
 
 

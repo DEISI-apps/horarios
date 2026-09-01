@@ -1,5 +1,7 @@
 "use client";
 
+import { ANO_LECTIVO, ANO_LECTIVO_ID, SEMESTRE } from '@/lib/constants';
+
 import { useMemo, useState } from "react";
 import SelectHorario from "@/components/SelectHorario/SelectHorario";
 import DisciplinasSection from "@/components/DisciplinasSection/DisciplinasSection";

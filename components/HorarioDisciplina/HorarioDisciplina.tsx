@@ -1,4 +1,7 @@
 "use client";
+
+import { ANO_LECTIVO, ANO_LECTIVO_ID, SEMESTRE } from '@/lib/constants';
+
 import { useAnosLectivos } from "@/hooks/useAnosLectivos";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -14,16 +17,16 @@ export default function HorarioDisciplina() {
 
   //
   // A. Gestão de estado do componente
-  const [selectedAnoLectivo, setSelectedAnoLectivo] = useState<number | null>(35);
-  const [selectedSemestre, setSelectedSemestre] = useState<number | null>(2);
+  const [selectedAnoLectivo, setSelectedAnoLectivo] = useState<number | null>(ANO_LECTIVO_ID);
+  const [selectedSemestre, setSelectedSemestre] = useState<number | null>(SEMESTRE);
   const [selectedDisciplina, setSelectedDisciplina] = useState<Disciplina | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectOpened, setSelectOpened] = useState(false);
   const [hasPrefilled, setHasPrefilled] = useState(false);
 
   useEffect(() => {
-    setSelectedAnoLectivo(35);
-    setSelectedSemestre(2);
+    setSelectedAnoLectivo(ANO_LECTIVO_ID);
+    setSelectedSemestre(SEMESTRE);
   }, []);
 
   //
@@ -111,7 +114,7 @@ export default function HorarioDisciplina() {
           onChange={handleAnoLectivoSelection}
           className="hidden"
         >
-          <option value="35">25-26</option>
+          <option value="{ANO_LECTIVO_ID}">{ANO_LECTIVO}</option>
         </select>
 
         {/* Seletor de Semestre - Hidden */}
@@ -120,7 +123,7 @@ export default function HorarioDisciplina() {
           onChange={handleSemestreSelection}
           className="hidden"
         >
-          <option key={2} value="2">2º Semestre</option>
+          <option key={SEMESTRE} value="{SEMESTRE}">{SEMESTRE}º Semestre</option>
         </select>
 
         {/* Seletor de Disciplina */}

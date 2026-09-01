@@ -1,4 +1,7 @@
 "use client";
+
+import { ANO_LECTIVO, ANO_LECTIVO_ID, SEMESTRE } from '@/lib/constants';
+
 import { useAnosLectivos } from "@/hooks/useAnosLectivos";
 import { useEffect, useState } from "react";
 import { Disciplina } from "@/types/interfaces";
@@ -11,15 +14,15 @@ export default function HorarioDisciplinaLEI() {
 
   //
   // A. Gestão de estado do componente
-  const [selectedAnoLectivo, setSelectedAnoLectivo] = useState<number | null>(35);
-  const [selectedSemestre, setSelectedSemestre] = useState<number | null>(2);
+  const [selectedAnoLectivo, setSelectedAnoLectivo] = useState<number | null>(ANO_LECTIVO_ID);
+  const [selectedSemestre, setSelectedSemestre] = useState<number | null>(SEMESTRE);
   const [selectedDisciplina, setSelectedDisciplina] = useState<Disciplina | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectOpened, setSelectOpened] = useState(false);
 
   useEffect(() => {
-    setSelectedAnoLectivo(35);
-    setSelectedSemestre(2);
+    setSelectedAnoLectivo(ANO_LECTIVO_ID);
+    setSelectedSemestre(SEMESTRE);
   }, []);
 
 
@@ -100,7 +103,7 @@ export default function HorarioDisciplinaLEI() {
           onChange={handleAnoLectivoSelection}
           className="border rounded p-2 text-lg cursor-pointer"
         >
-          <option value="35">25-26</option>
+          <option value={ANO_LECTIVO_ID}> {ANO_LECTIVO} </option>
           {/* {anosLectivos
           .sort((a, b) => b.ano_lectivo.localeCompare(a.ano_lectivo))
           .map((ano, idx) => (
@@ -117,8 +120,7 @@ export default function HorarioDisciplinaLEI() {
           onChange={handleSemestreSelection}
           className="border rounded p-2 text-lg cursor-pointer"
         >
-          {/* <option key={1} value="1">1º Semestre</option> */}
-          <option key={2} value="2">2º Semestre</option>
+          <option key={SEMESTRE} value={SEMESTRE}>{SEMESTRE}º Semestre</option>
         </select>
 
         {/* Seletor de Disciplina */}

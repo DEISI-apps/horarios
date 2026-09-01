@@ -1,4 +1,7 @@
 "use client";
+
+import { ANO_LECTIVO_ID, SEMESTRE } from '@/lib/constants';
+
 import { useState, useCallback, useEffect, useRef } from "react";
 import CalendarioSemanalAluno from "../CalendarioSemanalAluno";
 import { Download, Info, Search, User, Loader2 } from "lucide-react";
@@ -18,8 +21,8 @@ export default function HorarioAluno({ numeroAlunoInicial, esconderPesquisa }: H
   const [downloadFn, setDownloadFn] = useState<(() => void) | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const selectedAnoLectivo = 35;
-  const selectedSemestre = 2;
+  const selectedAnoLectivo = ANO_LECTIVO_ID;
+  const selectedSemestre = SEMESTRE;
   const hasAutoLoaded = useRef(false);
 
   const showPesquisa = !esconderPesquisa;

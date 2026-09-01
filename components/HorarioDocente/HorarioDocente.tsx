@@ -1,4 +1,7 @@
 "use client";
+
+import { ANO_LECTIVO, ANO_LECTIVO_ID, SEMESTRE } from '@/lib/constants';
+
 import { useAnosLectivos } from "@/hooks/useAnosLectivos";
 import { useDocentes } from "@/hooks/useDocentes";
 import { useEffect, useState, useCallback } from "react";
@@ -12,8 +15,8 @@ export default function HorarioDocente() {
   const router = useRouter();
   
   // Estado
-  const [selectedAnoLectivo, setSelectedAnoLectivo] = useState<number | null>(35);
-  const [selectedSemestre, setSelectedSemestre] = useState<number | null>(2);
+  const [selectedAnoLectivo, setSelectedAnoLectivo] = useState<number | null>(ANO_LECTIVO_ID);
+  const [selectedSemestre, setSelectedSemestre] = useState<number | null>(SEMESTRE);
   const [selectedDocente, setSelectedDocente] = useState<DocenteBase | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectOpened, setSelectOpened] = useState(false);
@@ -31,8 +34,8 @@ export default function HorarioDocente() {
 
   // Defaults
   useEffect(() => {
-    setSelectedAnoLectivo(35);
-    setSelectedSemestre(2);
+    setSelectedAnoLectivo(ANO_LECTIVO_ID);
+    setSelectedSemestre(SEMESTRE);
   }, []);
 
   // Pré-preencher a partir de query params
@@ -117,7 +120,7 @@ export default function HorarioDocente() {
           onChange={handleAnoLectivoSelection}
           className="hidden"
         >
-          <option value={35}>25-26</option>
+          <option value={ANO_LECTIVO_ID}> {ANO_LECTIVO} </option>
         </select>
 
         {/* Semestre - Hidden */}
@@ -126,7 +129,7 @@ export default function HorarioDocente() {
           onChange={handleSemestreSelection}
           className="hidden"
         >
-          <option value="2">2º Semestre</option>
+          <option value={SEMESTRE}>{SEMESTRE}º Semestre</option>
         </select>
 
         {/* Docente */}

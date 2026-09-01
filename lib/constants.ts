@@ -1,3 +1,9 @@
+// configurações do ano e semestre 
+export const ANO_LECTIVO = '26-27';
+export const ANO_LECTIVO_ID = 36;
+export const SEMESTRE = 1;
+
+// configurações de visualização do calendario
 export const HOUR_HEIGHT = 40;
 export const MINUTE_HEIGHT = HOUR_HEIGHT / 60;
 export const START_HOUR = 8;
