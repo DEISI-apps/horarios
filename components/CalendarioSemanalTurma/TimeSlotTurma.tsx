@@ -28,6 +28,7 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotPro
   const [isModalOpen, setModalOpen] = useState(false);
   const [isModalSalaOpen, setModalSalaOpen] = useState(false);
   const [isModalDisciplinaOpen, setModalDisciplinaOpen] = useState(false);
+  const [emailsCopiados, setEmailsCopiados] = useState(false);
 
   const fetcher = (url: string) => fetch(url).then(res => res.json());
 
@@ -51,6 +52,12 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotPro
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const copyEmails = async () => {
+    await navigator.clipboard.writeText(alunos.map(aluno => aluno.email).join('\n'));
+    setEmailsCopiados(true);
+    setTimeout(() => setEmailsCopiados(false), 2000);
   };
 
 
@@ -290,6 +297,21 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotPro
                   }}
                 >
                   ⬇ CSV
+                </button>
+                <button
+                  onClick={copyEmails}
+                  style={{
+                    padding: '6px 12px',
+                    backgroundColor: '#2196F3',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '12px',
+                    fontWeight: '500',
+                  }}
+                >
+                  {emailsCopiados ? 'Copiado!' : 'Copiar emails'}
                 </button>
                 <button
                   onClick={() => setModalAlunosOpen(false)}
