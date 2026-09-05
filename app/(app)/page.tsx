@@ -149,7 +149,7 @@ export default function Page() {
             >
               <GraduationCap className="w-6 h-6 text-blue-600" />
               <div className="mt-2 font-semibold text-gray-900">Horário do aluno</div>
-              <p className="text-sm text-gray-600">Consulta do calendario semanal de aulas, podendo exportar para Google Calendar.</p>
+              <p className="text-sm text-gray-600">Consulta do horário semanal, podendo visualizar todas as aulas existentes de uma disciplina.</p>
             </Link>
 
             <Link
@@ -159,7 +159,7 @@ export default function Page() {
             >
               <Presentation className="w-6 h-6 text-blue-600" />
               <div className="mt-2 font-semibold text-gray-900">Horário do Docente</div>
-              <p className="text-sm text-gray-600">Consulta do calendario semanal de aulas, podendo exportar para Google Calendar.</p>
+              <p className="text-sm text-gray-600">Consulta do horário semanal, podendo visualizar as aulas existentes de uma disciplina.</p>
             </Link>
 
             <Link
@@ -169,7 +169,7 @@ export default function Page() {
             >
               <Users className="w-5 h-5 text-blue-600 mb-2" />
               <div className="text-lg font-semibold text-gray-900">Listagem de alunos</div>
-              <p className="text-sm text-gray-600">O docente pode ver ou descarregar a lista de alunos de cada aula, e o seu horário (atualmente restrito a LEI).</p>
+              <p className="text-sm text-gray-600">O docente pode consultar a lista de alunos de cada aula, ou copiar diretamente os emails.</p>
             </Link>
 
             <Link
@@ -179,7 +179,7 @@ export default function Page() {
             >
               <BookOpen className="w-6 h-6 text-blue-600" />
               <div className="mt-2 font-semibold text-gray-900">Horário da disciplina</div>
-              <p className="text-sm text-gray-600">Distribuição semanal das aulas e e seus docentes.</p>
+              <p className="text-sm text-gray-600">Calendário semanal das aulas de uma disciplina, identificando o docente e lista de alunos de cada aula.</p>
             </Link>
             
             <Link
@@ -194,7 +194,7 @@ export default function Page() {
                 <line x1="3" y1="10" x2="21" y2="10"></line>
               </svg>
               <div className="text-lg font-semibold text-gray-900">Google Calendar</div>
-              <p className="text-sm text-gray-600">Importação das aulas do semestre inteiro no calendário Google ou Outlook.</p>
+              <p className="text-sm text-gray-600">Importação do horário do semestre inteiro no calendário Google ou Outlook.</p>
             </Link>
             
             <Link
