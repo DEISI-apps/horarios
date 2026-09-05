@@ -27,7 +27,7 @@ export default function RootLayout({
         <footer className="w-full py-4 mt-auto">
           <div className="text-center text-xs text-gray-500">
             <div className="flex justify-center items-center">
-              <span>DEISI · Universidade Lusófona © 2025 · </span>
+              <span>DEISI · Universidade Lusófona © 2026 · </span>
               <a
                 href="mailto:lucio.studer@ulusofona.pt"
                 aria-label="Contactar por email"
