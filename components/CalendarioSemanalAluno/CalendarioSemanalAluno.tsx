@@ -10,12 +10,15 @@ import {
   SEMESTER_START_MONTH,
   SEMESTER_START_MONTH_NUMBER_OF_DAYS,
   SEMESTER_CICLE_1_START_DAY,
+  SEMESTER_CICLE_1_YEAR1_START_DAY,
   SEMESTER_CICLE_23_START_DAY,
   SEMESTER_CICLE_1_HOLIDAYS_WEEKS,
   SEMESTER_CICLE_23_HOLIDAYS_WEEKS,
+  SEMESTER_NUMBER_OF_WEEKS,
 } from '@/lib/constants';
 import CalendarioGridTurma from '@/components/CalendarioSemanalTurma/CalendarioGridTurma';
 import { Aula, AlunoInfo } from '@/types/interfaces';
+import { useHorarios } from '@/hooks/useHorarios';
 import ICAL from 'ical.js';
 import { Loader2, Download, Info } from 'lucide-react';
 
@@ -121,6 +124,7 @@ export default function CalendarioSemanalAluno({
 }: Props) {
   
   const { aulas, isLoadingAulas } = useAulasAnoSemestre(ano_lectivo_id, semestre);
+  const { horarios } = useHorarios();
 
   const aulasAluno = useMemo(() => {
     if (!aulas?.length) return [];
@@ -152,7 +156,10 @@ export default function CalendarioSemanalAluno({
         classEndMinute = 59;
       }
 
-      const semesterStartDay = aula.curso_sigla[0] === 'L' ? SEMESTER_CICLE_1_START_DAY : SEMESTER_CICLE_23_START_DAY;
+      const horarioAula = horarios?.find(horario => horario.id === aula.horario_id);
+      const semesterStartDay = aula.curso_sigla[0] === 'L'
+        ? horarioAula?.ano === 1 ? SEMESTER_CICLE_1_YEAR1_START_DAY : SEMESTER_CICLE_1_START_DAY
+        : SEMESTER_CICLE_23_START_DAY;
       const classDay = (semesterStartDay - 1 + aula.dia_semana) % SEMESTER_START_MONTH_NUMBER_OF_DAYS;
       const classMonth = SEMESTER_START_MONTH + Math.floor((semesterStartDay - 1 + aula.dia_semana) / SEMESTER_START_MONTH_NUMBER_OF_DAYS);
 
@@ -169,7 +176,7 @@ export default function CalendarioSemanalAluno({
         : SEMESTER_CICLE_23_HOLIDAYS_WEEKS;
       const excludingDates = computeExcludingDates(start, holidaysWeeks);
 
-      const semanas = 16 + excludingDates.length;
+      const semanas = SEMESTER_NUMBER_OF_WEEKS + excludingDates.length;
 
       return {
         start,
@@ -181,7 +188,7 @@ export default function CalendarioSemanalAluno({
         ...(excludingDates.length > 0 && { exdate: excludingDates }),
       };
     });
-  }, [aulasAluno]);
+  }, [aulasAluno, horarios]);
 
   // Usar ref para evitar loop infinito no useEffect
   const eventsRef = useRef(events);

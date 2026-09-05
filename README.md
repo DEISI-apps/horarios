@@ -36,7 +36,12 @@ python manage.py copiar_horarios \
     --semestre_destino=2
 ```
 
-3. alterar em `lib/constants.ts` os valores de ANO_LECTIVO, ANO_LECTIVO_ID e SEMESTRE 
+3. alterar em `lib/constants.ts` os valores de 
+
+- ANO_LECTIVO
+- ANO_LECTIVO_ID 
+- SEMESTRE
+- constantes para calendario icas 
 
 
 4. criar horários em https://horarios-phi.vercel.app/editarHorarios

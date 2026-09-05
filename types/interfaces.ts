@@ -134,6 +134,7 @@ export interface SlotForm extends Omit<AulaIn,
 
 export interface AulaDocente {
   id: number | null;
+  horario_id: number;
 
   turmas: Map<string, string[]>;
 

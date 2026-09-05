@@ -13,9 +13,11 @@ import {
   SEMESTER_START_MONTH,
   SEMESTER_START_MONTH_NUMBER_OF_DAYS,
   SEMESTER_CICLE_1_START_DAY,
+  SEMESTER_CICLE_1_YEAR1_START_DAY,
   SEMESTER_CICLE_23_START_DAY,
   SEMESTER_CICLE_1_HOLIDAYS_WEEKS,
   SEMESTER_CICLE_23_HOLIDAYS_WEEKS,
+  SEMESTER_NUMBER_OF_WEEKS,
 } from '@/lib/constants';
 
 interface EventProps {
@@ -176,7 +178,9 @@ export default function TurmasAlunos() {
         classEndMinute = 59;
       }
 
-      const semesterStartDay = aula.curso_sigla[0] === 'L' ? SEMESTER_CICLE_1_START_DAY : SEMESTER_CICLE_23_START_DAY;
+      const semesterStartDay = aula.curso_sigla[0] === 'L'
+        ? horario?.ano === 1 ? SEMESTER_CICLE_1_YEAR1_START_DAY : SEMESTER_CICLE_1_START_DAY
+        : SEMESTER_CICLE_23_START_DAY;
       const classDay = (semesterStartDay - 1 + aula.dia_semana) % SEMESTER_START_MONTH_NUMBER_OF_DAYS;
       const classMonth = SEMESTER_START_MONTH + Math.floor((semesterStartDay - 1 + aula.dia_semana) / SEMESTER_START_MONTH_NUMBER_OF_DAYS);
 
@@ -193,7 +197,7 @@ export default function TurmasAlunos() {
         : SEMESTER_CICLE_23_HOLIDAYS_WEEKS;
       const excludingDates = computeExcludingDates(start, holidaysWeeks);
 
-      const semanas = 16 + excludingDates.length;
+      const semanas = SEMESTER_NUMBER_OF_WEEKS + excludingDates.length;
 
       return {
         start,
@@ -205,7 +209,7 @@ export default function TurmasAlunos() {
         ...(excludingDates.length > 0 && { exdate: excludingDates }),
       };
     });
-  }, [aulasTurma]);
+  }, [aulasTurma, horario?.ano]);
 
   const handleDownload = useCallback(() => {
     if (!events || events.length === 0) {
