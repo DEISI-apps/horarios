@@ -47,7 +47,7 @@ export default function RootLayout({
               </a>
             </div>
             <div className="mt-1">
-              Frontend: React, Next.js e TypeScript · Backend: Django, Python
+              Tecnologias utilizadas nesta aplicação: frontend desenvolvido com React, Next.js e TypeScript; backend desenvolvido com Django e Python
             </div>
           </div>
         </footer>
