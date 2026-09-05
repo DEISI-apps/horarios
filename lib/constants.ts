@@ -32,10 +32,10 @@ export const SEMESTER_CICLE_23_START_DAY = 28;  // para o 2º e 3º ciclo as aul
 export const SEMESTER_START_MONTH = 9;
 export const SEMESTER_START_YEAR = 2026;
 export const SEMESTER_START_MONTH_NUMBER_OF_DAYS = 30; // Setembro tem 30 dias
-export const SEMESTER_CICLE_1_HOLIDAYS_WEEKS = [15, 16]; // nao ha interrupcao lectiva no 1º ciclo
+export const SEMESTER_CICLE_1_HOLIDAYS_WEEKS = []; // nao ha interrupcao lectiva no 1º ciclo
 // export const SEMESTER_CICLE_1_YEAR1_HOLIDAYS_WEEKS = [15, 16]; // nao ha interrupcao lectiva no 1º ciclo
-export const SEMESTER_CICLE_23_HOLIDAYS_WEEKS = [14, 15]; // interrupcao lectiva no 2º e 3º ciclo (Natal)
-export const SEMESTER_NUMBER_OF_WEEKS = 16; // Número total de semanas no semestre
+export const SEMESTER_CICLE_23_HOLIDAYS_WEEKS = [13, 14]; // interrupcao lectiva no 2º e 3º ciclo (Natal)
+export const SEMESTER_NUMBER_OF_WEEKS = 15; // Número total de semanas no semestre
 
 
 export const DAYS = [
