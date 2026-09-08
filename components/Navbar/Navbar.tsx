@@ -26,9 +26,6 @@ export default function Navbar() {
         (docente) => docente.email?.toLowerCase() === sessionEmail
       ) ?? null
     : null;
-  const docenteHorarioHref = docenteLogado
-    ? `/docentes?docente=${encodeURIComponent(docenteLogado.nome)}`
-    : "/docentes";
 
   async function handleLogin() {
     if (typeof window !== "undefined") {
