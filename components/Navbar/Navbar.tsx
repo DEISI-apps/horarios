@@ -5,8 +5,6 @@ import Image from "next/image";
 import { useSession, signIn } from "next-auth/react";
 import { UserNav } from "@/components/UserNav";
 import { LogIn } from "lucide-react";
-import { useDocentes } from "@/hooks/useDocentes";
-import { ANO_LECTIVO_ID, SEMESTRE } from "@/lib/constants";
 
 
 const ALLOWED_EMAILS = ["p6069@ulusofona.pt", "p718@ulusofona.pt"];
