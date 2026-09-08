@@ -22,6 +22,13 @@ Como trabalhar em modo de desenvolvimento:
 # Info extra
 em `DisciplinasCard` há info sobre docentes que podemos adicionar
 
+# variaveis ambiente
+no vercel eexistem variaveis de ambiente. poisso importar com:
+* npx vercel login
+* npx vercel link
+* npx vercel env pull .env.local
+* npm run dev
+
 # Docentes autorizados a autenticar-se
 * existe uma variável de ambiente no Vercel, com a lista de emails de docentes
 * formato da variável:

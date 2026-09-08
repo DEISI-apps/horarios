@@ -23,7 +23,7 @@ export default function Navbar() {
     if (typeof window !== "undefined") {
       sessionStorage.setItem("attempting_docente_login", "true");
     }
-    await signIn("google", { callbackUrl: "/" });
+    await signIn("google", { callbackUrl: "/meu-horario" });
   }
 
   async function handleAlunoLogin() {
