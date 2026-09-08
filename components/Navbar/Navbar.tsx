@@ -15,7 +15,6 @@ const ALLOWED_EMAILS = ["p6069@ulusofona.pt", "p718@ulusofona.pt"];
 export default function Navbar() {
   const { data: session } = useSession();
   const [menuOpen, setMenuOpen] = useState(false);
-  const { docentes } = useDocentes(ANO_LECTIVO_ID, SEMESTRE);
 
   const sessionEmail = session?.user?.email?.toLowerCase() ?? null;
   const canEdit = sessionEmail && ALLOWED_EMAILS.includes(sessionEmail);
