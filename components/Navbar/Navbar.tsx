@@ -21,11 +21,6 @@ export default function Navbar() {
   const canEdit = sessionEmail && ALLOWED_EMAILS.includes(sessionEmail);
   const role = (session?.user as { role?: string })?.role;
   const isAluno = role === "aluno";
-  const docenteLogado = sessionEmail
-    ? docentes?.find(
-        (docente) => docente.email?.toLowerCase() === sessionEmail
-      ) ?? null
-    : null;
 
   async function handleLogin() {
     if (typeof window !== "undefined") {
