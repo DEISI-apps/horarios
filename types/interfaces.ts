@@ -27,6 +27,7 @@ export interface Horario {
 export interface DocenteBase {
   id: number;
   nome: string;
+  email?: string;
 }
 
 export interface Docente extends DocenteBase {

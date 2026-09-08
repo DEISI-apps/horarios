@@ -5,6 +5,8 @@ import Image from "next/image";
 import { useSession, signIn } from "next-auth/react";
 import { UserNav } from "@/components/UserNav";
 import { LogIn } from "lucide-react";
+import { useDocentes } from "@/hooks/useDocentes";
+import { ANO_LECTIVO_ID, SEMESTRE } from "@/lib/constants";
 
 
 const ALLOWED_EMAILS = ["p6069@ulusofona.pt", "p718@ulusofona.pt"];
@@ -13,10 +15,20 @@ const ALLOWED_EMAILS = ["p6069@ulusofona.pt", "p718@ulusofona.pt"];
 export default function Navbar() {
   const { data: session } = useSession();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { docentes } = useDocentes(ANO_LECTIVO_ID, SEMESTRE);
 
-  const canEdit = session?.user?.email && ALLOWED_EMAILS.includes(session.user.email);
+  const sessionEmail = session?.user?.email?.toLowerCase() ?? null;
+  const canEdit = sessionEmail && ALLOWED_EMAILS.includes(sessionEmail);
   const role = (session?.user as { role?: string })?.role;
   const isAluno = role === "aluno";
+  const docenteLogado = sessionEmail
+    ? docentes?.find(
+        (docente) => docente.email?.toLowerCase() === sessionEmail
+      ) ?? null
+    : null;
+  const docenteHorarioHref = docenteLogado
+    ? `/docentes?docente=${encodeURIComponent(docenteLogado.nome)}`
+    : "/docentes";
 
   async function handleLogin() {
     if (typeof window !== "undefined") {
@@ -84,11 +96,12 @@ export default function Navbar() {
                     {canEdit && (
                       <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition"  href="/editarHorarios">Editar</Link>
                     )}
-                    <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/cursos">Curso</Link>
-                    <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/docentes">Docente</Link>
-                    <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/disciplinas">Disciplina</Link>
+                    <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href={docenteHorarioHref}>O meu Horário</Link>
+                    <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/cursos">Cursos</Link>
+                    <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/docentes">Docentes</Link>
+                    <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/disciplinas">Disciplinas</Link>
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/alunos">Alunos</Link>
-                    <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/salas">Sala</Link>
+                    <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/salas">Salas</Link>
                   </nav>
                   <div className="pl-6 border-l border-white/10">
                     <UserNav />
@@ -125,11 +138,12 @@ export default function Navbar() {
               {canEdit && (
                 <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/editarHorarios" onClick={() => setMenuOpen(false)}>Editar</Link>
               )}
-              <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/cursos" onClick={() => setMenuOpen(false)}>Curso</Link>
-              <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/docentes" onClick={() => setMenuOpen(false)}>Docente</Link>
-              <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/disciplinas" onClick={() => setMenuOpen(false)}>Disciplina</Link>
+              <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href={docenteHorarioHref} onClick={() => setMenuOpen(false)}>O meu Horário</Link>
+              <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/cursos" onClick={() => setMenuOpen(false)}>Cursos</Link>
+              <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/docentes" onClick={() => setMenuOpen(false)}>Docentes</Link>
+              <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/disciplinas" onClick={() => setMenuOpen(false)}>Disciplinas</Link>
               <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/alunos" onClick={() => setMenuOpen(false)}>Alunos</Link>
-              <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/salas" onClick={() => setMenuOpen(false)}>Sala</Link>
+              <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/salas" onClick={() => setMenuOpen(false)}>Salas</Link>
               <div className="border-t border-white/10 px-4 py-3">
                 <UserNav />
               </div>
