@@ -96,7 +96,7 @@ export default function Navbar() {
                     {canEdit && (
                       <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition"  href="/editarHorarios">Editar</Link>
                     )}
-                    <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href={docenteHorarioHref}>O meu Horário</Link>
+                    <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/meu-horario">O meu Horário</Link>
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/cursos">Cursos</Link>
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/disciplinas">Disciplinas</Link>
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/docentes">Docentes</Link>
@@ -138,7 +138,7 @@ export default function Navbar() {
               {canEdit && (
                 <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/editarHorarios" onClick={() => setMenuOpen(false)}>Editar</Link>
               )}
-              <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href={docenteHorarioHref} onClick={() => setMenuOpen(false)}>O meu Horário</Link>
+              <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/meu-horario" onClick={() => setMenuOpen(false)}>O meu Horário</Link>
               <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/cursos" onClick={() => setMenuOpen(false)}>Cursos</Link>
               <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/disciplinas" onClick={() => setMenuOpen(false)}>Disciplinas</Link>
               <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/docentes" onClick={() => setMenuOpen(false)}>Docentes</Link>
