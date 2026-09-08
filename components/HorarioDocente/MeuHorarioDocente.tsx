@@ -28,8 +28,7 @@ export default function MeuHorarioDocente({ docente }: MeuHorarioDocenteProps) {
               <GraduationCap className="w-6 h-6 text-blue-600" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">O Meu Horário</h1>
-              <p className="text-sm text-gray-500">{docente.nome}</p>
+              <h1 className="text-2xl font-bold text-gray-900">Horário de {docente.nome}</h1>
             </div>
           </div>
 

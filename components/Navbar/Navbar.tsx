@@ -98,8 +98,8 @@ export default function Navbar() {
                     )}
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href={docenteHorarioHref}>O meu Horário</Link>
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/cursos">Cursos</Link>
-                    <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/docentes">Docentes</Link>
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/disciplinas">Disciplinas</Link>
+                    <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/docentes">Docentes</Link>
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/alunos">Alunos</Link>
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/salas">Salas</Link>
                   </nav>
@@ -140,8 +140,8 @@ export default function Navbar() {
               )}
               <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href={docenteHorarioHref} onClick={() => setMenuOpen(false)}>O meu Horário</Link>
               <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/cursos" onClick={() => setMenuOpen(false)}>Cursos</Link>
-              <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/docentes" onClick={() => setMenuOpen(false)}>Docentes</Link>
               <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/disciplinas" onClick={() => setMenuOpen(false)}>Disciplinas</Link>
+              <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/docentes" onClick={() => setMenuOpen(false)}>Docentes</Link>
               <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/alunos" onClick={() => setMenuOpen(false)}>Alunos</Link>
               <Link className="block px-4 py-2 hover:bg-white/10 hover:text-white" href="/salas" onClick={() => setMenuOpen(false)}>Salas</Link>
               <div className="border-t border-white/10 px-4 py-3">
