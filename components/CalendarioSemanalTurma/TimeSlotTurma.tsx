@@ -264,7 +264,7 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotPro
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            zIndex: 2000,
+            zIndex: 9999,
           }}
           onClick={() => setModalAlunosOpen(false)}
         >
@@ -274,15 +274,17 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotPro
               borderRadius: '8px',
               padding: '24px',
               maxWidth: '600px',
+              width: 'calc(100% - 32px)',
               maxHeight: '80vh',
               overflowY: 'auto',
+              boxSizing: 'border-box',
               boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '16px' }}>
               <h2 style={{ margin: 0 }}>Alunos ({alunos.length})</h2>
-              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
                 <button
                   onClick={downloadCSV}
                   style={{
@@ -294,6 +296,8 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotPro
                     cursor: 'pointer',
                     fontSize: '12px',
                     fontWeight: '500',
+                    whiteSpace: 'nowrap',
+                    flexShrink: 0,
                   }}
                 >
                   ⬇ CSV
@@ -309,6 +313,8 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre }: TimeSlotPro
                     cursor: 'pointer',
                     fontSize: '12px',
                     fontWeight: '500',
+                    whiteSpace: 'nowrap',
+                    flexShrink: 0,
                   }}
                 >
                   {emailsCopiados ? 'Copiado!' : 'Copiar emails'}

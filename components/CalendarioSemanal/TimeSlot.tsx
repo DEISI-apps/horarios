@@ -44,6 +44,13 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
   const [alunos, setAlunos] = useState<Aluno[]>([]);
   const [isModalAlunosOpen, setModalAlunosOpen] = useState(false);
   const [isModalDisciplinaOpen, setModalDisciplinaOpen] = useState(false);
+  const [emailsCopiados, setEmailsCopiados] = useState(false);
+
+  const copyEmails = async () => {
+    await navigator.clipboard.writeText(alunos.map(aluno => aluno.email).join('\n'));
+    setEmailsCopiados(true);
+    setTimeout(() => setEmailsCopiados(false), 2000);
+  };
 
   const top = calculateSlotPosition(slot.hora_inicio) + 2.5;
   const height = slot.duracao * MINUTE_HEIGHT - 4;
@@ -245,7 +252,7 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              zIndex: 2000,
+              zIndex: 9999,
             }}
             onClick={() => setModalAlunosOpen(false)}
           >
@@ -255,26 +262,47 @@ export default function TimeSlot({ slot, ano_lectivo_id, semestre, onEdit }: Tim
                 borderRadius: '8px',
                 padding: '24px',
                 maxWidth: '600px',
+                width: 'calc(100% - 32px)',
                 maxHeight: '80vh',
                 overflowY: 'auto',
+                boxSizing: 'border-box',
                 boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
               }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '16px' }}>
                 <h2 style={{ margin: 0 }}>Alunos ({alunos.length})</h2>
-                <button
-                  onClick={() => setModalAlunosOpen(false)}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    fontSize: '24px',
-                    cursor: 'pointer',
-                    color: '#666',
-                  }}
-                >
-                  ×
-                </button>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <button
+                    onClick={copyEmails}
+                    style={{
+                      padding: '6px 12px',
+                      backgroundColor: '#2196F3',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontSize: '12px',
+                      fontWeight: '500',
+                      whiteSpace: 'nowrap',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {emailsCopiados ? 'Copiado!' : 'Copiar emails'}
+                  </button>
+                  <button
+                    onClick={() => setModalAlunosOpen(false)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      fontSize: '24px',
+                      cursor: 'pointer',
+                      color: '#666',
+                    }}
+                  >
+                    ×
+                  </button>
+                </div>
               </div>
 
               <div style={{ backgroundColor: '#f8f9fa', padding: '12px', borderRadius: '6px', marginBottom: '16px', fontSize: '13px' }}>
