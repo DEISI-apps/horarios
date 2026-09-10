@@ -115,7 +115,7 @@ export default function TimeSlotDisciplina({ slot, showAlunos = true }: TimeSlot
     const link = document.createElement('a');
     const url = URL.createObjectURL(new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }));
     link.href = url;
-    link.download = `alunos_${slot.disciplina_nome}.csv`;
+    link.download = `alunos_disciplina_${slot.disciplina_id}.csv`;
     link.click();
     URL.revokeObjectURL(url);
   };
