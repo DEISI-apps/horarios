@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { AulaDocente, Aluno } from '@/types/interfaces';
 import { calculateSlotPosition } from '@/lib/calendario';
 import { MINUTE_HEIGHT } from '@/lib/constants';
@@ -207,7 +208,7 @@ export default function TimeSlotDocente({ slot }: TimeSlotProps) {
         )}
       </div>
 
-      {modalAberto && (
+      {modalAberto && typeof document !== 'undefined' && createPortal(
         <div
           style={{
             position: 'fixed',
@@ -313,7 +314,8 @@ export default function TimeSlotDocente({ slot }: TimeSlotProps) {
                 ))}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
