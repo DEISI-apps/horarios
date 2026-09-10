@@ -50,6 +50,7 @@ export default function TimeSlotDisciplina({ slot, showAlunos = true }: TimeSlot
   const [alunosPorDocente, setAlunosPorDocente] = useState<Record<number, Aluno[]>>({});
   const [modalAberto, setModalAberto] = useState(false);
   const [docenteSelecionado, setDocenteSelecionado] = useState<number | null>(null);
+  const [emailsCopiados, setEmailsCopiados] = useState(false);
 
   useEffect(() => {
     if (!podeVerAlunos || !showAlunos) {
@@ -103,6 +104,27 @@ export default function TimeSlotDisciplina({ slot, showAlunos = true }: TimeSlot
     docenteSelecionado !== null
       ? alunosPorDocente[docenteSelecionado] ?? []
       : [];
+
+  const downloadCSV = () => {
+    const csvContent = [
+      ['Nome', 'Número', 'Email'].join(','),
+      ...alunosSelecionados.map(aluno => [aluno.nome, aluno.numero, aluno.email]
+        .map(field => `"${field}"`)
+        .join(',')),
+    ].join('\n');
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }));
+    link.href = url;
+    link.download = `alunos_${slot.disciplina_nome}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const copyEmails = async () => {
+    await navigator.clipboard.writeText(alunosSelecionados.map(aluno => aluno.email).join('\n'));
+    setEmailsCopiados(true);
+    setTimeout(() => setEmailsCopiados(false), 2000);
+  };
 
   return (
     <>
@@ -166,7 +188,7 @@ export default function TimeSlotDisciplina({ slot, showAlunos = true }: TimeSlot
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              zIndex: 2000,
+              zIndex: 9999,
             }}
             onClick={() => setModalAberto(false)}
           >
@@ -176,29 +198,40 @@ export default function TimeSlotDisciplina({ slot, showAlunos = true }: TimeSlot
                 borderRadius: '8px',
                 padding: '24px',
                 maxWidth: '600px',
+                width: 'calc(100% - 32px)',
                 maxHeight: '80vh',
                 overflowY: 'auto',
+                boxSizing: 'border-box',
                 boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
               }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', alignItems: 'center', flexWrap: 'wrap', marginBottom: '16px' }}>
                 <h2 style={{ margin: 0 }}>
                   {slot.docentes.find(d => d.id === docenteSelecionado)?.docente_nome}
                   {" — "}
                   {alunosSelecionados.length} alunos
                 </h2>
-                <button
-                  onClick={() => setModalAberto(false)}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    fontSize: '24px',
-                    cursor: 'pointer',
-                  }}
-                >
-                  ×
-                </button>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <button
+                    onClick={downloadCSV}
+                    style={{ padding: '6px 12px', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', fontWeight: '500', whiteSpace: 'nowrap' }}
+                  >
+                    CSV
+                  </button>
+                  <button
+                    onClick={copyEmails}
+                    style={{ padding: '6px 12px', backgroundColor: '#2196F3', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', fontWeight: '500', whiteSpace: 'nowrap' }}
+                  >
+                    {emailsCopiados ? 'Copiado!' : 'Copiar emails'}
+                  </button>
+                  <button
+                    onClick={() => setModalAberto(false)}
+                    style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer' }}
+                  >
+                    ×
+                  </button>
+                </div>
               </div>
 
               <div style={{ fontSize: '13px', marginBottom: '16px', color: '#666' }}>
