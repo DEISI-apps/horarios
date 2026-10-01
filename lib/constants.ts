@@ -1,4 +1,7 @@
 // configurações do ano e semestre 
+export const ALLOWED_EMAILS = ["p6069@ulusofona.pt", "p718@ulusofona.pt"];
+export const MONITOR_EMAILS = ["f7432@ulusofona.pt", "josejosejose2348@gmail.com", "7oanacorreia@gmail.com"];
+
 export const ANO_LECTIVO = '26-27';
 export const ANO_LECTIVO_ID = 36;
 export const SEMESTRE = 1;

@@ -38,6 +38,11 @@ p5502@ulusofona.pt,p1644@ulusofona.pt,p6476@ulusofona.pt,carlaalexmartins@gmail.
 * incuir nao profs, para acederem e verem a plataforma:
 mjdamasio@ulusofona.pt,p695@ulusofona.pt,p1837@ulusofona.pt,p967@ulusofona.pt,paulo.ferreira@ulusofona.pt,timoteo.rodrigues@ulusofona.pt,p3418@ulusofona.pt,f3418@ulusofona.pt,f3090@ulusofona.pt,f4849@ulusofona.pt,f3090@ulusofona.pt,f3560@ulusofona.pt,p718@ulusofona.pt,f3560@ulusofona.pt
 
+# Monitores
+
+os monitores podem ver info das salas, alunos, docentes. 
+a lista dos emails autorizados está em /lib/constants.ts
+
 # Disciplinas
 
 # Como carregar novo semestre?

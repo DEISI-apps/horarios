@@ -5,10 +5,7 @@ import Image from "next/image";
 import { useSession, signIn } from "next-auth/react";
 import { UserNav } from "@/components/UserNav";
 import { LogIn } from "lucide-react";
-
-
-const ALLOWED_EMAILS = ["p6069@ulusofona.pt", "p718@ulusofona.pt"];
-
+import { ALLOWED_EMAILS, MONITOR_EMAILS } from "@/lib/constants";
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -18,6 +15,8 @@ export default function Navbar() {
   const canEdit = sessionEmail && ALLOWED_EMAILS.includes(sessionEmail);
   const role = (session?.user as { role?: string })?.role;
   const isAluno = role === "aluno";
+
+  const isMonitor = sessionEmail !== null && MONITOR_EMAILS.includes(sessionEmail);
 
   async function handleLogin() {
     if (typeof window !== "undefined") {
@@ -73,6 +72,14 @@ export default function Navbar() {
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition font-semibold" href="/meu-horario">O meu Horário</Link>
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition font-semibold" href="/turmas-alunos">Turmas</Link>
                     <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition font-semibold" href="/disciplinas">Disciplinas</Link>
+
+                  {isMonitor && (
+                    <>
+                      <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/salas">Salas</Link>
+                      <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/docentes">Docentes</Link>
+                      <Link className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition" href="/alunos">Alunos</Link>
+                    </>
+                  )}
                   </nav>
                   <div className="pl-6 border-l border-white/10">
                     <UserNav />
